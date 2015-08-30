@@ -7,6 +7,14 @@ defmodule Erlangelist do
     import Supervisor.Spec, warn: false
 
     children = [
+      worker(ConCache, [
+        [
+          touch_on_read: true,
+          ttl: :timer.minutes(30),
+          ttl_check: :timer.seconds(5)
+        ],
+        [name: :articles]
+      ]),
       # Start the endpoint when the application starts
       supervisor(Erlangelist.Endpoint, []),
       # Start the Ecto repository

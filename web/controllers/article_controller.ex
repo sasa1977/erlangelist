@@ -7,7 +7,6 @@ defmodule Erlangelist.ArticleController do
 
   def post(conn, _params) do
     [title] = conn.path_info
-
     render_article(conn, article_meta(title))
   end
 
@@ -21,12 +20,16 @@ defmodule Erlangelist.ArticleController do
   end
 
   defp articles do
-    {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
-    articles_meta
+    ConCache.get_or_store(:articles, :articles_metas, fn ->
+      {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
+      articles_meta
+    end)
   end
 
   defp article({title, meta}) do
-    [{:html, {:safe, article_html(title)}} | meta]
+    ConCache.get_or_store(:articles, {:article, title}, fn ->
+      [{:html, {:safe, article_html(title)}} | meta]
+    end)
   end
 
   defp article_html(title) do
