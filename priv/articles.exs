@@ -1,3 +1,3 @@
 [
-  {"why_elixir", [posted_at: 20140121]}
+  {"why_elixir", [title: "Why Elixir", posted_at: "2014-01-21"]}
 ]

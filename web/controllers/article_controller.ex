@@ -22,7 +22,19 @@ defmodule Erlangelist.ArticleController do
   defp articles do
     ConCache.get_or_store(:articles, :articles_metas, fn ->
       {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
-      articles_meta
+      for {title, meta} <- articles_meta do
+        {
+          title,
+          Enum.map(meta, fn
+            {:posted_at, isodate} ->
+              {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
+              {:ok, formatted_date} = Timex.DateFormat.format(date, "%B %d, %Y", :strftime)
+              {:posted_at, formatted_date} |> IO.inspect
+
+            other -> other
+          end)
+        }
+      end
     end)
   end
 
