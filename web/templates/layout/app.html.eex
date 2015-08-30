@@ -12,20 +12,26 @@
   </head>
 
   <body>
-    <div class="container" role="main">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-        </ul>
-        <span class="logo"></span>
-      </div>
-
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <%= @inner %>
+      <div class="container">
+        <div class="header">
+          <h2><a href="/">The Erlangelist</a></h2>
+          <i>(not only) Erlang related musings</i>
+          <p>Hi, I am Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the upcoming <a href="http://manning.com/juric">Elixir in Action</a> book. In this blog you can read about Erlang and other programming related topics. You can subscribe to the <a href="/feeds/posts/default">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</p>
+        </div>
 
-    </div> <!-- /container -->
+        <div class="row">
+
+          <div class="col-10 col-sm-10 col-lg-10 main">
+            <%= @inner %>
+          </div>
+
+          <div class="col-2 col-sm-2 col-lg-2 right">right side bar</div>
+        </div>
+      </div>
+
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
