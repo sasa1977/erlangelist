@@ -1,3 +1,3 @@
 <div class="blog-post">
-<%= @html %>
+<%= @article[:html] %>
 </div>

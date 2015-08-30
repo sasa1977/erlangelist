@@ -1,3 +1,5 @@
+# Why Elixir
+
 It's been about a year since I've started using Elixir. Originally, I intended to use the language only for blogging purposes, thinking it could help me better illustrate benefits of Erlang Virtual Machine (EVM). However, I was immediately fascinated with what the language brings to the table, and very quickly introduced it to the Erlang based production system I have been developing at the time. Today, I consider Elixir as a better alternative for the development of EVM powered systems, and in this posts I'll try to highlight some of its benefits, and also dispell some misconceptions about it.
 
 
