@@ -15,6 +15,7 @@ defmodule Erlangelist do
         ],
         [name: :articles]
       ]),
+      worker(Erlangelist.Article, []),
       # Start the endpoint when the application starts
       supervisor(Erlangelist.Endpoint, []),
       # Start the Ecto repository

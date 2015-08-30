@@ -18,7 +18,8 @@ defmodule Erlangelist.Mixfile do
   def application do
     [mod: {Erlangelist, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, :earmark, :con_cache, :timex]]
+                    :phoenix_ecto, :postgrex, :earmark, :con_cache, :timex,
+                    :fs]]
   end
 
   # Specifies which paths to compile per environment
@@ -37,7 +38,8 @@ defmodule Erlangelist.Mixfile do
      {:cowboy, "~> 1.0"},
      {:earmark, "~> 0.1"},
      {:con_cache, "~> 0.8.1"},
-     {:timex, "~> 0.19.2"}
+     {:timex, "~> 0.19.2"},
+     {:fs, "~> 0.9"}
    ]
   end
 end
