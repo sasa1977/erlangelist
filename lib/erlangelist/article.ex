@@ -5,56 +5,60 @@ defmodule Erlangelist.Article do
   def all do
     ConCache.get_or_store(:articles, :articles_metas, fn ->
       {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
-      for {article_id, meta} <- articles_meta do
-        {
-          article_id,
-          Enum.map(meta, fn
-            {:posted_at, isodate} ->
-              {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
-              {:ok, formatted_date} = Timex.DateFormat.format(date, "%B %d, %Y", :strftime)
-              {:posted_at, formatted_date}
-
-            other -> other
-
-          end) |> Enum.into(%{})
-        }
-      end
+      Enum.map(articles_meta, &transform_meta/1)
     end)
   end
 
-  def link({_, %{redirect: redirect}}) do
-    "http://theerlangelist.blogspot.com/#{redirect}"
-  end
+  defp transform_meta({article_id, meta}) do
+    transformed_meta =
+      meta
+      |> Enum.map(fn
+        {:posted_at, isodate} ->
+          {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
+          {:ok, formatted_date} = Timex.DateFormat.format(date, "%B %d, %Y", :strftime)
+          {:posted_at, formatted_date}
 
-  def link({article_id, _meta}) do
-    "/article/#{article_id}"
+        {:redirect, old_link} ->
+          {:redirect, "http://theerlangelist.blogspot.com#{old_link}"}
+
+        other -> other
+      end)
+      |> Enum.into(%{})
+      |> Map.put(:id, article_id)
+
+    {article_id, transformed_meta}
   end
 
   def most_recent do
-    article(hd(all))
+    case all do
+      [] -> nil
+      [{_, meta} | _] -> meta
+    end
   end
 
-  def get(article_id) do
-    ConCache.get_or_store(:articles, {:article_meta, article_id}, fn ->
+  def meta(article_id) do
+    case ConCache.get_or_store(:articles, {:article_meta, article_id}, fn ->
       Enum.find(all, &match?({^article_id, _}, &1))
-    end)
-    |> article
+    end) do
+      nil -> nil
+      {_, meta} -> meta
+    end
   end
 
-  defp article(nil), do: nil
-  defp article({article_id, meta}) do
-    ConCache.get_or_store(:articles, {:article_data, article_id}, fn ->
-      %ConCache.Item{
-        value: Map.put(meta, :html, article_html(article_id)),
-        ttl: :timer.minutes(30)
-      }
+  def html(article_id) do
+    ConCache.get_or_store(:articles, {:article_html, article_id}, fn ->
+      html =
+        "#{priv_dir}/articles/#{article_id}.md"
+        |> File.read!
+        |> Earmark.to_html
+
+      %ConCache.Item{value: html, ttl: :timer.minutes(30)}
     end)
   end
 
-  defp article_html(article_id) do
-    "#{priv_dir}/articles/#{article_id}.md"
-    |> File.read!
-    |> Earmark.to_html
+  def link({_, %{redirect: redirect}}), do: redirect
+  def link({article_id, _meta}) do
+    "/article/#{article_id}"
   end
 
 
@@ -86,7 +90,7 @@ defmodule Erlangelist.Article do
       {:article, %{"article_id" => article_id}} ->
         Logger.info("invalidating cache for article #{article_id}")
         ConCache.delete(:articles, {:article_meta, article_id})
-        ConCache.delete(:articles, {:article_data, article_id})
+        ConCache.delete(:articles, {:article_html, article_id})
     end
 
     noreply
