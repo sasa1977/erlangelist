@@ -5,9 +5,11 @@ defmodule Erlangelist.ArticleController do
     render_article(conn, hd(articles))
   end
 
-  def post(conn, _params) do
-    [title] = conn.path_info
-    render_article(conn, article_meta(title))
+  def post(conn, %{"article_id" => article_id}) do
+    case article_meta(article_id) do
+      nil -> render(conn, Erlangelist.ErrorView, "404.html")
+      meta -> render_article(conn, meta)
+    end
   end
 
   defp render_article(conn, meta) do
@@ -15,16 +17,16 @@ defmodule Erlangelist.ArticleController do
     |> render("article.html", %{article: article(meta)})
   end
 
-  defp article_meta(title) do
-    Enum.find(articles, fn({t, _}) -> title == t end)
+  defp article_meta(article_id) do
+    Enum.find(articles, fn({id, _}) -> id == article_id end)
   end
 
   defp articles do
     ConCache.get_or_store(:articles, :articles_metas, fn ->
       {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
-      for {title, meta} <- articles_meta do
+      for {article_id, meta} <- articles_meta do
         {
-          title,
+          article_id,
           Enum.map(meta, fn
             {:posted_at, isodate} ->
               {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
@@ -38,14 +40,14 @@ defmodule Erlangelist.ArticleController do
     end)
   end
 
-  defp article({title, meta}) do
-    ConCache.get_or_store(:articles, {:article, title}, fn ->
-      [{:html, {:safe, article_html(title)}} | meta]
+  defp article({article_id, meta}) do
+    ConCache.get_or_store(:articles, {:article, article_id}, fn ->
+      [{:html, {:safe, article_html(article_id)}} | meta]
     end)
   end
 
-  defp article_html(title) do
-    "#{Application.app_dir(:erlangelist, "priv")}/articles/#{title}.md"
+  defp article_html(article_id) do
+    "#{Application.app_dir(:erlangelist, "priv")}/articles/#{article_id}.md"
     |> File.read!
     |> Earmark.to_html
   end

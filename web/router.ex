@@ -17,7 +17,7 @@ defmodule Erlangelist.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", ArticleController, :last
-    get "/why_elixir", ArticleController, :post
+    get "/article/:article_id", ArticleController, :post
     get "/2012/12/yet-another-introduction-to-erlang.html", OldPostController, :render
   end
 
