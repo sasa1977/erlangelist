@@ -26,15 +26,19 @@ defmodule Erlangelist.Article do
   end
 
   def get(article_id) do
-    articles
-    |> Enum.find(&match?({^article_id, _}, &1))
+    ConCache.get_or_store(:articles, {:article_meta, article_id}, fn ->
+      Enum.find(articles, &match?({^article_id, _}, &1))
+    end)
     |> article
   end
 
   defp article(nil), do: nil
   defp article({article_id, meta}) do
-    ConCache.get_or_store(:articles, {:article, article_id}, fn ->
-      [{:html, article_html(article_id)} | meta]
+    ConCache.get_or_store(:articles, {:article_data, article_id}, fn ->
+      %ConCache.Item{
+        value: [{:html, article_html(article_id)} | meta],
+        ttl: :timer.minutes(30)
+      }
     end)
   end
 
@@ -72,7 +76,8 @@ defmodule Erlangelist.Article do
 
       {:article, %{"article_id" => article_id}} ->
         Logger.info("invalidating cache for article #{article_id}")
-        ConCache.delete(:articles, {:article, article_id})
+        ConCache.delete(:articles, {:article_meta, article_id})
+        ConCache.delete(:articles, {:article_data, article_id})
     end
 
     noreply

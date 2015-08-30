@@ -10,7 +10,6 @@ defmodule Erlangelist do
       worker(ConCache, [
         [
           touch_on_read: true,
-          ttl: :timer.minutes(30),
           ttl_check: :timer.seconds(5)
         ],
         [name: :articles]
