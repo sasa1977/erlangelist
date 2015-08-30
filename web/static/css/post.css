@@ -1,0 +1,8 @@
+.blog-post p, .blog-post ul {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.blog-post code {
+  font-size: 14px;
+}
