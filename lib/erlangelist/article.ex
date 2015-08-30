@@ -2,7 +2,7 @@ defmodule Erlangelist.Article do
   use ExActor.GenServer
   require Logger
 
-  def articles do
+  def all do
     ConCache.get_or_store(:articles, :articles_metas, fn ->
       {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
       for {article_id, meta} <- articles_meta do
@@ -12,22 +12,31 @@ defmodule Erlangelist.Article do
             {:posted_at, isodate} ->
               {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
               {:ok, formatted_date} = Timex.DateFormat.format(date, "%B %d, %Y", :strftime)
-              {:posted_at, formatted_date} |> IO.inspect
+              {:posted_at, formatted_date}
 
             other -> other
-          end)
+
+          end) |> Enum.into(%{})
         }
       end
     end)
   end
 
+  def link({_, %{redirect: redirect}}) do
+    "http://theerlangelist.blogspot.com/#{redirect}"
+  end
+
+  def link({article_id, _meta}) do
+    "/article/#{article_id}"
+  end
+
   def most_recent do
-    article(hd(articles))
+    article(hd(all))
   end
 
   def get(article_id) do
     ConCache.get_or_store(:articles, {:article_meta, article_id}, fn ->
-      Enum.find(articles, &match?({^article_id, _}, &1))
+      Enum.find(all, &match?({^article_id, _}, &1))
     end)
     |> article
   end
@@ -36,7 +45,7 @@ defmodule Erlangelist.Article do
   defp article({article_id, meta}) do
     ConCache.get_or_store(:articles, {:article_data, article_id}, fn ->
       %ConCache.Item{
-        value: [{:html, article_html(article_id)} | meta],
+        value: Map.put(meta, :html, article_html(article_id)),
         ttl: :timer.minutes(30)
       }
     end)

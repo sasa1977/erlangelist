@@ -1,6 +1,6 @@
 <div class="blog-post">
-  <h1><%= @article[:title] %></h1>
-  <h4 class="right"><%= @article[:posted_at] %></h4>
+  <h1><%= @article.title %></h1>
+  <h4 class="right"><%= @article.posted_at %></h4>
   <br/>
-  <%= {:safe, @article[:html]} %>
+  <%= {:safe, @article.html} %>
 </div>

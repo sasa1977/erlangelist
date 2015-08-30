@@ -1,0 +1,11 @@
+<div class="col-xs-12" style="height:50px;"></div>
+<div class="articles">
+  <h4>All posts</h4>
+  <ul>
+  <%= for {_, opts} = article_meta <- @articles do %>
+    <li>
+      <a href="<%= Erlangelist.Article.link(article_meta) %>"><%= opts.title %></a>
+    </li>
+  <% end %>
+  </ul>
+</div>
