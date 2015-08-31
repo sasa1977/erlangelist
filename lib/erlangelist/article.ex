@@ -95,6 +95,7 @@ defmodule Erlangelist.Article do
       {:articles, %{}} ->
         Logger.info("invalidating cache for articles metas")
         prime_cache
+        ConCache.delete(:articles, :articles_links_html)
         ConCache.delete(:articles, {:article_html, :last})
 
       {:article, %{"article_id" => article_id}} ->
