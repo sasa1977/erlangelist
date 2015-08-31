@@ -4,7 +4,7 @@ defmodule Erlangelist.ArticleController do
 
   def last(conn, _params) do
     conn
-    |> render_result(cached_html(:last, &Erlangelist.Article.most_recent/0))
+    |> render_result(cached_html(:last, &Erlangelist.Article.most_recent/0, ttl: nil))
   end
 
   def post(conn, %{"article_id" => article_id}) do
@@ -12,14 +12,16 @@ defmodule Erlangelist.ArticleController do
     |> render_result(cached_html(article_id, fn-> Erlangelist.Article.meta(article_id) end))
   end
 
-  defp cached_html(article_id, fetch_article) do
+  defp cached_html(article_id, fetch_article, opts \\ [ttl: :timer.minutes(30)]) do
     ConCache.get_or_store(:articles, {:article_html, article_id}, fn ->
       Logger.info("Building html for article #{article_id}")
 
-      %ConCache.Item{
-        value: article_html(fetch_article.()),
-        ttl: :timer.seconds(10)
-      }
+      html = article_html(fetch_article.())
+      case opts[:ttl] do
+        nil -> html
+        ttl ->
+          %ConCache.Item{value: html, ttl: opts[:ttl]}
+      end
     end)
   end
 

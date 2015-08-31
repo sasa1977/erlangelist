@@ -3,10 +3,12 @@ defmodule Erlangelist.Article do
   require Logger
 
   def all do
-    ConCache.get_or_store(:articles, :articles_metas, fn ->
-      {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
-      Enum.map(articles_meta, &transform_meta/1)
-    end)
+    ConCache.get_or_store(:articles, :articles_metas, &all_articles/0)
+  end
+
+  defp all_articles do
+    {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
+    Enum.map(articles_meta, &transform_meta/1)
   end
 
   defp transform_meta({article_id, meta}) do
@@ -60,12 +62,23 @@ defmodule Erlangelist.Article do
   defstart start_link do
     :fs.subscribe
 
+    prime_cache
+
     initial_state(%{
         regexes: [
           articles: Regex.compile!("^#{priv_regex("articles.exs")}$"),
           article: Regex.compile!("^#{priv_regex("articles")}/(?<article_id>.+)\.md$")
         ]
     })
+  end
+
+  defp prime_cache do
+    articles_metas = all_articles
+    ConCache.put(:articles, :articles_metas, articles_metas)
+
+    for {article_id, _} = article_meta <- articles_metas do
+      ConCache.put(:articles, {:article_meta, article_id}, article_meta)
+    end
   end
 
 
@@ -80,7 +93,7 @@ defmodule Erlangelist.Article do
 
       {:articles, %{}} ->
         Logger.info("invalidating cache for articles metas")
-        ConCache.delete(:articles, :articles_metas)
+        prime_cache
         ConCache.delete(:articles, {:article_html, :last})
 
       {:article, %{"article_id" => article_id}} ->

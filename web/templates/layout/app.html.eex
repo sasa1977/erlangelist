@@ -29,9 +29,8 @@
           </div>
 
           <div class="col-2 col-sm-2 col-lg-2 right">
-            <%= render Erlangelist.ArticleView, "_articles.html",
-                  articles: Erlangelist.Article.all
-            %>
+            <div class="col-xs-12" style="height:50px;"></div>
+            <%= Erlangelist.ArticleView.articles_links_html %>
           </div>
         </div>
       </div>
