@@ -6,8 +6,9 @@ defmodule Erlangelist.Article do
     ConCache.get_or_store(:articles, :articles_metas, &all_articles/0)
   end
 
-  defp all_articles do
-    {articles_meta, _} = Code.eval_file("#{Application.app_dir(:erlangelist, "priv")}/articles.exs")
+  @doc false
+  def all_articles(location \\ nil) do
+    {articles_meta, _} = Code.eval_file("#{location || priv_dir}/articles.exs")
     Enum.map(articles_meta, &transform_meta/1)
   end
 

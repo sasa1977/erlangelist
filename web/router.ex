@@ -1,4 +1,5 @@
 defmodule Erlangelist.Router do
+  require Erlangelist.Article
   use Erlangelist.Web, :router
 
   pipeline :browser do
@@ -18,7 +19,12 @@ defmodule Erlangelist.Router do
 
     get "/", ArticleController, :last
     get "/article/:article_id", ArticleController, :post
-    get "/2012/12/yet-another-introduction-to-erlang.html", OldPostController, :render
+
+    for {_article_id, meta} <- Erlangelist.Article.all_articles("#{File.cwd!}/priv") do
+      if path = meta[:redirect] do
+        get String.replace(path, "http://theerlangelist.blogspot.com",""), OldPostController, :render
+      end
+    end
   end
 
   # Other scopes may use custom stacks.

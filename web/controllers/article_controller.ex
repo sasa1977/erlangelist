@@ -20,7 +20,7 @@ defmodule Erlangelist.ArticleController do
       case opts[:ttl] do
         nil -> html
         ttl ->
-          %ConCache.Item{value: html, ttl: opts[:ttl]}
+          %ConCache.Item{value: html, ttl: ttl}
       end
     end)
   end
