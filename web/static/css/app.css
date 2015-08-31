@@ -45,17 +45,21 @@ form.link, form.button {
   }
 }
 
-/* Customize container */
 @media (min-width: 992px) {
   .container {
     max-width: 860px;
   }
 }
 
-/* Customize container */
 @media (min-width: 1024px) {
   .container {
     max-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .affix {
+    position: static;
   }
 }
 
@@ -66,4 +70,12 @@ form.link, form.button {
 .articles ul {
     margin-left: 15px;
     padding-left: 15px;
+}
+
+.nav {
+  width: 250px;
+}
+
+.affix {
+  top: 10px;
 }

@@ -19,18 +19,22 @@
         <div class="header">
           <h2><a href="/">The Erlangelist</a></h2>
           <i>(not only) Erlang related musings</i>
-          <p>Hi, I am Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the upcoming <a href="http://manning.com/juric">Elixir in Action</a> book. In this blog you can read about Erlang and other programming related topics. You can subscribe to the <a href="/feeds/posts/default">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</p>
+          <p>Hi, I am Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the upcoming <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric">Elixir in Action</a> book. In this blog you can read about Erlang and other programming related topics. You can subscribe to the <a href="/feeds/posts/default">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</p>
         </div>
 
         <div class="row">
 
-          <div class="col-10 col-sm-10 col-lg-10 main">
+          <div class="col-9 col-sm-9 col-lg-9 main">
             <%= @inner %>
           </div>
 
-          <div class="col-2 col-sm-2 col-lg-2 right">
-            <div class="col-xs-12" style="height:50px;"></div>
-            <%= Erlangelist.ArticleView.articles_links_html %>
+          <div class="col-3 col-sm-3 col-lg-3 right">
+            <div class="col-xs-12" style="height:130px;"></div>
+            <nav class="nav" data-spy="affix" data-offset-top="220" data-target=".right" data-offset-bottom="200">
+              <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric" title="Elixir in Action"><img height="250" src="/images/EIA_150.jpg" width="200"></a>
+              <div class="col-xs-12" style="height:50px;"></div>
+              <%= Erlangelist.ArticleView.articles_links_html %>
+            </nav>
           </div>
         </div>
       </div>
