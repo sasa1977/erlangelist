@@ -1,40 +1,26 @@
 defmodule Erlangelist.ArticleController do
   use Erlangelist.Web, :controller
-  require Logger
+  alias Erlangelist.Article
 
-  def last(conn, _params) do
-    conn
-    |> render_result(cached_html(:last, &Erlangelist.Article.most_recent/0, ttl: nil))
+
+  def most_recent(conn, _params) do
+    render_article(conn, Article.most_recent)
   end
 
-  def post(conn, %{"article_id" => article_id}) do
-    conn
-    |> render_result(cached_html(article_id, fn-> Erlangelist.Article.meta(article_id) end))
+  def article(conn, %{"article_id" => article_id}) do
+    render_article(conn, article_id)
   end
 
-  defp cached_html(article_id, fetch_article, opts \\ [ttl: :timer.minutes(30)]) do
-    ConCache.get_or_store(:articles, {:article_html, article_id}, fn ->
-      Logger.info("Building html for article #{article_id}")
-
-      html = article_html(fetch_article.())
-      case opts[:ttl] do
-        nil -> html
-        ttl ->
-          %ConCache.Item{value: html, ttl: ttl}
-      end
-    end)
+  defp render_article(conn, article_id) do
+    render_article(conn, Article.meta(article_id), Article.html(article_id))
   end
 
-  defp article_html(nil), do:
-    Phoenix.View.render(Erlangelist.ErrorView, "404.html")
-  defp article_html(%{redirect: _}), do:
-    Phoenix.View.render(Erlangelist.ErrorView, "404.html")
-  defp article_html(article), do:
-    Phoenix.View.render(Erlangelist.ArticleView, "article.html", %{article: article})
+  defp render_article(conn, nil, _), do:
+    render(conn, Erlangelist.ErrorView, "404.html")
 
-  defp render_result(conn, inner) do
-    conn
-    |> put_layout(false)
-    |> render(Erlangelist.LayoutView, "app.html", %{inner: inner})
-  end
+  defp render_article(conn, _, nil), do:
+    render(conn, Erlangelist.ErrorView, "404.html")
+
+  defp render_article(conn, meta, html), do:
+    render(conn, "article.html", %{meta: meta, html: html})
 end

@@ -1,9 +1,9 @@
 <div class="articles">
   <h4>All posts</h4>
   <ul>
-  <%= for {_, opts} = article_meta <- @articles do %>
+  <%= for article <- @articles do %>
     <li>
-      <a href="<%= Erlangelist.Article.link(article_meta) %>"><%= opts.title %></a>
+      <a href="<%= Erlangelist.Article.link(article) %>"><%= Erlangelist.Article.title(article) %></a>
     </li>
   <% end %>
   </ul>

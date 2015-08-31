@@ -1,18 +1,13 @@
 defmodule Erlangelist.Article do
-  use ExActor.GenServer
-  require Logger
+  @external_resource "../articles/index.exs"
 
-  def all do
-    ConCache.get_or_store(:articles, :articles_metas, &all_articles/0)
+  {articles_meta, _} = Code.eval_file("../articles/index.exs")
+
+  for {article_id, _} <- articles_meta do
+    @external_resource "../articles/#{article_id}.md"
   end
 
-  @doc false
-  def all_articles(location \\ nil) do
-    {articles_meta, _} = Code.eval_file("#{location || priv_dir}/articles.exs")
-    Enum.map(articles_meta, &transform_meta/1)
-  end
-
-  defp transform_meta({article_id, meta}) do
+  transform_meta = fn({article_id, meta}) ->
     transformed_meta =
       meta
       |> Enum.map(fn
@@ -26,99 +21,46 @@ defmodule Erlangelist.Article do
 
         other -> other
       end)
-      |> Enum.into(%{})
-      |> Map.put(:id, article_id)
 
     {article_id, transformed_meta}
   end
 
+  def all do
+    unquote(Enum.map(articles_meta, transform_meta))
+  end
+
+
+  [{article_id, _} | _] = articles_meta
   def most_recent do
-    case all do
-      [] -> nil
-      [{_, meta} | _] -> meta
+    unquote(article_id)
+  end
+
+  for {article_id, meta} <- articles_meta do
+    def meta(unquote(article_id)) do
+      unquote(meta)
     end
   end
 
-  def meta(article_id) do
-    case ConCache.get_or_store(:articles, {:article_meta, article_id}, fn ->
-      Enum.find(all, &match?({^article_id, _}, &1))
-    end) do
-      nil -> nil
-      {_, meta} -> meta
-    end
-  end
+  def meta(_), do: nil
 
-  def html(article_id) do
-    "#{priv_dir}/articles/#{article_id}.md"
+
+  html = fn(article_id) ->
+    "../articles/#{article_id}.md"
     |> File.read!
     |> Earmark.to_html
   end
 
-  def link({_, %{redirect: redirect}}), do: redirect
-  def link({article_id, _meta}) do
-    "/article/#{article_id}"
-  end
-
-
-  defstart start_link do
-    :fs.subscribe
-
-    prime_cache
-
-    initial_state(%{
-        regexes: [
-          articles: Regex.compile!("^#{priv_regex("articles.exs")}$"),
-          article: Regex.compile!("^#{priv_regex("articles")}/(?<article_id>.+)\.md$")
-        ]
-    })
-  end
-
-  defp prime_cache do
-    articles_metas = all_articles
-    ConCache.put(:articles, :articles_metas, articles_metas)
-
-    for {article_id, _} = article_meta <- articles_metas do
-      ConCache.put(:articles, {:article_meta, article_id}, article_meta)
+  for {article_id, meta} <- articles_meta, meta[:redirect] == nil do
+    def html(unquote(article_id)) do
+      unquote(html.(article_id))
     end
   end
 
+  def html(_), do: nil
 
-  defhandleinfo {_, {:fs, :file_event}, {path, [_, :modified]}}, state: state do
-    path = to_string(path)
-
-    state.regexes
-    |> Stream.map(fn({regex_id, regex}) -> {regex_id, Regex.named_captures(regex, path)} end)
-    |> Enum.find(fn({_, matches}) -> matches != nil end)
-    |> case do
-      nil -> :ok
-
-      {:articles, %{}} ->
-        Logger.info("invalidating cache for articles metas")
-        prime_cache
-        ConCache.delete(:articles, :articles_links_html)
-        ConCache.delete(:articles, {:article_html, :last})
-
-      {:article, %{"article_id" => article_id}} ->
-        Logger.info("invalidating cache for article #{article_id}")
-        ConCache.delete(:articles, {:article_meta, article_id})
-        ConCache.delete(:articles, {:article_html, article_id})
-    end
-
-    noreply
+  def link({article_id, meta}) do
+    meta[:redirect] || "/article/#{article_id}"
   end
 
-  defhandleinfo _, do: noreply
-
-
-  defp priv_regex(path) do
-    priv_dir
-    |> Path.join(path)
-    |> Regex.escape
-  end
-
-  if Mix.env != "prod" do
-    defp priv_dir, do: "#{File.cwd!}/priv"
-  else
-    defp priv_dir, do: Application.app_dir(:erlangelist, "priv")
-  end
+  def title({_, meta}), do: meta[:title]
 end

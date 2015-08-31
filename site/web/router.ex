@@ -17,10 +17,10 @@ defmodule Erlangelist.Router do
   scope "/", Erlangelist do
     pipe_through :browser # Use the default browser stack
 
-    get "/", ArticleController, :last
-    get "/article/:article_id", ArticleController, :post
+    get "/", ArticleController, :most_recent
+    get "/article/:article_id", ArticleController, :article
 
-    for {_article_id, meta} <- Erlangelist.Article.all_articles("#{File.cwd!}/priv") do
+    for {_article_id, meta} <- Erlangelist.Article.all do
       if path = meta[:redirect] do
         get String.replace(path, "http://theerlangelist.blogspot.com",""), OldPostController, :render
       end
