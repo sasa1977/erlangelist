@@ -46,14 +46,9 @@ defmodule Erlangelist.Article do
   end
 
   def html(article_id) do
-    ConCache.get_or_store(:articles, {:article_html, article_id}, fn ->
-      html =
-        "#{priv_dir}/articles/#{article_id}.md"
-        |> File.read!
-        |> Earmark.to_html
-
-      %ConCache.Item{value: html, ttl: :timer.minutes(30)}
-    end)
+    "#{priv_dir}/articles/#{article_id}.md"
+    |> File.read!
+    |> Earmark.to_html
   end
 
   def link({_, %{redirect: redirect}}), do: redirect
@@ -86,6 +81,7 @@ defmodule Erlangelist.Article do
       {:articles, %{}} ->
         Logger.info("invalidating cache for articles metas")
         ConCache.delete(:articles, :articles_metas)
+        ConCache.delete(:articles, {:article_html, :last})
 
       {:article, %{"article_id" => article_id}} ->
         Logger.info("invalidating cache for article #{article_id}")
