@@ -12,7 +12,8 @@ config :erlangelist, Erlangelist.Endpoint,
   secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
   render_errors: [accepts: ~w(html json)],
   pubsub: [name: Erlangelist.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+           adapter: Phoenix.PubSub.PG2],
+  http: [compress: true]
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -18,7 +18,6 @@ defmodule Erlangelist.Web do
 
   def model do
     quote do
-      use Ecto.Model
     end
   end
 
@@ -27,9 +26,6 @@ defmodule Erlangelist.Web do
       use Phoenix.Controller
 
       alias Erlangelist.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 1, from: 2]
-
       import Erlangelist.Router.Helpers
     end
   end
@@ -57,11 +53,6 @@ defmodule Erlangelist.Web do
   def channel do
     quote do
       use Phoenix.Channel
-
-      alias Erlangelist.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 1, from: 2]
-
     end
   end
 
