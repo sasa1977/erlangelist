@@ -20,7 +20,7 @@ function build_versioned_image {
   docker build -f="$1" --tag $next_version_tag . 1>&2
 
   if [ "$this_version" == "$(image_id $2 $next_version)" ]; then
-    docker rmi "$next_version_tag" 1>&2
+    docker rmi "$next_version_tag" > /dev/null 2>&1
     echo "No changes, using $2:$version" 1>&2
     echo "$2:$version"
   else
@@ -45,10 +45,10 @@ id=$(docker create $image_tag)
 mkdir -p tmp
 rm -rf tmp/* || true
 docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar.gz
-docker stop $id
-docker rm -v $id
+docker stop $id > /dev/null
+docker rm -v $id > /dev/null
 
-cd tmp && tar -xzvf erlangelist.tar.gz --to-stdout | tar -xzf -
+cd tmp && tar -xzf erlangelist.tar.gz --to-stdout | tar -xzf -
 cd ..
 rm tmp/erlangelist.tar.gz
 rm tmp/releases/0.0.1/*.tar.gz || true
