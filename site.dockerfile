@@ -1,10 +1,6 @@
-FROM ubuntu:14.04
+FROM msaraiva/alpine-elixir-base:18.0
 
-RUN apt-get -y update\
-    && dpkg-reconfigure locales \
-    && locale-gen en_US.UTF-8 \
-    && /usr/sbin/update-locale LANG=en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+RUN apk --update add erlang-sasl && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /erlangelist
 COPY tmp /erlangelist/

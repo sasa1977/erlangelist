@@ -1,17 +1,20 @@
-FROM trenpixster/elixir:1.0.5
+FROM msaraiva/elixir-dev:1.0.5
 
-RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - \
-    && apt-get -y install nodejs inotify-tools
+RUN apk --update add curl nodejs && rm -rf /var/cache/apk/*
+RUN npm install -g brunch
 
-# RUN mix local.hex --force \
-#     && mix archive.install https://github.com/phoenixframework/phoenix/releases/download/v1.0.0/phoenix_new-1.0.0.ez --force
+COPY site/package.json /tmp/erlangelist/site/
+RUN cd /tmp/erlangelist/site && npm install
 
-COPY . /tmp/erlangelist
+COPY site/mix.exs /tmp/erlangelist/site/
+COPY site/mix.lock /tmp/erlangelist/site/
+
+RUN cd /tmp/erlangelist/site && mix deps.get && MIX_ENV=prod mix deps.compile
+
+COPY site /tmp/erlangelist/site
+COPY articles /tmp/erlangelist/articles
 
 RUN cd /tmp/erlangelist/site \
-    && npm install \
-    && npm install -g brunch \
-    && mix deps.get \
     && MIX_ENV=prod mix compile \
     && brunch build --production \
     && MIX_ENV=prod mix phoenix.digest \
