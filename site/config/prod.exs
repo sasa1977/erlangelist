@@ -13,7 +13,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :erlangelist, Erlangelist.Endpoint,
   http: [port: 5454],
-  url: [host: "example.com", port: 80],
+  url: [host: "theerlangelist.com", port: 80],
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
