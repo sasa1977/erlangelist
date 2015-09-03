@@ -17,7 +17,7 @@ function build_versioned_image {
   fi
   next_version_tag="$2:$next_version"
 
-  docker build -f="$1" --tag $next_version_tag . 1>&2
+  docker build -f="docker/$1" --tag $next_version_tag . 1>&2
 
   if [ "$this_version" == "$(image_id $2 $next_version)" ]; then
     docker rmi "$next_version_tag" > /dev/null 2>&1
