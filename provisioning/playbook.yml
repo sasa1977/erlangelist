@@ -2,15 +2,16 @@
 - hosts: all
   sudo: true
   tasks:
+    # install docker
     - apt: pkg=wget update_cache=true
-
     - stat: path=/usr/bin/docker
       register: docker
     - shell: wget -qO- https://get.docker.com/ | sh
       when: docker.stat.exists == false
 
+    # setup git
     - group: name=git
-    - user: name=git group=git groups=docker shell=/bin/bash
+    - user: name=git group=git groups=docker,sudo shell=/bin/bash
     - file: path=/home/git/.ssh state=directory owner=git group=git mode=0700
     - file: path=/home/git/.ssh/authorized_keys state=touch owner=git group=git mode=0600
     - copy: src=~/.ssh/sasa/id_rsa.pub dest=/tmp/sasa.pub
@@ -18,6 +19,7 @@
       shell: cat /tmp/sasa.pub >> ~/.ssh/authorized_keys
     - shell: rm /tmp/sasa.pub
 
+    # create git repo with post-receive hook
     - stat: path=/erlangelist
       register: erlangelist_repo
     - file: path=/erlangelist state=directory owner=git group=git mode=0700
@@ -27,3 +29,11 @@
       when: erlangelist_repo.stat.exists == false
     - copy: src=post-receive dest=/erlangelist/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
+
+    # systemd infrastructure
+    - file: path=/opt/erlangelist state=directory mode=0755
+    - copy: src=start-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=stop-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=erlangelist_site.service dest=/lib/systemd/system/
+    - service: name=erlangelist_site enabled=yes
+    - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"

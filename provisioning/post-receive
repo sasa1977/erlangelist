@@ -7,3 +7,4 @@ rm -rf erlangelist || true
 git clone /erlangelist
 cd erlangelist
 ./build-site-image.sh
+sudo systemctl restart erlangelist_site
