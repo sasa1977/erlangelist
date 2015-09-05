@@ -25,3 +25,5 @@
     - sudo_user: git
       shell: cd /erlangelist && git init . --bare
       when: erlangelist_repo.stat.exists == false
+    - copy: src=post-receive dest=/erlangelist/hooks/ owner=git group=git mode=0755
+    - file: path=/var/log/deploy.log state=touch owner=git group=git
