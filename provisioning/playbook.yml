@@ -1,0 +1,27 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+    - apt: pkg=wget update_cache=true
+
+    - stat: path=/usr/bin/docker
+      register: docker
+    - shell: wget -qO- https://get.docker.com/ | sh
+      when: docker.stat.exists == false
+
+    - group: name=git
+    - user: name=git group=git groups=docker shell=/bin/bash
+    - file: path=/home/git/.ssh state=directory owner=git group=git mode=0700
+    - file: path=/home/git/.ssh/authorized_keys state=touch owner=git group=git mode=0600
+    - copy: src=~/.ssh/sasa/id_rsa.pub dest=/tmp/sasa.pub
+    - sudo_user: git
+      shell: cat /tmp/sasa.pub >> ~/.ssh/authorized_keys
+    - shell: rm /tmp/sasa.pub
+
+    - stat: path=/erlangelist
+      register: erlangelist_repo
+    - file: path=/erlangelist state=directory owner=git group=git mode=0700
+      when: erlangelist_repo.stat.exists == false
+    - sudo_user: git
+      shell: cd /erlangelist && git init . --bare
+      when: erlangelist_repo.stat.exists == false
