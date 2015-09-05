@@ -13,7 +13,8 @@ for container in $(docker ps -a | grep "erlangelist/site" | awk '{print $1}'); d
 done
 
 docker run \
-  --name erlangelist_site_$latest_version \
+  --name erlangelist_site \
   --rm \
-  -p 5454:5454 erlangelist/site:$latest_version \
+  --add-host="erlangelist.site:127.0.0.1" \
+  -p 5454:5454 -p 4369:4369 -p 30000:30000 erlangelist/site:$latest_version \
   /erlangelist/bin/erlangelist foreground

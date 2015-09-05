@@ -2,4 +2,4 @@ site/deps
 site/_build
 site/node_modules
 site/priv/static
-site/rel
+site/rel/erlangelist

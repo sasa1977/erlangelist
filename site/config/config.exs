@@ -20,6 +20,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :kernel, inet_dist_listen_min: 30000
+config :kernel, inet_dist_listen_max: 30000
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

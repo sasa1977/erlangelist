@@ -18,7 +18,7 @@ defmodule Erlangelist.Mixfile do
   def application do
     [mod: {Erlangelist, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :postgrex, :con_cache, :timex]]
+                    :postgrex, :con_cache, :timex, :runtime_tools]]
   end
 
   # Specifies which paths to compile per environment
