@@ -48,7 +48,7 @@ docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.t
 docker stop $id > /dev/null
 docker rm -v $id > /dev/null
 
-cd tmp && tar -xzf erlangelist.tar.gz --to-stdout | tar -xzf -
+cd tmp && tar -xf erlangelist.tar.gz --to-stdout | tar -xzf -
 cd ..
 rm tmp/erlangelist.tar.gz
 rm tmp/releases/0.0.1/*.tar.gz || true
