@@ -5,6 +5,12 @@
 # is restricted to this project.
 use Mix.Config
 
+config :lager,
+  error_logger_redirect: false,
+  error_logger_whitelist: [Logger.ErrorHandler],
+  crash_log: false,
+  handlers: [{LagerLogger, [level: :info]}]
+
 # Configures the endpoint
 config :erlangelist, Erlangelist.Endpoint,
   url: [host: "localhost"],
@@ -22,6 +28,8 @@ config :logger, :console,
 
 config :kernel, inet_dist_listen_min: 30000
 config :kernel, inet_dist_listen_max: 30000
+
+import_config "exometer.exs"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

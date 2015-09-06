@@ -18,7 +18,8 @@ defmodule Erlangelist.Mixfile do
   def application do
     [mod: {Erlangelist, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :postgrex, :con_cache, :timex, :runtime_tools]]
+                    :postgrex, :con_cache, :timex, :runtime_tools,
+                    :lager_logger, :lager, :exometer]]
   end
 
   # Specifies which paths to compile per environment
@@ -37,7 +38,12 @@ defmodule Erlangelist.Mixfile do
      {:earmark, "~> 0.1"},
      {:con_cache, "~> 0.8.1"},
      {:timex, "~> 0.19.2"},
-     {:exrm, "~> 0.19.2"}
+     {:exrm, "~> 0.19.2"},
+     {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
+     {:exometer, github: "PSPDFKit-labs/exometer"},
+     {:edown, github: "uwiger/edown", tag: "0.7", override: true},
+     {:lager, "~> 2.1", override: true},
+     {:lager_logger, "~> 1.0"},
    ]
   end
 end

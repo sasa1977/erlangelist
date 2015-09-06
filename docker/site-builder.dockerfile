@@ -1,6 +1,8 @@
 FROM msaraiva/elixir-dev:1.0.5
 
-RUN apk --update add erlang-runtime-tools curl nodejs && rm -rf /var/cache/apk/*
+RUN apk --update add \
+  erlang-runtime-tools erlang-snmp curl nodejs \
+  && rm -rf /var/cache/apk/*
 RUN npm install -g brunch
 
 COPY site/package.json /tmp/erlangelist/site/
