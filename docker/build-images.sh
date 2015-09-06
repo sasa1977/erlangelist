@@ -40,6 +40,8 @@ function build_versioned_image {
   fi
 }
 
+build_versioned_image graphite.dockerfile erlangelist/graphite
+
 image_tag=$(build_versioned_image site-builder.dockerfile erlangelist/site-builder)
 id=$(docker create $image_tag)
 mkdir -p tmp

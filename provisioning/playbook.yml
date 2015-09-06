@@ -35,7 +35,10 @@
 
     # systemd infrastructure
     - file: path=/opt/erlangelist state=directory mode=0755
+    - copy: src=erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=erlangelist-graphite.service dest=/lib/systemd/system/
     - copy: src=erlangelist-site.service dest=/lib/systemd/system/
+    - service: name=erlangelist-graphite enabled=yes
     - service: name=erlangelist-site enabled=yes
     - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
