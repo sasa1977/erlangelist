@@ -4,8 +4,8 @@ Requires=docker.service
 After=docker.service
 
 [Service]
-ExecStart=/opt/erlangelist/start-site.sh
-ExecStop=/opt/erlangelist/stop-site.sh
+ExecStart=/opt/erlangelist/erlangelist-site.sh start
+ExecStop=/opt/erlangelist/erlangelist-site.sh stop
 
 [Install]
 WantedBy=multi-user.target

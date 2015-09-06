@@ -3,7 +3,10 @@
   sudo: true
   tasks:
     # install docker
+    - stat: path=/usr/bin/wget
+      register: wget
     - apt: pkg=wget update_cache=true
+      when: wget.stat.exists == false
     - stat: path=/usr/bin/docker
       register: docker
     - shell: wget -qO- https://get.docker.com/ | sh
@@ -32,8 +35,7 @@
 
     # systemd infrastructure
     - file: path=/opt/erlangelist state=directory mode=0755
-    - copy: src=start-site.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=stop-site.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=erlangelist_site.service dest=/lib/systemd/system/
-    - service: name=erlangelist_site enabled=yes
+    - copy: src=erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=erlangelist-site.service dest=/lib/systemd/system/
+    - service: name=erlangelist-site enabled=yes
     - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
