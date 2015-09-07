@@ -7,43 +7,56 @@ function image_id {
 }
 
 function build_versioned_image {
-  version=$(docker images | awk "{if (\$1 == \"$2\") print \$2}" | sort -g -r | head -n 1)
+  image_name="$1"
+  docker_file="$2"
+
+  version=$(
+    docker images |
+    awk "{if (\$1 == \"$image_name\" && \$2 != "latest") print \$2}" |
+    sort -g -r |
+    head -n 1
+  )
 
   if [ "$version" == "" ]; then
     next_version=1
   else
-    this_version=$(image_id $2 $version)
+    this_version=$(image_id $image_name $version)
     next_version=$(($version+1))
   fi
-  next_version_tag="$2:$next_version"
 
-  docker build -f="docker/$1" --tag $next_version_tag . 1>&2
+  tmp_repository_name="tmp_$image_name"
+  tmp_image_version=$(uuidgen)
+  docker build -f="docker/$docker_file" -t "$tmp_repository_name:$tmp_image_version" .
+  image_id=$(image_id $tmp_repository_name $tmp_image_version)
 
-  if [ "$this_version" == "$(image_id $2 $next_version)" ]; then
-    docker rmi "$next_version_tag" > /dev/null 2>&1
-    echo "No changes, using $2:$version" 1>&2
-    echo "$2:$version"
+  if [ "$this_version" == "$image_id" ]; then
+    docker tag -f $image_id "$image_name:latest"
+    echo "No changes, using $image_name:$version"
   else
-    for old_version in $(
-      docker images |
-      awk "{if (\$1 == \"$2\") print \$2}" |
-      sort -g -r |
-      tail -n+3
-    ); do
-      docker rmi "$2:$old_version" 1>&2
-    done
-
-    docker rmi $(docker images -f "dangling=true" -q) > /dev/null 2>&1
-
-    echo "Built $next_version_tag" 1>&2
-    echo "$next_version_tag"
+    echo "Built $image_name:$next_version"
+    docker tag $image_id "$image_name:$next_version"
+    docker tag -f $image_id "$image_name:latest"
   fi
+  docker rmi "$tmp_repository_name:$tmp_image_version" > /dev/null
+
+  for old_version in $(
+    docker images |
+    awk "{if (\$1 == \"$image_name\" && \$2 != \"latest\") print \$2}" |
+    sort -g -r |
+    tail -n+3
+  ); do
+    docker rmi "$image_name:$old_version"
+  done
+
+  docker rmi $(docker images -f "dangling=true" -q) > /dev/null 2>&1
 }
 
-build_versioned_image graphite.dockerfile erlangelist/graphite
+cd $(dirname ${BASH_SOURCE[0]})/..
 
-image_tag=$(build_versioned_image site-builder.dockerfile erlangelist/site-builder)
-id=$(docker create $image_tag)
+build_versioned_image erlangelist/graphite graphite.dockerfile
+
+build_versioned_image erlangelist/site-builder site-builder.dockerfile
+id=$(docker create "erlangelist/site-builder:latest")
 mkdir -p tmp
 rm -rf tmp/* || true
 docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar.gz
@@ -54,4 +67,4 @@ cd tmp && tar -xf erlangelist.tar.gz --to-stdout | tar -xzf -
 cd ..
 rm tmp/erlangelist.tar.gz
 rm tmp/releases/0.0.1/*.tar.gz || true
-build_versioned_image site.dockerfile erlangelist/site > /dev/null
+build_versioned_image erlangelist/site site.dockerfile

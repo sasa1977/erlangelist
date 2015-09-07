@@ -2,14 +2,6 @@
 
 set -o pipefail
 
-function latest_image_version {
-  echo $(docker images |
-    awk "{if (\$1 == \"$1\") print \$2}" |
-    sort -g -r |
-    head -n 1
-  )
-}
-
 function start_container {
   docker run \
     --name erlangelist-graphite \
@@ -17,7 +9,7 @@ function start_container {
     -p 5455:80 \
     -p 5456:2003 \
     -p 5457:8125/udp \
-    hopsoft/graphite-statsd
+    erlangelist/graphite:latest
 }
 
 function stop_container {

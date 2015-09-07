@@ -2,21 +2,13 @@
 
 set -o pipefail
 
-function latest_image_version {
-  echo $(docker images |
-    awk "{if (\$1 == \"$1\") print \$2}" |
-    sort -g -r |
-    head -n 1
-  )
-}
-
 function start_container {
   docker run \
     --name erlangelist-site \
     --rm \
     --add-host="erlangelist.site:127.0.0.1" \
     -p 5454:5454 -p 4369:4369 -p 30000:30000 \
-    erlangelist/site:$(latest_image_version erlangelist/site) \
+    erlangelist/site:latest \
     /erlangelist/bin/erlangelist foreground
 }
 
