@@ -58,7 +58,15 @@ function build_versioned_image {
     docker rmi "$image_name:$old_version"
   done
 
-  docker rmi $(docker images -f "dangling=true" -q) > /dev/null 2>&1
+  stopped_containers=$(docker ps -a | tail -n+2 | grep -v Up | awk '{print $1}')
+  if [ "$stopped_containers" != "" ]; then
+    docker rm "$stopped_containers" > /dev/null || true
+  fi
+
+  dangling_images=$(docker images -f "dangling=true" -q)
+  if [ "$dangling_images" != "" ]; then
+    docker rmi "$dangling_images" > /dev/null || true
+  fi
 }
 
 cd $(dirname ${BASH_SOURCE[0]})/..
