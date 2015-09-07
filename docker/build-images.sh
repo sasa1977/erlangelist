@@ -8,7 +8,8 @@ function image_id {
 
 function build_versioned_image {
   image_name="$1"
-  docker_file="$2"
+  docker_file="docker/$2"
+  dockerignore_file="docker/${2%.*}.dockerignore"
 
   version=$(
     docker images |
@@ -26,7 +27,16 @@ function build_versioned_image {
 
   tmp_repository_name="tmp_$image_name"
   tmp_image_version=$(uuidgen)
-  docker build -f="docker/$docker_file" -t "$tmp_repository_name:$tmp_image_version" .
+
+  if [ -f .dockerignore ]; then rm .dockerignore; fi
+  if [ -f $dockerignore_file ]; then cp -rp $dockerignore_file .dockerignore; fi
+  docker build -f="$docker_file" -t "$tmp_repository_name:$tmp_image_version" . \
+   || {
+    exit_code="$?"
+    if [ -f .dockerignore ]; then rm .dockerignore; fi
+    exit $exit_code
+   }
+
   image_id=$(image_id $tmp_repository_name $tmp_image_version)
 
   if [ "$this_version" == "$image_id" ]; then
@@ -59,12 +69,11 @@ build_versioned_image erlangelist/site-builder site-builder.dockerfile
 id=$(docker create "erlangelist/site-builder:latest")
 mkdir -p tmp
 rm -rf tmp/* || true
-docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar.gz
+docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar
 docker stop $id > /dev/null
 docker rm -v $id > /dev/null
 
-cd tmp && tar -xf erlangelist.tar.gz --to-stdout | tar -xzf -
-cd ..
-rm tmp/erlangelist.tar.gz
+cd tmp && tar -xf erlangelist.tar --to-stdout | tar -xzf - && cd ..
+rm tmp/erlangelist.tar
 rm tmp/releases/0.0.1/*.tar.gz || true
 build_versioned_image erlangelist/site site.dockerfile
