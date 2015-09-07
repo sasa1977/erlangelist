@@ -16,10 +16,10 @@ defmodule Erlangelist.ArticleController do
   end
 
   defp render_article(conn, nil, _), do:
-    render(conn, Erlangelist.ErrorView, "404.html")
+    render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
 
   defp render_article(conn, _, nil), do:
-    render(conn, Erlangelist.ErrorView, "404.html")
+    render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
 
   defp render_article(conn, meta, html), do:
     render(conn, "article.html", %{meta: meta, html: html})
