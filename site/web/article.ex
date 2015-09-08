@@ -54,9 +54,12 @@ defmodule Erlangelist.Article do
     def html(unquote(article_id)) do
       unquote(html.(article_id))
     end
+
+    def exists?(unquote(article_id)), do: true
   end
 
   def html(_), do: nil
+  def exists?(_), do: false
 
   def link({article_id, meta}) do
     meta[:redirect] || "/article/#{article_id}"

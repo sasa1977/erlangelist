@@ -1,6 +1,6 @@
 <div class="blog-post">
-  <h1><%= @meta[:title] %></h1>
-  <h4 class="right"><%= @meta[:posted_at] %></h4>
+  <h1><%= Erlangelist.Article.meta(@article_id)[:title] %></h1>
+  <h4 class="right"><%= Erlangelist.Article.meta(@article_id)[:posted_at] %></h4>
   <br/>
-  <%= {:safe, @html} %>
+  <%= {:safe, Erlangelist.Article.html(@article_id)} %>
 </div>

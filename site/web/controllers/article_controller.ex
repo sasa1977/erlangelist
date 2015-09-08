@@ -12,15 +12,10 @@ defmodule Erlangelist.ArticleController do
   end
 
   defp render_article(conn, article_id) do
-    render_article(conn, Article.meta(article_id), Article.html(article_id))
+    if Article.exists?(article_id) do
+      render(conn, "article.html", %{article_id: article_id})
+    else
+      render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
+    end
   end
-
-  defp render_article(conn, nil, _), do:
-    render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
-
-  defp render_article(conn, _, nil), do:
-    render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
-
-  defp render_article(conn, meta, html), do:
-    render(conn, "article.html", %{meta: meta, html: html})
 end
