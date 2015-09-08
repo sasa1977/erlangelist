@@ -32,6 +32,6 @@ case "$1" in
     ;;
 
   ssh)
-    docker exec -it erlangelist-site /bin/sh
+    docker exec -it erlangelist-site /bin/bash
     ;;
 esac

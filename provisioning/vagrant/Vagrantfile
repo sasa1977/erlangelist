@@ -1,0 +1,7 @@
+raise "Run as VM_IP=w.x.y.z vagrant up" if ARGV[0]=="up" && ENV["VM_IP"].nil?
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "debian/jessie64"
+  config.vm.hostname = "erlangelist"
+  config.vm.network "private_network", ip: ENV["VM_IP"] if ARGV[0]=="up"
+end

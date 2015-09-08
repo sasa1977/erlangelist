@@ -4,7 +4,7 @@ set -o pipefail
 
 cd /tmp
 rm -rf erlangelist || true
-git clone /erlangelist
+git clone ~/erlangelist
 cd erlangelist
 docker/build-images.sh
 sudo systemctl restart erlangelist-graphite

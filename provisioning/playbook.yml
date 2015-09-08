@@ -3,42 +3,38 @@
   sudo: true
   tasks:
     # install docker
-    - stat: path=/usr/bin/wget
-      register: wget
-    - apt: pkg=wget update_cache=true
-      when: wget.stat.exists == false
+    - apt: name=wget
     - stat: path=/usr/bin/docker
       register: docker
     - shell: wget -qO- https://get.docker.com/ | sh
       when: docker.stat.exists == false
 
+    # install uuid-runtime
+    - apt: name=uuid-runtime
+
     # setup git
     - group: name=git
     - user: name=git group=git groups=docker,sudo shell=/bin/bash
     - file: path=/home/git/.ssh state=directory owner=git group=git mode=0700
-    - file: path=/home/git/.ssh/authorized_keys state=touch owner=git group=git mode=0600
-    - copy: src=~/.ssh/sasa/id_rsa.pub dest=/tmp/sasa.pub
-    - sudo_user: git
-      shell: cat /tmp/sasa.pub >> ~/.ssh/authorized_keys
-    - shell: rm /tmp/sasa.pub
+    - assemble: remote_src=false src=git_keys dest=/home/git/.ssh/authorized_keys owner=git group=git mode=0600
 
     # create git repo with post-receive hook
-    - stat: path=/erlangelist
+    - stat: path=/home/git/erlangelist.git
       register: erlangelist_repo
-    - file: path=/erlangelist state=directory owner=git group=git mode=0700
+    - file: path=/home/git/erlangelist.git state=directory owner=git group=git mode=0700
       when: erlangelist_repo.stat.exists == false
     - sudo_user: git
-      shell: cd /erlangelist && git init . --bare
+      shell: cd /home/git/erlangelist.git && git init . --bare
       when: erlangelist_repo.stat.exists == false
-    - copy: src=post-receive dest=/erlangelist/hooks/ owner=git group=git mode=0755
+    - copy: src=remote_files/post-receive dest=/home/git/erlangelist.git/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
 
     # systemd infrastructure
     - file: path=/opt/erlangelist state=directory mode=0755
-    - copy: src=erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=erlangelist-graphite.service dest=/lib/systemd/system/
-    - copy: src=erlangelist-site.service dest=/lib/systemd/system/
+    - copy: src=remote_files/erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=remote_files/erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=remote_files/erlangelist-graphite.service dest=/lib/systemd/system/
+    - copy: src=remote_files/erlangelist-site.service dest=/lib/systemd/system/
     - service: name=erlangelist-graphite enabled=yes
     - service: name=erlangelist-site enabled=yes
     - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
