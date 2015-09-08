@@ -14,7 +14,6 @@ COPY site/mix.lock /tmp/erlangelist/site/
 RUN cd /tmp/erlangelist/site && mix deps.get && MIX_ENV=prod mix deps.compile
 
 COPY site /tmp/erlangelist/site
-COPY articles /tmp/erlangelist/articles
 
 RUN cd /tmp/erlangelist/site \
     && MIX_ENV=prod mix compile \

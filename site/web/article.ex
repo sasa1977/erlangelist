@@ -1,10 +1,10 @@
 defmodule Erlangelist.Article do
-  @external_resource "../articles/index.exs"
+  @external_resource "articles/index.exs"
 
-  {articles_meta, _} = Code.eval_file("../articles/index.exs")
+  {articles_meta, _} = Code.eval_file("articles/index.exs")
 
   for {article_id, _} <- articles_meta do
-    @external_resource "../articles/#{article_id}.md"
+    @external_resource "articles/#{article_id}.md"
   end
 
   transform_meta = fn({article_id, meta}) ->
@@ -45,7 +45,7 @@ defmodule Erlangelist.Article do
 
 
   html = fn(article_id) ->
-    "../articles/#{article_id}.md"
+    "articles/#{article_id}.md"
     |> File.read!
     |> Earmark.to_html
   end

@@ -3,7 +3,7 @@
 
 # whitelist only needed stuff, to reduce docker context
 
-!articles
+!site/articles
 !site/brunch-config.js
 !site/package.json
 !site/package.json
