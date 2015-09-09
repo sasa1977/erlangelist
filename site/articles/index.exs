@@ -1,132 +1,141 @@
 [
   {"conway", [
-    title: "Conway's Game of Life in Elixir",
+    short_title: "Conway's Game of Life",
+    long_title: "Conway's Game of Life in Elixir",
     posted_at: "2014-11-24",
     legacy_url: "/2014/11/conways-game-of-life-in-elixir.html"
   ]},
 
   {"macros_6", [
-    title: "Understanding Elixir Macros, Part 6 - In-place Code Generation",
+    short_title: "Understanding macros, part 6",
+    long_title: "Understanding Elixir Macros, Part 6 - In-place Code Generation",
     posted_at: "2014-07-06",
     legacy_url: "/2014/06/understanding-elixir-macros-part-6.html"
   ]},
 
   {"macros_5", [
-    title: "Understanding Elixir Macros, Part 5 - Reshaping the AST",
+    short_title: "Understanding macros, part 5",
+    long_title: "Understanding Elixir Macros, Part 5 - Reshaping the AST",
     posted_at: "2014-06-29",
     legacy_url: "/2014/06/understanding-elixir-macros-part-5.html"
   ]},
 
   {"macros_4", [
-    title: "Understanding Elixir Macros, Part 4 - Diving Deeper",
+    short_title: "Understanding macros, part 4",
+    long_title: "Understanding Elixir Macros, Part 4 - Diving Deeper",
     posted_at: "2014-06-23",
     legacy_url: "/2014/06/understanding-elixir-macros-part-4.html"
   ]},
 
   {"macros_3", [
-    title: "Understanding Elixir Macros, Part 3 - Getting into the AST",
+    short_title: "Understanding macros, part 3",
+    long_title: "Understanding Elixir Macros, Part 3 - Getting into the AST",
     posted_at: "2014-06-15",
     legacy_url: "/2014/06/understanding-elixir-macros-part-3.html"
   ]},
 
   {"macros_2", [
-    title: "Understanding Elixir Macros, Part 2 - Micro Theory",
+    short_title: "Understanding macros, part 2",
+    long_title: "Understanding Elixir Macros, Part 2 - Micro Theory",
     posted_at: "2014-06-11",
     legacy_url: "/2014/06/understanding-elixir-macros-part-2.html"
   ]},
 
   {"macros_1", [
-    title: "Understanding Elixir Macros, Part 1 - Basics",
+    short_title: "Understanding macros, part 1",
+    long_title: "Understanding Elixir Macros, Part 1 - Basics",
     posted_at: "2014-06-06",
     legacy_url: "/2014/06/understanding-elixir-macros-part-1.html"
   ]},
 
   {"why_elixir", [
-    title: "Why Elixir",
+    long_title: "Why Elixir",
     posted_at: "2014-01-21",
     legacy_url: "/2014/01/why-elixir.html"
   ]},
 
   {"announce_eia", [
-    title: "Announcing Elixir in Action",
+    long_title: "Announcing Elixir in Action",
     posted_at: "2014-01-09",
     redirect: "/2014/01/announcing-elixir-in-action.html"
   ]},
 
   {"wczg2013", [
-    title: "WebCamp Zagreb, 2013",
+    long_title: "WebCamp Zagreb, 2013",
     posted_at: "2013-11-02",
     redirect: "/2013/11/webcamp-zagreb-2013.html"
   ]},
 
   {"immutable_fp", [
-    title: "Immutable programming, FP style",
+    long_title: "Immutable programming, FP style",
     posted_at: "2013-07-03",
     redirect: "/2013/07/immutable-programming-fp-style.html"
   ]},
 
   {"immutable_oo", [
-    title: "Immutable programming, OO style",
+    long_title: "Immutable programming, OO style",
     posted_at: "2013-06-22",
     redirect: "/2013/06/immutable-programming-oo-style.html"
   ]},
 
   {"immutable_data", [
-    title: "Working with immutable data",
+    long_title: "Working with immutable data",
     posted_at: "2013-05-26",
     redirect: "/2013/05/working-with-immutable-data.html"
   ]},
 
   {"long_polling", [
-    title: "Concurrency in a long polling comet server",
+    short_title: "Long polling comet server",
+    long_title: "Concurrency in a long polling comet server",
     posted_at: "2013-05-07",
     redirect: "/2013/05/concurrency-in-long-polling-comet-server.html"
   ]},
 
   {"interview_yurii", [
-    title: "Interview with Yurii Rashkovskii",
+    long_title: "Interview with Yurii Rashkovskii",
     posted_at: "2013-04-23",
     redirect: "/2013/04/interview-with-yurii-rashkovskii.html"
   ]},
 
   {"parallelizing_tasks", [
-    title: "Parallelizing independent tasks",
+    long_title: "Parallelizing independent tasks",
     posted_at: "2013-04-08",
     redirect: "/2013/04/parallelizing-independent-tasks.html"
   ]},
 
   {"queueing_messages", [
-    title: "Manually queueing messages",
+    long_title: "Manually queueing messages",
     posted_at: "2013-03-18",
     redirect: "/2013/03/manually-queueing-messages.html"
   ]},
 
   {"pipelining", [
-    title: "Pipelining in Elixir/Erlang",
+    long_title: "Pipelining in Elixir/Erlang",
     posted_at: "2013-02-22",
     redirect: "/2013/02/pipelining-in-elixirerlang.html"
   ]},
 
   {"actors_erlang_elixir", [
-    title: "Actors in Erlang/Elixir",
+    long_title: "Actors in Erlang/Elixir",
     posted_at: "2013-01-25",
     redirect: "/2013/01/actors-in-erlangelixir.html"
   ]},
 
   {"programming_paradigms", [
-    title: "Teaching orthogonal programming paradigms",
+    short_title: "Orthogonal programming paradigms",
+    long_title: "Teaching orthogonal programming paradigms",
     posted_at: "2013-01-13",
     redirect: "/2013/01/teaching-orthogonal-programming.html"
   ]},
 
   {"erlang_based_systems", [
-    title: "Erlang based server systems",
+    long_title: "Erlang based server systems",
     posted_at: "2013-01-10",
     redirect: "/2013/01/erlang-based-server-systems.html"
   ]},
 
   {"erlang_introduction", [
-    title: "Yet another introduction to Erlang",
+    long_title: "Yet another introduction to Erlang",
     posted_at: "2012-12-28",
     redirect: "/2012/12/yet-another-introduction-to-erlang.html"
   ]}

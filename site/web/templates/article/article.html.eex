@@ -1,5 +1,5 @@
 <div class="blog-post">
-  <h1><%= Erlangelist.Article.meta(@article_id)[:title] %></h1>
+  <h1><%= Erlangelist.Article.long_title(@article_id) %></h1>
   <h4 class="right"><%= Erlangelist.Article.meta(@article_id)[:posted_at] %></h4>
 
   <div class="article-body">

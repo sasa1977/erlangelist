@@ -54,15 +54,20 @@ defmodule Erlangelist.Article do
     |> Earmark.to_html
   end
 
-  for {article_id, meta} <- articles_meta, meta[:redirect] == nil do
-    def html(unquote(article_id)) do
-      unquote(html.(article_id))
+  for {article_id, meta} <- articles_meta do
+    if meta[:redirect] == nil do
+      def html(unquote(article_id)) do
+        unquote(html.(article_id))
+      end
+
+      def exists?(unquote(article_id)), do: true
+
+      def source_link(unquote(article_id)), do:
+        "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{unquote(article_id)}.md"
     end
 
-    def exists?(unquote(article_id)), do: true
-
-    def source_link(unquote(article_id)), do:
-      "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{unquote(article_id)}.md"
+    def long_title(unquote(article_id)), do: unquote(meta[:long_title] || meta[:short_title])
+    def short_title(unquote(article_id)), do: unquote(meta[:short_title] || meta[:long_title])
   end
 
   def html(_), do: nil
@@ -71,6 +76,4 @@ defmodule Erlangelist.Article do
   def link({article_id, meta}) do
     meta[:redirect] || "/article/#{article_id}"
   end
-
-  def title({_, meta}), do: meta[:title]
 end
