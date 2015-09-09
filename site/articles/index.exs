@@ -1,4 +1,10 @@
 [
+  {"macros_2", [
+    title: "Understanding Elixir Macros, Part 2 - Micro Theory",
+    posted_at: "2014-06-11",
+    legacy_url: "/2014/06/understanding-elixir-macros-part-2.html"
+  ]},
+
   {"macros_1", [
     title: "Understanding Elixir Macros, Part 1 - Basics",
     posted_at: "2014-06-06",
