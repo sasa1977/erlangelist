@@ -32,5 +32,6 @@
   "ranch": {:hex, :ranch, "1.1.0"},
   "relx": {:hex, :relx, "3.5.0"},
   "setup": {:git, "git://github.com/uwiger/setup.git", "51ee7c9f64d2bbe9dcbb58c278e8fbfd4d0ca5e2", [tag: "1.4"]},
-  "timex": {:hex, :timex, "0.19.2"},
-  "tzdata": {:hex, :tzdata, "0.1.7"}}
+  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
+  "timex": {:hex, :timex, "0.19.4"},
+  "tzdata": {:hex, :tzdata, "0.5.2"}}
