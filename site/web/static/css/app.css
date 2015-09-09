@@ -86,3 +86,29 @@ form.link, form.button {
   border: none;
   background-color: inherit;
 }
+
+.blog-post pre code {
+  margin-bottom: 10px;
+}
+
+.blog-post img {
+  max-width: 80%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.blog-post a {
+  text-decoration:underline;
+}
+
+.blog-post a code {
+  color: #337ab7;
+}
+
+.blog-post h2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}

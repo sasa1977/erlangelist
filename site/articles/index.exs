@@ -1,4 +1,10 @@
 [
+  {"macros_1", [
+    title: "Understanding Elixir Macros, Part 1 - Basics",
+    posted_at: "2014-06-06",
+    legacy_url: "/2014/06/understanding-elixir-macros-part-1.html"
+  ]},
+
   {"why_elixir", [
     title: "Why Elixir",
     posted_at: "2014-01-21",
