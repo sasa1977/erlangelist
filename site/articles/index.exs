@@ -1,4 +1,10 @@
 [
+  {"macros_6", [
+    title: "Understanding Elixir Macros, Part 6 - In-place Code Generation",
+    posted_at: "2014-07-06",
+    legacy_url: "/2014/06/understanding-elixir-macros-part-6.html"
+  ]},
+
   {"macros_5", [
     title: "Understanding Elixir Macros, Part 5 - Reshaping the AST",
     posted_at: "2014-06-29",
