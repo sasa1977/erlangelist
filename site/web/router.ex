@@ -34,4 +34,9 @@ defmodule Erlangelist.Router do
       end
     end
   end
+
+  scope "/", Erlangelist do
+    get "/rss", RssController, :index
+    get "/feeds/posts/default", RssController, :index
+  end
 end

@@ -66,14 +66,13 @@ defmodule Erlangelist.Article do
         "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{unquote(article_id)}.md"
     end
 
+    def link(unquote(article_id)), do:
+      unquote(meta[:redirect] || "/article/#{article_id}")
+
     def long_title(unquote(article_id)), do: unquote(meta[:long_title] || meta[:short_title])
     def short_title(unquote(article_id)), do: unquote(meta[:short_title] || meta[:long_title])
   end
 
   def html(_), do: nil
   def exists?(_), do: false
-
-  def link({article_id, meta}) do
-    meta[:redirect] || "/article/#{article_id}"
-  end
 end

@@ -1,0 +1,22 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <atom:link href="http://theerlangelist.com/rss" rel="self" type="application/rss+xml" />
+    <title>The Erlangelist</title>
+    <description>(not only) Erlang related musings</description>
+    <link>http://theerlangelist.com</link>
+    <%= for {article_id, meta} <- Erlangelist.Article.all, meta[:redirect] == nil do %>
+      <item>
+        <title>
+          <![CDATA[<%= Erlangelist.Article.long_title(article_id) %>]]>
+        </title>
+        <link>
+            <![CDATA[http://theerlangelist.com/<%= Erlangelist.Article.link(article_id) %>]]>
+        </link>
+        <description>
+          <![CDATA[<%= Phoenix.View.render_to_string(Erlangelist.ArticleView, "article.html", article_id: article_id) %>]]>
+        </description>
+        <guid isPermaLink="true">http://theerlangelist.com/<%= Erlangelist.Article.link(article_id) %></guid>
+      </item>
+    <% end %>
+  </channel>
+</rss>
