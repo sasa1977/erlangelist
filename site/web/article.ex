@@ -60,6 +60,9 @@ defmodule Erlangelist.Article do
     end
 
     def exists?(unquote(article_id)), do: true
+
+    def source_link(unquote(article_id)), do:
+      "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{unquote(article_id)}.md"
   end
 
   def html(_), do: nil
