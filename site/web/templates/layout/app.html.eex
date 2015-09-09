@@ -17,8 +17,11 @@
 
       <div class="container">
         <div class="header">
-          <h2><a href="/">The Erlangelist</a></h2>
-          <i>(not only) Erlang related musings</i>
+          <div style="margin-bottom:20px;">
+            <h2 style="margin-bottom:0px;"><a href="/">The Erlangelist</a></h2>
+            <i>(not only) Erlang related musings</i>
+          </div>
+
           <p>Hi, I am Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the upcoming <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric">Elixir in Action</a> book. In this blog you can read about Erlang and other programming related topics. You can subscribe to the <a href="/feeds/posts/default">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</p>
         </div>
 

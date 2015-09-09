@@ -1,13 +1,7 @@
 defmodule Erlangelist.Article do
   @external_resource "articles/index.exs"
 
-  {articles_meta, _} = Code.eval_file("articles/index.exs")
-
-  for {article_id, _} <- articles_meta do
-    @external_resource "articles/#{article_id}.md"
-  end
-
-  transform_meta = fn({article_id, meta}) ->
+  transform_meta = fn(meta) ->
     transformed_meta =
       meta
       |> Enum.map(fn
@@ -22,11 +16,21 @@ defmodule Erlangelist.Article do
         other -> other
       end)
 
-    {article_id, transformed_meta}
+    transformed_meta
+  end
+
+
+  {articles_meta, _} = Code.eval_file("articles/index.exs")
+  articles_meta = Enum.map(articles_meta,
+    fn({article_id, meta}) -> {article_id, transform_meta.(meta)} end
+  )
+
+  for {article_id, _} <- articles_meta do
+    @external_resource "articles/#{article_id}.md"
   end
 
   def all do
-    unquote(Enum.map(articles_meta, transform_meta))
+    unquote(articles_meta)
   end
 
 

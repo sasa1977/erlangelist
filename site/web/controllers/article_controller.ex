@@ -11,7 +11,7 @@ defmodule Erlangelist.ArticleController do
     render_article(conn, article_id)
   end
 
-  def article(%{private: %{article_id: article_id}} = conn, params) do
+  def article(%{private: %{article_id: article_id}} = conn, _params) do
     render_article(conn, article_id)
   end
 
