@@ -1,4 +1,10 @@
 [
+  {"conway", [
+    title: "Conway's Game of Life in Elixir",
+    posted_at: "2014-11-24",
+    legacy_url: "/2014/11/conways-game-of-life-in-elixir.html"
+  ]},
+
   {"macros_6", [
     title: "Understanding Elixir Macros, Part 6 - In-place Code Generation",
     posted_at: "2014-07-06",
