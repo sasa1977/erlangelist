@@ -1,4 +1,10 @@
 [
+  {"macros_3", [
+    title: "Understanding Elixir Macros, Part 3 - Getting Into The AST",
+    posted_at: "2014-06-15",
+    legacy_url: "/2014/06/understanding-elixir-macros-part-3.html"
+  ]},
+
   {"macros_2", [
     title: "Understanding Elixir Macros, Part 2 - Micro Theory",
     posted_at: "2014-06-11",
