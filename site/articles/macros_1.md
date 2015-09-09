@@ -298,4 +298,4 @@ iex(5)> Macro.to_string(expanded) |> IO.puts
 
 The point of all this is to demonstrate that your macro call is really expanded to something else. This is how macros work. Though we only tried it from the shell, the same things happen when we're building our projects with `mix` or `elixirc`.
 
-I guess this is enough for the first session. You've learned a bit about the compiler process and the AST, and seen a fairly simple example of a macro. In the [next installment](/article/macros_2), I'll dive a bit deeper, discussing some mechanical aspects of macros.
+I guess this is enough for the first session. You've learned a bit about the compiler process and the AST, and seen a fairly simple example of a macro. In the [next installment](macros_2), I'll dive a bit deeper, discussing some mechanical aspects of macros.

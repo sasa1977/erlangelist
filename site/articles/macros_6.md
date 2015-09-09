@@ -3,7 +3,7 @@ Today's post is the last one in the macro series. Before starting, I'd like to e
 In the meantime, let's wrap up this macro saga. In today's post, probably the most involved one in the entire series, I'm going to discuss some aspects of an in-place code generation, and the consequences it may have on our macros.
 
 ## Generating code in the module
-As I mentioned way back in [part 1](/article/macros_1), macros are not the only meta-programming mechanism in Elixir. It is also possible to generate the code directly in the module. To refresh your memory, let's see the example:
+As I mentioned way back in [part 1](macros_1), macros are not the only meta-programming mechanism in Elixir. It is also possible to generate the code directly in the module. To refresh your memory, let's see the example:
 
 ```elixir
 defmodule Fsm do
@@ -155,7 +155,7 @@ Before implementing the solution, it's important to note that this is not a univ
 
 If your macro is not meant to be used on a module-level, then you should probably avoid this technique. Otherwise, if your macro is called from inside function definition, and you move the generation to the caller's context, you'll essentially move the code execution from compile-time to run-time, which can affect performance.
 
-Moreover, even if your macro is running on a module-level, this technique won't be necessary as long as you don't make any assumptions about the input. For example, in [part 2](/article/macros_2), we made a simulation of Plug's `get` macro:
+Moreover, even if your macro is running on a module-level, this technique won't be necessary as long as you don't make any assumptions about the input. For example, in [part 2](macros_2), we made a simulation of Plug's `get` macro:
 
 ```elixir
 defmacro get(route, body) do

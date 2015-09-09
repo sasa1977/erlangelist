@@ -1,4 +1,4 @@
-[Last time](/article/macros_5) I presented a basic version of `deftraceable` macro that allows us to write traceable functions. The final version of the macro has some remaining issues, and today we'll tackle one of those - arguments pattern matching.
+[Last time](macros_5) I presented a basic version of `deftraceable` macro that allows us to write traceable functions. The final version of the macro has some remaining issues, and today we'll tackle one of those - arguments pattern matching.
 
 Today's exercise should demonstrate that we have to carefully consider our assumptions about possible inputs to our macros can receive.
 
@@ -219,4 +219,4 @@ iex(line 5) Elixir.Test.div(5,0) = :error
 ```
 As you can see, it's possible, and not extremely complicated, to get into the AST, tear it apart, and sprinkle it with some custom injected code. On the downside, the code of the resulting macro gets increasingly complex, and it becomes harder to analyze.
 
-This concludes today's session. [Next time](/article/macros_6) I'm going to discuss some aspects of in-place code generation.
+This concludes today's session. [Next time](macros_6) I'm going to discuss some aspects of in-place code generation.

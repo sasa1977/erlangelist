@@ -1,4 +1,4 @@
-It's time to continue our exploration of Elixir macros. [Last time](/article/macros_3) I've covered some essential theory, and today, I'll step into a less documented territory, and discuss some details on Elixir AST.
+It's time to continue our exploration of Elixir macros. [Last time](macros_3) I've covered some essential theory, and today, I'll step into a less documented territory, and discuss some details on Elixir AST.
 
 ## Tracing function calls
 So far you have seen only basic macros that take input AST fragments and combine them together, sprinkling some additional boilerplate around and/or between input fragments. Since we don't analyze or parse the input AST, this is probably the cleanest (or the least hackiest) style of macro writing, which results in fairly simple macros that are reasonably easy to understand.
@@ -180,4 +180,4 @@ The interesting thing happens in line 9. Here I make a simple generic dispatch t
 
 Keep in mind that while quoting, we don't assemble strings, but AST fragments. So instead, when we want to generate a binary operation code, we need to inject a proper AST, which (as explained earlier) is the same as the two arguments function call. Hence, we can simply generate the function call `unquote(operator)(left, right)`.
 
-With this in mind, I'm going to finish today's session. It was a bit shorter, but slightly more complex. [Next time](/article/macros_4), I'm going to dive a bit deeper into the topic of AST parsing.
+With this in mind, I'm going to finish today's session. It was a bit shorter, but slightly more complex. [Next time](macros_4), I'm going to dive a bit deeper into the topic of AST parsing.

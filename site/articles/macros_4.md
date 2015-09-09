@@ -1,4 +1,4 @@
-In [previous installment](/article/macros_3), I've shown you some basic ways of analyzing input AST and doing something about it. Today we'll take a look at some more involved AST transformations. This will mostly be a rehash of already explained techniques. The aim is to show that it's not very hard to go deeper into the AST, though the resulting code can easily become fairly complex and somewhat hacky.
+In [previous installment](macros_3), I've shown you some basic ways of analyzing input AST and doing something about it. Today we'll take a look at some more involved AST transformations. This will mostly be a rehash of already explained techniques. The aim is to show that it's not very hard to go deeper into the AST, though the resulting code can easily become fairly complex and somewhat hacky.
 
 ## Tracing function calls
 In this article, we'll create a `deftraceable` macro that allows us to define traceable functions. A traceable function works just like a normal function, but whenever we call it, a debug information is printed. Here's the idea:
@@ -270,4 +270,4 @@ iex(line 4) Test.my_fun(10,5) = 2.0
 iex(4)> Test.my_fun(10, 5)
 iex(line 7) Test.my_fun(10,5) = 2.0
 ```
-The main point of this exercise was to illustrate that it's possible to deduce something from the input AST. In this example, we managed to detect and handle a function guard. Obviously, the code becomes more involved, since it relies on the internal structure of the AST. In this case, the code is relatively simple, but as you'll see in [future articles](/article/macros_5), where I'll tackle remaining problems of `deftraceable`, things can quickly become messy.
+The main point of this exercise was to illustrate that it's possible to deduce something from the input AST. In this example, we managed to detect and handle a function guard. Obviously, the code becomes more involved, since it relies on the internal structure of the AST. In this case, the code is relatively simple, but as you'll see in [future articles](macros_5), where I'll tackle remaining problems of `deftraceable`, things can quickly become messy.
