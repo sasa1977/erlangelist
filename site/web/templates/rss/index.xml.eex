@@ -4,18 +4,15 @@
     <title>The Erlangelist</title>
     <description>(not only) Erlang related musings</description>
     <link>http://theerlangelist.com</link>
-    <%= for {article_id, meta} <- Erlangelist.Article.all, meta[:redirect] == nil do %>
+    <%= for article <- Erlangelist.Article.all, article.exists? do %>
       <item>
-        <title>
-          <![CDATA[<%= Erlangelist.Article.long_title(article_id) %>]]>
-        </title>
-        <link>
-            <![CDATA[http://theerlangelist.com/<%= Erlangelist.Article.link(article_id) %>]]>
-        </link>
+        <title><![CDATA[<%= article.long_title %>]]></title>
+        <link><![CDATA[http://theerlangelist.com/<%= article.link %>]]></link>
+        <pubdate><![CDATA[http://theerlangelist.com/<%= article.posted_at_rfc822 %>]]></pubdate>
         <description>
-          <![CDATA[<%= Phoenix.View.render_to_string(Erlangelist.ArticleView, "article.html", article_id: article_id) %>]]>
+          <![CDATA[<%= Phoenix.View.render_to_string(Erlangelist.ArticleView, "article.html", article: article) %>]]>
         </description>
-        <guid isPermaLink="true">http://theerlangelist.com/<%= Erlangelist.Article.link(article_id) %></guid>
+        <guid isPermaLink="true">http://theerlangelist.com/<%= article.link %></guid>
       </item>
     <% end %>
   </channel>

@@ -1,12 +1,12 @@
 <div class="blog-post">
-  <h1><%= Erlangelist.Article.long_title(@article_id) %></h1>
-  <h4 class="right"><%= Erlangelist.Article.meta(@article_id)[:posted_at] %></h4>
+  <h1><%= @article.long_title %></h1>
+  <h4 class="right"><%= @article.posted_at %></h4>
 
   <div class="article-body">
-    <%= {:safe, Erlangelist.Article.html(@article_id)} %>
+    <%= {:safe, Erlangelist.Article.html(@article)} %>
   </div>
 
   <div class="article-footer">
-    <i>The markdown source of this post can be found <a href="<%= Erlangelist.Article.source_link(@article_id) %>">here</a>. Pull requests fixing mechanical errors, such as grammar, spelling, or punctuation, are most welcome :-)</i>
+    <i>The markdown source of this post can be found <a href="<%= @article.source_link %>">here</a>. Pull requests fixing mechanical errors, such as grammar, spelling, or punctuation, are most welcome :-)</i>
   </div>
 </div>

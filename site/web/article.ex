@@ -1,52 +1,29 @@
 defmodule Erlangelist.Article do
   @external_resource "articles/index.exs"
 
-  transform_meta = fn(meta) ->
+  article_map = fn({article_id, data}) ->
+    date = Timex.DateFormat.parse!(data[:posted_at], "{ISOdate}")
+
     transformed_meta =
-      meta
-      |> Enum.map(fn
-        {:posted_at, isodate} ->
-          {:ok, date} = Timex.DateFormat.parse(isodate, "{ISOdate}")
-          {:ok, formatted_date} = Timex.DateFormat.format(date, "%B %d, %Y", :strftime)
-          {:posted_at, formatted_date}
+      data
+      |> Enum.into(%{})
+      |> Map.put(:id, article_id)
+      |> Map.put(:posted_at, Timex.DateFormat.format!(date, "%B %d, %Y", :strftime))
+      |> Map.put(:posted_at_rfc822, Timex.DateFormat.format!(date, "{RFC822}"))
+      |> Map.put(:exists?, data[:redirect] == nil)
+      |> Map.put(:long_title, data[:long_title] || data[:short_title])
+      |> Map.put(:short_title, data[:short_title] || data[:long_title])
+      |> Map.put(:link, data[:redirect] || "/article/#{article_id}")
+      |> Map.put(:legacy_url, data[:legacy_url] || nil)
+      |> Map.put(:source_link, "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md")
 
-        {:redirect, old_link} ->
-          {:redirect, "http://theerlangelist.blogspot.com#{old_link}"}
-
-        other -> other
-      end)
+    transformed_meta =
+      if data[:redirect],
+        do: Map.put(transformed_meta, :redirect, "http://theerlangelist.blogspot.com#{data[:redirect]}"),
+        else: Map.put(transformed_meta, :redirect, nil)
 
     transformed_meta
   end
-
-
-  {articles_meta, _} = Code.eval_file("articles/index.exs")
-  articles_meta = Enum.map(articles_meta,
-    fn({article_id, meta}) -> {article_id, transform_meta.(meta)} end
-  )
-
-  for {article_id, _} <- articles_meta do
-    @external_resource "articles/#{article_id}.md"
-  end
-
-  def all do
-    unquote(articles_meta)
-  end
-
-
-  [{article_id, _} | _] = articles_meta
-  def most_recent do
-    unquote(article_id)
-  end
-
-  for {article_id, meta} <- articles_meta do
-    def meta(unquote(article_id)) do
-      unquote(meta)
-    end
-  end
-
-  def meta(_), do: nil
-
 
   html = fn(article_id) ->
     "articles/#{article_id}.md"
@@ -54,25 +31,28 @@ defmodule Erlangelist.Article do
     |> Earmark.to_html
   end
 
-  for {article_id, meta} <- articles_meta do
-    if meta[:redirect] == nil do
-      def html(unquote(article_id)) do
-        unquote(html.(article_id))
-      end
 
-      def exists?(unquote(article_id)), do: true
 
-      def source_link(unquote(article_id)), do:
-        "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{unquote(article_id)}.md"
-    end
+  {articles_data, _} = Code.eval_file("articles/index.exs")
 
-    def link(unquote(article_id)), do:
-      unquote(meta[:redirect] || "/article/#{article_id}")
+  for {article_id, _} <- articles_data, do: @external_resource "articles/#{article_id}.md"
 
-    def long_title(unquote(article_id)), do: unquote(meta[:long_title] || meta[:short_title])
-    def short_title(unquote(article_id)), do: unquote(meta[:short_title] || meta[:long_title])
+  ordered_articles = Enum.map(articles_data, article_map)
+  def all do
+    unquote(Macro.escape(ordered_articles))
   end
 
-  def html(_), do: nil
-  def exists?(_), do: false
+  def most_recent do
+    unquote(Macro.escape(hd(ordered_articles)))
+  end
+
+  for article <- ordered_articles do
+    def article(unquote(article.id)), do: unquote(Macro.escape(article))
+
+    if article.exists? do
+      def html(%{id: unquote(article.id)}), do: unquote(html.(article.id))
+    end
+  end
+
+  def article(_), do: false
 end

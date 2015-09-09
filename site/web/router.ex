@@ -22,15 +22,15 @@ defmodule Erlangelist.Router do
     get "/article/:article_id", ArticleController, :article
 
 
-    for {article_id, meta} <- Erlangelist.Article.all do
+    for article <- Erlangelist.Article.all do
       # old-style urls
-      if path = meta[:legacy_url] do
-        get path, ArticleController, :article, private: %{article_id: article_id}
+      if article.legacy_url do
+        get article.legacy_url, ArticleController, :article, private: %{article: article}
       end
 
       # redirect to blogspot for non-migrated articles
-      if path = meta[:redirect] do
-        get String.replace(path, "http://theerlangelist.blogspot.com",""), OldPostController, :render
+      if article.redirect do
+        get String.replace(article.redirect, "http://theerlangelist.blogspot.com",""), OldPostController, :render
       end
     end
   end
