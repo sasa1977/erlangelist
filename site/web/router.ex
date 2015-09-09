@@ -21,15 +21,17 @@ defmodule Erlangelist.Router do
     get "/", ArticleController, :most_recent
     get "/article/:article_id", ArticleController, :article
 
-    for {_article_id, meta} <- Erlangelist.Article.all do
+
+    for {article_id, meta} <- Erlangelist.Article.all do
+      # old-style urls
+      if path = meta[:legacy_url] do
+        get path, ArticleController, :article, private: %{article_id: article_id}
+      end
+
+      # redirect to blogspot for non-migrated articles
       if path = meta[:redirect] do
         get String.replace(path, "http://theerlangelist.blogspot.com",""), OldPostController, :render
       end
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", Erlangelist do
-  #   pipe_through :api
-  # end
 end

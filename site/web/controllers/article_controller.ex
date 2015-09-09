@@ -11,11 +11,21 @@ defmodule Erlangelist.ArticleController do
     render_article(conn, article_id)
   end
 
+  def article(%{private: %{article_id: article_id}} = conn, params) do
+    render_article(conn, article_id)
+  end
+
+  def article(conn, _params) do
+    render_not_found(conn)
+  end
+
   defp render_article(conn, article_id) do
     if Article.exists?(article_id) do
       render(conn, "article.html", %{article_id: article_id})
     else
-      render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
+      render_not_found(conn)
     end
   end
+
+  defp render_not_found(conn), do: render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
 end

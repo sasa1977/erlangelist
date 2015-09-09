@@ -24,6 +24,8 @@ defmodule Erlangelist.ConnCase do
 
       # The default endpoint for testing
       @endpoint Erlangelist.Endpoint
+
+      import Erlangelist.ConnHelper
     end
   end
 

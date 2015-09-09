@@ -3,10 +3,7 @@ defmodule Erlangelist.OldPostControllerTest do
   alias Erlangelist.Article
 
   for {_article_id, meta} <- Article.all, meta[:redirect] != nil do
-    url = String.replace(meta[:redirect], "http://theerlangelist.blogspot.com","")
-    test "GET #{url}" do
-      conn = get(conn, unquote(url))
-      assert html_response(conn, 302) =~ ~s(<a href="#{unquote(meta[:redirect])}">)
-    end
+    String.replace(meta[:redirect], "http://theerlangelist.blogspot.com","")
+    |> test_get 302, ~s(<a href="#{meta[:redirect]}">)
   end
 end

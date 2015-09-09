@@ -1,7 +1,8 @@
 [
   {"why_elixir", [
     title: "Why Elixir",
-    posted_at: "2014-01-21"
+    posted_at: "2014-01-21",
+    legacy_url: "/2014/01/why-elixir.html"
   ]},
 
   {"announce_eia", [
