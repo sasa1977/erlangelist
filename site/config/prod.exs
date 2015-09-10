@@ -16,6 +16,9 @@ config :erlangelist, Erlangelist.Endpoint,
   url: [host: "theerlangelist.com", port: 80],
   cache_static_manifest: "priv/static/manifest.json"
 
+# No cache expiry in prod
+config :erlangelist, :articles_cache, []
+
 # Do not print debug messages in production
 config :logger, level: :info
 

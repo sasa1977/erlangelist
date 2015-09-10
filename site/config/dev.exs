@@ -25,6 +25,11 @@ config :erlangelist, Erlangelist.Endpoint,
     ]
   ]
 
+# Fairly short cache expiry to support refreshing
+config :erlangelist, :articles_cache,
+  ttl_check: :timer.seconds(1),
+  ttl: :timer.seconds(1)
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

@@ -6,14 +6,9 @@ defmodule Erlangelist do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    {:ok, cache_opts} = Application.fetch_env(:erlangelist, :articles_cache)
     children = [
-      worker(ConCache, [
-        [
-          touch_on_read: true,
-          ttl_check: :timer.seconds(5)
-        ],
-        [name: :articles]
-      ]),
+      worker(ConCache, [cache_opts, [name: :articles]]),
       # Start the endpoint when the application starts
       supervisor(Erlangelist.Endpoint, []),
       # Here you could define other workers and supervisors as children

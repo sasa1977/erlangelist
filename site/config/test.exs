@@ -6,6 +6,9 @@ config :erlangelist, Erlangelist.Endpoint,
   http: [port: 4001],
   server: false
 
+# No cache expiry
+config :erlangelist, :articles_cache, []
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 
