@@ -67,7 +67,7 @@ In either case (macros or in-place code generation), we are performing some tran
 ## Compilation process
 Roughly speaking, the compilation of Elixir code happens in three phases:
 
-![foobar](/images/concurrent_handling.png)
+![Compilation process](/images/compilation_process.png)
 
 The input source code is parsed, and a corresponding abstract syntax tree (AST) is produced. The AST represents your code in form of nested Elixir terms. Then the expansion phase kicks off. It is in this phase that various built-in and custom macros are called to transform the input AST into the final version. Once this transformation is done, Elixir can produce final bytecode - a binary representation of your source program.
 

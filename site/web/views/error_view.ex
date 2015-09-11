@@ -2,11 +2,11 @@ defmodule Erlangelist.ErrorView do
   use Erlangelist.Web, :view
 
   def render("404.html", _assigns) do
-    "Page not found"
+    {:safe, "<div style='margin-top:20px;'>Page not found</div>"}
   end
 
   def render("500.html", _assigns) do
-    "Server internal error"
+    {:safe, "<div style='margin-top:20px;'>Server internal error</div>"}
   end
 
   # In case no render clause matches or no

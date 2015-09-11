@@ -1,5 +1,142 @@
+html,body {
+    height: 100%;
+}
+
+/* Phoenix flash messages */
+.alert:empty { display: none; }
+
+/* desktop layout */
+@media (min-width: 992px) {
+  body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .container-fluid {
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 0px;
+  }
+
+  .container-fluid .left-bar {
+    height: 100%;
+    width: calc(100% - 270px);
+    overflow: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .container-fluid .right-bar {
+    height: 100%;
+    width: 270px;
+    overflow: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .container-fluid .right-bar .eia-image-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .container-fluid .right-bar .eia-image-link a {
+    margin: auto;
+  }
+
+  .container-fluid .right-bar .eia-image-link a img {
+    height: auto;
+    width: 180px;
+  }
+
+  .container-fluid .right-bar .articles {
+    margin-top: 30px;
+  }
+
+  .blog-post pre code {
+    display: block;
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* mobile layout */
+@media (max-width: 992px) {
+  .container-fluid {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .container-fluid .left-bar {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .container-fluid .right-bar .eia-image-link {
+    display: none;
+  }
+
+  .container-fluid .right-bar .articles {
+    margin-top: 30px;
+  }
+}
+
+.articles ul {
+    margin-left: 15px;
+    padding-left: 15px;
+}
+
+.blog-post pre {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  border-radius: 0px;
+  background-color: inherit;
+}
+
+.blog-post pre code {
+  margin-bottom: 10px;
+}
+
+.blog-post img {
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.container-fluid .left-bar .title {
+  margin-bottom:20px;
+}
+
+.container-fluid .left-bar .title h2{
+  margin-bottom:0px;
+  margin-top:0px;
+}
+
+.blog-post a code {
+  color: #337ab7;
+}
+
+.blog-post h2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.blog-post p {
+  margin-bottom: 15px;
+}
+
+.blog-post .article-body {
+  margin-top: 30px;
+}
+
 .blog-post p, .blog-post ul {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 300;
 }
 
