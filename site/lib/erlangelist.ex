@@ -8,11 +8,9 @@ defmodule Erlangelist do
 
     {:ok, cache_opts} = Application.fetch_env(:erlangelist, :articles_cache)
     children = [
-      worker(ConCache, [cache_opts, [name: :articles]]),
-      # Start the endpoint when the application starts
-      supervisor(Erlangelist.Endpoint, []),
-      # Here you could define other workers and supervisors as children
-      # worker(Erlangelist.Worker, [arg1, arg2, arg3]),
+      worker(ConCache, [cache_opts, [name: :articles]], id: :articles_con_cache),
+      worker(ConCache, [[], [name: :metrics]], id: :metrics_con_cache),
+      supervisor(Erlangelist.Endpoint, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
