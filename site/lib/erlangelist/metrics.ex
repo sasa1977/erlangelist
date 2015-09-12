@@ -1,7 +1,7 @@
 defmodule Erlangelist.Metrics do
   def inc_spiral(metric_name, count \\ 1) do
     metric_name
-    |> ensure_metric(:spiral, :one)
+    |> ensure_metric(:spiral, :one, timespan: Erlangelist.app_env!(:exometer_polling_interval))
     |> :exometer.update(count)
   end
 

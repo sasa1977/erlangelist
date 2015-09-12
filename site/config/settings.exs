@@ -82,7 +82,7 @@ defmodule Erlangelist.Settings do
       ],
 
       exometer_polling_interval: [
-        common: :timer.seconds(60),
+        common: :timer.seconds(5),
         dev: :timer.seconds(1)
       ],
 
