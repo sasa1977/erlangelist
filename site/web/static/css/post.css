@@ -143,3 +143,7 @@ html,body {
 .blog-post code {
   font-size: 14px;
 }
+
+.blog-post .comments {
+  margin-top:30px;
+}

@@ -9,4 +9,6 @@
   <div class="article-footer">
     <i>The markdown source of this post can be found <a href="<%= @article.source_link %>">here</a>. Pull requests fixing mechanical errors, such as grammar, spelling, or punctuation, are most welcome :-)</i>
   </div>
+
+  <%= render "_comments.html", article: @article %>
 </div>
