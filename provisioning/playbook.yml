@@ -29,6 +29,12 @@
     - copy: src=remote_files/post-receive dest=/home/git/erlangelist.git/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
 
+    # collectd
+    - apt: name=collectd
+    - apt: name=collectd-utils
+    - copy: src=remote_files/collectd.conf dest=/etc/collectd/ owner=root group=root mode=0644
+    - service: name=collectd state=restarted
+
     # systemd infrastructure
     - file: path=/opt/erlangelist state=directory mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
