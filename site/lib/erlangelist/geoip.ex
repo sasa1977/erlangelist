@@ -19,18 +19,13 @@ defmodule Erlangelist.GeoIp do
   end
 
   defp country(ip) do
-    {:ok, geoip_site} = Application.fetch_env(:erlangelist, :geoip_site)
-
-    ip_string =
-      ip
-      |> Tuple.to_list
-      |> Enum.join(".")
-
     %HTTPoison.Response{
       status_code: 200,
       body: body
-    } = HTTPoison.get!("http://#{geoip_site}:5458/json/#{ip_string}")
+    } = HTTPoison.get!("#{geoip_site_url}/json/#{ip}")
 
     Poison.decode!(body)["country_name"]
   end
+
+  defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:geoip_site)}:5458"
 end

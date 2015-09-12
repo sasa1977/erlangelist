@@ -6,10 +6,10 @@ defmodule Erlangelist do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    {:ok, cache_opts} = Application.fetch_env(:erlangelist, :articles_cache)
     children = [
-      worker(ConCache, [cache_opts, [name: :articles_cache]], id: :articles_con_cache),
-      worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_con_cache),
+      worker(ConCache, [app_env!(:articles_cache), [name: :articles_cache]], id: :articles_cache),
+      worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
+      worker(Erlangelist.ArticleEvent, []),
       supervisor(Erlangelist.OneOff, []),
       supervisor(Erlangelist.Endpoint, [])
     ]
@@ -25,5 +25,10 @@ defmodule Erlangelist do
   def config_change(changed, _new, removed) do
     Erlangelist.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def app_env!(name) do
+    {:ok, value} = Application.fetch_env(:erlangelist, name)
+    value
   end
 end

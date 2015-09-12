@@ -22,7 +22,10 @@ config :erlangelist, Erlangelist.Endpoint,
   http: [compress: true]
 
 config :erlangelist,
-  geoip_site: "127.0.0.1"
+  geoip_site: "127.0.0.1",
+  article_event_handlers: [
+    Erlangelist.ArticleEvent.Metrics
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

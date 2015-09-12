@@ -1,8 +1,8 @@
 defmodule Erlangelist.ArticleController do
   use Erlangelist.Web, :controller
+
   alias Erlangelist.Article
-  alias Erlangelist.GeoIp
-  alias Erlangelist.Metrics
+  alias Erlangelist.ArticleEvent
 
   def most_recent(conn, _params) do
     render_article(conn, Article.most_recent)
@@ -20,15 +20,20 @@ defmodule Erlangelist.ArticleController do
 
 
   defp render_article(conn, %{exists?: true} = article) do
-    GeoIp.report_metric(conn.remote_ip)
-    Metrics.inc_spiral([:article, article.id, :requests])
+    ArticleEvent.visited(article, %{remote_ip: remote_ip_string(conn)})
     render(conn, "article.html", %{article: article})
   end
 
   defp render_article(conn, _), do: render_not_found(conn)
 
   defp render_not_found(conn) do
-    Metrics.inc_spiral([:article, :invalid_article, :requests])
+    ArticleEvent.invalid_article
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
+  end
+
+  defp remote_ip_string(conn) do
+    conn.remote_ip
+    |> Tuple.to_list
+    |> Enum.join(".")
   end
 end
