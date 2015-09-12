@@ -24,7 +24,7 @@ defmodule Erlangelist.Metrics do
     metric_opts \\ []
   ) do
     metric_name = [:erlangelist | metric_name]
-    ConCache.get_or_store(:metrics, metric_name, fn ->
+    ConCache.get_or_store(:metrics_cache, metric_name, fn ->
       {:ok, polling_interval} = Application.fetch_env(:erlangelist, :polling_interval)
       :exometer.new(metric_name, metric_type, metric_opts)
       :exometer_report.subscribe(:exometer_report_statsd, metric_name, datapoint, polling_interval)

@@ -8,8 +8,8 @@ defmodule Erlangelist do
 
     {:ok, cache_opts} = Application.fetch_env(:erlangelist, :articles_cache)
     children = [
-      worker(ConCache, [cache_opts, [name: :articles]], id: :articles_con_cache),
-      worker(ConCache, [[], [name: :metrics]], id: :metrics_con_cache),
+      worker(ConCache, [cache_opts, [name: :articles_cache]], id: :articles_con_cache),
+      worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_con_cache),
       supervisor(Erlangelist.OneOff, []),
       supervisor(Erlangelist.Endpoint, [])
     ]
