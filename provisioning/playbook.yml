@@ -31,6 +31,7 @@
 
     # systemd infrastructure
     - file: path=/opt/erlangelist state=directory mode=0755
+    - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-geoip.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
