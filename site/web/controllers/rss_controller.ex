@@ -1,6 +1,5 @@
 defmodule Erlangelist.RssController do
   use Erlangelist.Web, :controller
-  alias Erlangelist.Article
 
   def index(conn, _params) do
     conn

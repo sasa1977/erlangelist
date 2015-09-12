@@ -10,6 +10,7 @@ defmodule Erlangelist do
     children = [
       worker(ConCache, [cache_opts, [name: :articles]], id: :articles_con_cache),
       worker(ConCache, [[], [name: :metrics]], id: :metrics_con_cache),
+      supervisor(Erlangelist.OneOff, []),
       supervisor(Erlangelist.Endpoint, [])
     ]
 

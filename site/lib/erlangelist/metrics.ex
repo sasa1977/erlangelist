@@ -1,14 +1,20 @@
 defmodule Erlangelist.Metrics do
+  alias Erlangelist.OneOff
+
   def inc_spiral(metric_name, count \\ 1) do
-    metric_name
-    |> ensure_metric(:spiral, :one)
-    |> :exometer.update(count)
+    OneOff.run(fn ->
+      metric_name
+      |> ensure_metric(:spiral, :one)
+      |> :exometer.update(count)
+    end)
   end
 
   def sample_histogram(metric_name, value) do
-    metric_name
-    |> ensure_metric(:histogram, [:median, 75, 90, 95, :max], truncate: false)
-    |> :exometer.update(value)
+    OneOff.run(fn ->
+      metric_name
+      |> ensure_metric(:histogram, [:median, 75, 90, 95, :max], truncate: false)
+      |> :exometer.update(value)
+    end)
   end
 
   defp ensure_metric(

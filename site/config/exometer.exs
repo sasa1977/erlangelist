@@ -26,7 +26,11 @@ config :exometer,
 
   reporters: [
     exometer_report_statsd: [
-      hostname: '127.0.0.1',
+      hostname:
+        case Mix.env do
+          :prod -> '172.17.42.1'
+          _ -> '127.0.0.1'
+        end,
       port: 5457
     ],
   ],

@@ -7,5 +7,6 @@ rm -rf erlangelist || true
 git clone ~/erlangelist
 cd erlangelist
 docker/build-images.sh
+sudo systemctl restart erlangelist-geoip
 sudo systemctl restart erlangelist-graphite
 sudo systemctl restart erlangelist-site

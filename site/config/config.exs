@@ -21,6 +21,9 @@ config :erlangelist, Erlangelist.Endpoint,
            adapter: Phoenix.PubSub.PG2],
   http: [compress: true]
 
+config :erlangelist,
+  geoip_site: "127.0.0.1"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

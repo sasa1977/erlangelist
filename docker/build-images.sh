@@ -72,6 +72,7 @@ function build_versioned_image {
 cd $(dirname ${BASH_SOURCE[0]})/..
 
 build_versioned_image erlangelist/graphite graphite.dockerfile
+build_versioned_image erlangelist/geoip geoip.dockerfile
 
 build_versioned_image erlangelist/site-builder site-builder.dockerfile
 id=$(docker create "erlangelist/site-builder:latest")

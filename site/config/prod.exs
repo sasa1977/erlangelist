@@ -17,7 +17,9 @@ config :erlangelist, Erlangelist.Endpoint,
   cache_static_manifest: "priv/static/manifest.json"
 
 # No cache expiry in prod
-config :erlangelist, :articles_cache, []
+config :erlangelist,
+  :articles_cache, [],
+  geoip_site: "172.17.42.1"
 
 # Do not print debug messages in production
 config :logger, level: :info

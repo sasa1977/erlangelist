@@ -1,0 +1,11 @@
+[Unit]
+Description=The Erlangelist geoip server
+Requires=docker.service
+After=docker.service
+
+[Service]
+ExecStart=/opt/erlangelist/erlangelist-geoip.sh start
+ExecStop=/opt/erlangelist/erlangelist-geoip.sh stop
+
+[Install]
+WantedBy=multi-user.target

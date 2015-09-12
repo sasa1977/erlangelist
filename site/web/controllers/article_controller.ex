@@ -1,6 +1,7 @@
 defmodule Erlangelist.ArticleController do
   use Erlangelist.Web, :controller
   alias Erlangelist.Article
+  alias Erlangelist.GeoIp
   alias Erlangelist.Metrics
 
   def most_recent(conn, _params) do
@@ -19,6 +20,7 @@ defmodule Erlangelist.ArticleController do
 
 
   defp render_article(conn, %{exists?: true} = article) do
+    GeoIp.report_metric(conn.remote_ip)
     Metrics.inc_spiral([:article, article.id, :requests])
     render(conn, "article.html", %{article: article})
   end
