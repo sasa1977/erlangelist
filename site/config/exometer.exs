@@ -1,14 +1,6 @@
 use Mix.Config
 
-polling_interval = case Mix.env do
-  :dev -> :timer.seconds(1)
-  _ -> :timer.seconds(60)
-end
-
 memory_stats = ~w(atom binary ets processes total)a
-
-config :erlangelist,
-  polling_interval: polling_interval
 
 config :exometer,
   predefined: [
@@ -26,11 +18,7 @@ config :exometer,
 
   reporters: [
     exometer_report_statsd: [
-      hostname:
-        case Mix.env do
-          :prod -> '172.17.42.1'
-          _ -> '127.0.0.1'
-        end,
+      hostname: '#{Erlangelist.Settings.all[:erlangelist][:peer_ip]}',
       port: 5457
     ],
   ],
@@ -39,7 +27,9 @@ config :exometer,
     subscribers: [
       {
         :exometer_report_statsd,
-        [:erlang, :memory], memory_stats, polling_interval
+        [:erlang, :memory],
+        memory_stats,
+        Erlangelist.Settings.all[:erlangelist][:exometer_polling_interval]
       }
     ]
   ]

@@ -5,35 +5,18 @@
 # is restricted to this project.
 use Mix.Config
 
-config :lager,
-  error_logger_redirect: false,
-  error_logger_whitelist: [Logger.ErrorHandler],
-  crash_log: false,
-  handlers: [{LagerLogger, [level: :info]}]
+Code.require_file("config/settings.exs")
 
-# Configures the endpoint
-config :erlangelist, Erlangelist.Endpoint,
-  url: [host: "localhost"],
-  root: Path.dirname(__DIR__),
-  secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
-  render_errors: [accepts: ~w(html json)],
-  pubsub: [name: Erlangelist.PubSub,
-           adapter: Phoenix.PubSub.PG2],
-  http: [compress: true]
-
-config :erlangelist,
-  geoip_site: "127.0.0.1",
-  article_event_handlers: [
-    Erlangelist.ArticleEvent.Metrics
-  ]
-
-# Configures Elixir's Logger
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
-
-config :kernel, inet_dist_listen_min: 30000
-config :kernel, inet_dist_listen_max: 30000
+var!(config, Mix.Config) =
+  Enum.reduce(
+    Erlangelist.Settings.all,
+    var!(config, Mix.Config),
+    fn({app, settings}, acc) ->
+      var!(config, Mix.Config) = acc
+      config(app, settings)
+      var!(config, Mix.Config)
+    end
+  )
 
 import_config "exometer.exs"
 
