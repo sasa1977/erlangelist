@@ -2,9 +2,21 @@
   <h4>All posts</h4>
   <ul>
   <%= for article <- @articles do %>
-    <li>
-      <a href="<%= article.link %>"><%= article.short_title %></a>
-    </li>
+    <%= if article.exists? do %>
+      <li>
+        <a href="<%= article.link %>"><%= article.short_title %></a>
+      </li>
+    <% end %>
+  <% end %>
+  </ul>
+  <h4>Older posts (Blogger)</h4>
+  <ul>
+  <%= for article <- @articles do %>
+    <%= if article.redirect do %>
+      <li>
+        <a href="<%= article.link %>"><%= article.short_title %></a>
+      </li>
+    <% end %>
   <% end %>
   </ul>
 </div>

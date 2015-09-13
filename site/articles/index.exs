@@ -1,4 +1,29 @@
 [
+  {"outside_elixir", [
+    long_title: "Outside Elixir: running external programs with ports",
+    short_title: "Outside Elixir",
+    posted_at: "2015-08-18",
+    legacy_url: "/2015/08/outside-elixir.html"
+  ]},
+
+  {"tallakt_macros", [
+    long_title: "Optimizing a function with the help of Elixir macros",
+    short_title: "Optimizing with Elixir macros",
+    posted_at: "2015-08-06",
+    legacy_url: "/2015/08/optimizing-function-with-help-of-elixir.html"
+  ]},
+
+  {"beyond_taskasync", [
+    short_title: "Beyond Task.Async",
+    posted_at: "2015-07-31",
+    legacy_url: "/2015/07/beyond-taskasync.html"
+  ]},
+  {"elixirconf2015", [
+    short_title: "Speaking at ElixirConf EU",
+    posted_at: "2015-01-26",
+    legacy_url: "/2015/01/speaking-at-elixirconf-eu.html"
+  ]},
+
   {"conway", [
     short_title: "Conway's Game of Life",
     long_title: "Conway's Game of Life in Elixir",
