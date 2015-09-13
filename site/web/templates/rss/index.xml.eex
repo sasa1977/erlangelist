@@ -8,9 +8,9 @@
       <item>
         <title><![CDATA[<%= article.long_title %>]]></title>
         <link><![CDATA[http://theerlangelist.com/<%= article.link %>]]></link>
-        <pubdate><![CDATA[http://theerlangelist.com/<%= article.posted_at_rfc822 %>]]></pubdate>
+        <pubdate><%= article.posted_at_rfc822 %></pubdate>
         <description>
-          <![CDATA[<%= Phoenix.View.render_to_string(Erlangelist.ArticleView, "article.html", article: article) %>]]>
+          <![CDATA[<%= Phoenix.View.render_to_string(Erlangelist.ArticleView, "_article_content.html", article: article) %>]]>
         </description>
         <guid isPermaLink="true">http://theerlangelist.com/<%= article.link %></guid>
       </item>

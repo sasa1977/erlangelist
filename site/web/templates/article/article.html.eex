@@ -1,14 +1,4 @@
 <div class="blog-post">
-  <h1><%= @article.long_title %></h1>
-  <h4 class="right"><%= @article.posted_at %></h4>
-
-  <div class="article-body">
-    <%= {:safe, Erlangelist.Article.html(@article)} %>
-  </div>
-
-  <div class="article-footer">
-    <i>The markdown source of this post can be found <a href="<%= @article.source_link %>">here</a>. Pull requests fixing mechanical errors, such as grammar, spelling, or punctuation, are most welcome :-)</i>
-  </div>
-
+  <%= render "_article_content.html", article: @article %>
   <%= render "_comments.html", article: @article %>
 </div>
