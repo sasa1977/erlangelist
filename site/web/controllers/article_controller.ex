@@ -12,14 +12,16 @@ defmodule Erlangelist.ArticleController do
     render_article(conn, Article.article(article_id))
   end
 
-  def article(%{private: %{article: article}} = conn, _params) do
-    render_article(conn, article)
-  end
-
   def article(conn, _params), do: render_not_found(conn)
 
+  def article_from_old_path(%{private: %{article: article}} = conn, _params) do
+    conn
+    |> put_layout(:none)
+    |> redirect(external: "/article/#{article.id}")
+  end
 
-  defp render_article(conn, %{exists?: true} = article) do
+
+  defp render_article(conn, %{has_content?: true} = article) do
     ArticleEvent.visited(article, %{remote_ip: remote_ip_string(conn)})
     render(conn, "article.html", %{article: article})
   end

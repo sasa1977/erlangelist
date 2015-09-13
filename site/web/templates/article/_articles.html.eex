@@ -1,7 +1,7 @@
 <div class="articles">
   <ul>
   <%= for article <- @articles do %>
-    <%= if article.exists? do %>
+    <%= if article.has_content? do %>
       <li>
         <a href="<%= article.link %>"><%= article.short_title %></a>
       </li>

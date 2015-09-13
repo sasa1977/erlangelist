@@ -9,7 +9,7 @@ defmodule Erlangelist.ArticleControllerTest do
 
   test_get "/article/unknown", 404, "Page not found"
 
-  for article <- Article.all, article.exists? do
+  for article <- Article.all, article.has_content? do
     test_get "/article/#{article.id}", 200, "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
 
     if article.legacy_url do
@@ -24,7 +24,7 @@ defmodule Erlangelist.ArticleControllerTest do
     assert_receive(
       {:event,
         {:article_visited,
-          %{exists?: true, id: ^article_id},
+          %{has_content?: true, id: ^article_id},
           %{remote_ip: "127.0.0.1"}
         }
       }
