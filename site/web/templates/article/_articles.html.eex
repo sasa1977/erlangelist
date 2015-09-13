@@ -1,5 +1,4 @@
 <div class="articles">
-  <h4>All posts</h4>
   <ul>
   <%= for article <- @articles do %>
     <%= if article.exists? do %>
@@ -8,15 +7,19 @@
       </li>
     <% end %>
   <% end %>
-  </ul>
-  <h4>Older posts (Blogger)</h4>
-  <ul>
+  <li style="display:block;">
+    <a data-toggle="collapse" href=".old-post">
+    <b>Older posts (Blogger)</b>
+  </a>
+  </li>
   <%= for article <- @articles do %>
     <%= if article.redirect do %>
-      <li>
+      <li class="old-post collapse">
         <a href="<%= article.link %>"><%= article.short_title %></a>
       </li>
     <% end %>
   <% end %>
+
   </ul>
+
 </div>

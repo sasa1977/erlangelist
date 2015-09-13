@@ -14,10 +14,7 @@ exports.config = {
       // To change the order of concatenation of files, explicitly mention here
       // https://github.com/brunch/brunch/tree/master/docs#concatenation
       order: {
-        before: [
-          'web/static/vendor/jquery-2.1.4.min.js',
-          'web/static/vendor/bootstrap.min.js'
-        ]
+        before: []
       }
     },
     stylesheets: {

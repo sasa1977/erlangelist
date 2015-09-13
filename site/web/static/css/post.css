@@ -83,11 +83,6 @@ html,body {
   }
 }
 
-.articles ul {
-    margin-left: 15px;
-    padding-left: 15px;
-}
-
 .blog-post pre {
   padding: 0px;
   margin: 0px;
@@ -146,4 +141,18 @@ html,body {
 
 .blog-post .comments {
   margin-top:30px;
+}
+
+.right-bar .articles ul {
+  padding-left: 0px;
+  margin-left: 20px;
+  margin-right: 0px;
+}
+
+.right-bar .articles .collapsing {
+  display: list-item;
+}
+
+.right-bar .articles .collapse.in {
+  display: list-item;
 }
