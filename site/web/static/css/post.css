@@ -36,7 +36,7 @@ html,body {
 
   .container-fluid .right-bar .eia-image-link {
     width: 100%;
-    text-align: center;
+    text-align: left;
   }
 
   .container-fluid .right-bar .eia-image-link a {
@@ -45,7 +45,7 @@ html,body {
 
   .container-fluid .right-bar .eia-image-link a img {
     height: auto;
-    width: 180px;
+    width: 210px;
   }
 
   .container-fluid .right-bar .articles {
@@ -144,9 +144,8 @@ html,body {
 }
 
 .right-bar .articles ul {
+  list-style-position: inside;
   padding-left: 0px;
-  margin-left: 20px;
-  margin-right: 0px;
 }
 
 .right-bar .articles .collapsing {

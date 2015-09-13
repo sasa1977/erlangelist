@@ -1,4 +1,5 @@
 <div class="articles">
+  <h4>All posts</h4>
   <ul>
   <%= for article <- @articles do %>
     <%= if article.has_content? do %>
