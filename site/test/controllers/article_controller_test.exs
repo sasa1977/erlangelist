@@ -13,7 +13,7 @@ defmodule Erlangelist.ArticleControllerTest do
     test_get "/article/#{article.id}", 200, "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
 
     if article.legacy_url do
-      test_get article.legacy_url, 200, "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
+      test_get article.legacy_url, 302, "<a href=\"/article/#{article.id}\">"
     end
   end
 
