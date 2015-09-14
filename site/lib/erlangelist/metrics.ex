@@ -15,7 +15,7 @@ defmodule Erlangelist.Metrics do
     metric_name,
     metric_type,
     datapoint,
-    metric_opts \\ []
+    metric_opts
   ) do
     metric_name = [:erlangelist | metric_name]
     ConCache.get_or_store(:metrics_cache, metric_name, fn ->
