@@ -28,7 +28,7 @@ function container_ctl {
       ;;
 
     ssh)
-      docker exec -it $1 /bin/bash
+      docker exec -u root -it $1 /bin/bash
       ;;
 
     exec)
