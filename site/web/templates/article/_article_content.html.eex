@@ -6,5 +6,11 @@
 </div>
 
 <div class="article-footer">
-  <i>This article is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.</i>
+  <div>
+    <i>This article is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.</i>
+    <%= if @article.legacy_url do %>
+      <br/>
+      <i>The article was first published on the old version of the Erlangelist site. You can find the original post <a href="http://theerlangelist.blogspot.com<%=@article.legacy_url%>">here</a>.</i>
+    <% end %>
+  </div>
 </div>

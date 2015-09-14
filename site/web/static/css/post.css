@@ -108,6 +108,10 @@ html,body {
   margin-bottom:20px;
 }
 
+.container-fluid .left-bar .title a {
+  color: inherit;
+}
+
 .container-fluid .left-bar .title h2{
   margin-bottom:0px;
   margin-top:0px;

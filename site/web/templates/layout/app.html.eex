@@ -22,7 +22,7 @@
         <div class="col-md-9 left-bar">
           <div>
             <div class="title">
-              <h2><a href="/">The Erlangelist</a></h2>
+              <h2><a href="/"><b>The Erlangelist</b></a></h2>
               <i>(not only) Erlang related musings</i>
             </div>
 
