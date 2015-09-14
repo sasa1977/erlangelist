@@ -1,0 +1,10 @@
+[Unit]
+Description=Firewall rules
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/erlangelist/firewall-rules.sh
+
+[Install]
+WantedBy=basic.target

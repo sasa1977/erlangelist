@@ -2,6 +2,12 @@
 - hosts: all
   sudo: true
   tasks:
+    # firewall rules
+    - file: path=/opt/erlangelist state=directory mode=0755
+    - copy: src=remote_files/firewall-rules.sh dest=/opt/erlangelist mode=0755
+    - copy: src=remote_files/firewall-rules.service dest=/lib/systemd/system/
+    - service: name=firewall-rules enabled=yes
+
     # install docker
     - apt: name=wget
     - stat: path=/usr/bin/docker
@@ -35,8 +41,7 @@
     - copy: src=remote_files/collectd.conf dest=/etc/collectd/ owner=root group=root mode=0644
     - service: name=collectd state=restarted
 
-    # systemd infrastructure
-    - file: path=/opt/erlangelist state=directory mode=0755
+    # Erlangelist systemd services
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-geoip.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
