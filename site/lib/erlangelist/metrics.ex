@@ -7,7 +7,7 @@ defmodule Erlangelist.Metrics do
 
   def sample_histogram(metric_name, value) do
     metric_name
-    |> ensure_metric(:histogram, [:median, 75, 90, 95, :max], truncate: false)
+    |> ensure_metric(:histogram, [50, 75, 90, 95, :max], truncate: false)
     |> :exometer.update(value)
   end
 
