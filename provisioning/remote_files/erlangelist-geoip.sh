@@ -6,5 +6,5 @@ set -o pipefail
 
 START_ARGS="
   -p 5458:8080
-  fiorix/freegeoip:latest
+  erlangelist/geoip:latest
 " container_ctl erlangelist-geoip "$@"
