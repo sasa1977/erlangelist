@@ -4,6 +4,7 @@ defmodule Erlangelist.AdminController do
 
   alias Erlangelist.Repo
   alias Erlangelist.Model.ArticleVisit
+  alias Erlangelist.Model.CountryVisit
   alias Erlangelist.Model.RefererHostVisit
   alias Erlangelist.Model.RefererVisit
 
@@ -26,6 +27,7 @@ defmodule Erlangelist.AdminController do
 
   @visit_types [
     article: ArticleVisit,
+    country: CountryVisit,
     referer_host: RefererHostVisit,
     referer_url: RefererVisit
   ]
