@@ -19,7 +19,8 @@ defmodule Erlangelist.Mixfile do
     [mod: {Erlangelist, []},
      applications: [
       :phoenix, :phoenix_html, :cowboy, :logger, :postgrex, :con_cache, :timex,
-      :runtime_tools, :lager_logger, :lager, :exometer, :httpoison, :poison
+      :runtime_tools, :lager_logger, :lager, :exometer, :httpoison, :poison,
+      :gproc, :workex
     ]]
   end
 
@@ -32,12 +33,13 @@ defmodule Erlangelist.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [{:phoenix, "~> 1.0.0"},
+     {:phoenix_ecto, "~> 1.0.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:earmark, "~> 0.1"},
-     {:con_cache, "~> 0.8.1"},
+     {:con_cache, "~> 0.9.0"},
      {:timex, "~> 0.19.2"},
      {:exrm, "~> 0.19.2"},
      {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
@@ -47,6 +49,8 @@ defmodule Erlangelist.Mixfile do
      {:lager_logger, "~> 1.0"},
      {:httpoison, "~> 0.7.3"},
      {:poison, "~> 1.5.0"},
+     {:gproc, "~> 0.5.0"},
+     {:workex, "~> 0.8.0"}
    ]
   end
 end

@@ -5,6 +5,14 @@
 # is restricted to this project.
 use Mix.Config
 
+config :erlangelist, Erlangelist.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "erlangelist_repo",
+  username: "user",
+  password: "pass",
+  hostname: "localhost"
+
+
 Code.require_file("config/settings.exs")
 
 var!(config, Mix.Config) =

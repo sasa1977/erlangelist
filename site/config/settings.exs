@@ -76,6 +76,22 @@ defmodule Erlangelist.Settings do
         ]
       },
 
+      {Erlangelist.Repo,
+        common: [
+          adapter: Ecto.Adapters.Postgres,
+          database: "erlangelist",
+          username: "erlangelist",
+          password: "",
+          hostname: "127.0.0.1",
+          port: 5432
+        ],
+
+        prod: [
+          hostname: "172.17.42.1",
+          port: 5459
+        ]
+      },
+
       peer_ip: [
         common: "127.0.0.1",
         prod: "172.17.42.1"

@@ -7,10 +7,12 @@ defmodule Erlangelist do
     import Supervisor.Spec, warn: false
 
     children = [
+      worker(Erlangelist.Repo, []),
       worker(ConCache, [app_env!(:articles_cache), [name: :articles_cache]], id: :articles_cache),
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
       worker(Erlangelist.ArticleEvent, []),
       supervisor(Erlangelist.OneOff, []),
+      supervisor(Erlangelist.PersistentCounterServer, [], function: :start_sup),
       supervisor(Erlangelist.Endpoint, [])
     ]
 

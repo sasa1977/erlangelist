@@ -1,12 +1,7 @@
 defmodule Erlangelist.GeoIp do
-  alias Erlangelist.Metrics
-  alias Erlangelist.OneOff
+  alias Erlangelist.PersistentCounterServer
 
   def report_metric(ip) do
-    OneOff.run(fn -> do_report_metric(ip) end)
-  end
-
-  defp do_report_metric(ip) do
     ip
     |> country
     |> report
@@ -15,7 +10,7 @@ defmodule Erlangelist.GeoIp do
   defp report(nil), do: :ok
   defp report(""), do: :ok
   defp report(country) when is_binary(country) do
-    Metrics.inc_spiral([:site, :visitors, :country, country])
+    PersistentCounterServer.inc("country_visit", country)
   end
 
   if Mix.env == :dev do
