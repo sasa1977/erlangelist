@@ -5,13 +5,13 @@
     <div class="row">
       <h2><%= period_name %></h2>
       <%= for {visit_type, visit_data} <- period_data do %>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <h3><%= visit_type %></h3>
-          <table>
+          <table class="hits">
           <%= for {title, count} <- visit_data do %>
             <tr>
-              <td><%= title %></td>
-              <td><%= count %></td>
+              <td class="title"><div title="<%= title %>"><%= title %></div></td>
+              <td class="count"><%= count %></td>
             </tr>
           <% end %>
         </table>

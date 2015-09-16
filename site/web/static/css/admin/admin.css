@@ -1,0 +1,14 @@
+.hits {
+  width:100%;
+}
+
+.hits .title{
+  white-space:nowrap;
+  overflow: hidden;
+  max-width:400px;
+}
+
+.hits .count {
+  padding-left: 15px;
+  text-align: right;
+}
