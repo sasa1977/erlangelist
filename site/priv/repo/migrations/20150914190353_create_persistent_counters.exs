@@ -3,7 +3,7 @@ defmodule Erlangelist.Repo.Migrations.CreatePersistentCounters do
 
   def change do
     create table(:persistent_counters) do
-      add :name, :text, null: false
+      add :key, :text, null: false
       add :value, :bigint, null: false
       add :created_at, :datetime,
         null: false,
@@ -12,7 +12,7 @@ defmodule Erlangelist.Repo.Migrations.CreatePersistentCounters do
 
     for table <- [:article_visits, :country_visits] do
       create table(table, options: "inherits(persistent_counters)")
-      create index(table, [:name], unique: false)
+      create index(table, [:key], unique: false)
       create index(table, [:created_at], unique: false)
     end
   end

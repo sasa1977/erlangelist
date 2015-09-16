@@ -14,7 +14,7 @@ defmodule Erlangelist.AdminController do
   def index(conn, _params) do
     max_visits = Repo.all(
       from visit in grouped_visits,
-      select: [visit.name, max(visit.value)],
+      select: [visit.key, max(visit.value)],
       order_by: [desc: max(visit.value)]
     )
 
@@ -35,9 +35,9 @@ defmodule Erlangelist.AdminController do
           |> Timex.Ecto.DateTime.dump
 
         Repo.all(
-          from pc in grouped_visits,
-          select: [pc.name, max(pc.value)],
-          where: pc.created_at < ^since
+          from visit in grouped_visits,
+          select: [visit.key, max(visit.value)],
+          where: visit.created_at < ^since
         )
         |> Stream.map(&List.to_tuple/1)
         |> Enum.into(%{})
@@ -45,15 +45,15 @@ defmodule Erlangelist.AdminController do
         %{}
       end
 
-    Stream.map(max_visits, fn([name, count]) ->
-      past_count = past_visits[name] || 0
-      {name, count - past_count}
+    Stream.map(max_visits, fn([key, count]) ->
+      past_count = past_visits[key] || 0
+      {key, count - past_count}
     end)
     |> Stream.filter(fn({_, count}) -> count > 0 end)
   end
 
   defp grouped_visits do
     from visit in ArticleVisit,
-      group_by: [visit.name]
+      group_by: [visit.key]
   end
 end

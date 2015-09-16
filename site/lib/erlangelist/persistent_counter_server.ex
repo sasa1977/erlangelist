@@ -5,8 +5,8 @@ defmodule Erlangelist.PersistentCounterServer do
 
   alias Erlangelist.Repo
 
-  def inc(model, name, by \\ 1) do
-    case Supervisor.start_child(__MODULE__, [model, name]) do
+  def inc(model, key, by \\ 1) do
+    case Supervisor.start_child(__MODULE__, [model, key]) do
       {:ok, pid} -> pid
       {:error, {:already_started, pid}} -> pid
     end
@@ -30,23 +30,23 @@ defmodule Erlangelist.PersistentCounterServer do
     )
   end
 
-  def start_link(model, name) do
+  def start_link(model, key) do
     Workex.start_link(
       __MODULE__,
-      {model, name},
+      {model, key},
       [aggregate: Erlangelist.Workex.Counter.new],
-      [name: {:via, :gproc, {:n, :l, {model, name}}}]
+      [name: {:via, :gproc, {:n, :l, {model, key}}}]
     )
   end
 
   def init(state), do: {:ok, state}
 
-  def handle(by, {model, name} = state) do
+  def handle(by, {model, key} = state) do
     # Don't really want to crash here, because it might cause too many
     # restarts and ultimately overload the system. This is a non-critical work,
     # so just log error and resume as normal.
     try do
-      {:ok, _} = db_inc(model, name, by)
+      {:ok, _} = db_inc(model, key, by)
     catch
       type, error ->
         Logger.error("#{inspect type}: #{inspect error}")
@@ -58,17 +58,17 @@ defmodule Erlangelist.PersistentCounterServer do
     {:ok, state}
   end
 
-  defp db_inc(model, name, by) do
+  defp db_inc(model, key, by) do
     latest_count =
       Repo.one(
         from visit in model,
           select: visit.value,
-          where: visit.name == ^name,
+          where: visit.key == ^key,
           order_by: [desc: :id],
           limit: 1
       ) || 0
 
-    model.new(name, latest_count + by)
+    model.new(key, latest_count + by)
     |> Repo.insert
   end
 
@@ -92,20 +92,22 @@ defmodule Erlangelist.PersistentCounterServer do
         ~s{
           delete from #{table_name}
           using (
-            select name, date(created_at) created_at_date, max(value) max_value
+            select key, date(created_at) created_at_date, max(value) max_value
             from #{table_name}
             where date(created_at) < date(now())
-            group by name, date(created_at)
+            group by key, date(created_at)
           ) newest
           where
-            #{table_name}.name=newest.name
+            #{table_name}.key=newest.key
             and date(#{table_name}.created_at)=newest.created_at_date
             and #{table_name}.value < newest.max_value
         },
         []
       )
 
-      Logger.info("#{table_name} compacted, deleted #{num_rows} rows")
+      if num_rows > 0 do
+        Logger.info("#{table_name} compacted, deleted #{num_rows} rows")
+      end
     end
   end
 end

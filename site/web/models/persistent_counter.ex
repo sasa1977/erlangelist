@@ -5,13 +5,13 @@ defmodule Erlangelist.Model.CounterBase do
       use Timex.Ecto.Timestamps
 
       schema unquote(opts[:table_name]) do
-        field :name, :string
+        field :key, :string
         field :value, :integer
         field :created_at, Ecto.DateTime
       end
 
-      def new(name, value) do
-        %__MODULE__{name: name, value: value, created_at: Ecto.DateTime.utc}
+      def new(key, value) do
+        %__MODULE__{key: key, value: value, created_at: Ecto.DateTime.utc}
       end
     end
   end
