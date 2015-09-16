@@ -5,6 +5,8 @@ defmodule Erlangelist.ArticleEvent.Metrics do
   alias Erlangelist.GeoIp
   alias Erlangelist.PersistentCounterServer
   alias Erlangelist.Model.ArticleVisit
+  alias Erlangelist.Model.RefererVisit
+  alias Erlangelist.Model.RefererHostVisit
 
   def handle_event(:invalid_article, state) do
     OneOff.run(fn -> Metrics.inc_spiral([:article, :invalid_article, :requests]) end)
@@ -16,6 +18,11 @@ defmodule Erlangelist.ArticleEvent.Metrics do
     OneOff.run(fn -> GeoIp.report_metric(data[:remote_ip]) end)
     PersistentCounterServer.inc(ArticleVisit, "all")
     PersistentCounterServer.inc(ArticleVisit, article.id)
+
+    for {host, url} <- (data[:referers] || []) do
+      if host, do: PersistentCounterServer.inc(RefererHostVisit, host)
+      if url, do: PersistentCounterServer.inc(RefererVisit, url)
+    end
 
     {:ok, state}
   end

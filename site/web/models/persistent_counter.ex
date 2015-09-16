@@ -20,7 +20,9 @@ end
 for {table_name, module_suffix} <- %{
     "persistent_counters" => PersistentCounter,
     "article_visits" => ArticleVisit,
-    "country_visits" => CountryVisit
+    "country_visits" => CountryVisit,
+    "referer_host_visits" => RefererHostVisit,
+    "referer_visits" => RefererVisit
   } do
   defmodule Module.concat(Erlangelist.Model, module_suffix) do
     @table_name table_name

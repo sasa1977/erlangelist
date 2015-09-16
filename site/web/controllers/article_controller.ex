@@ -22,7 +22,7 @@ defmodule Erlangelist.ArticleController do
 
 
   defp render_article(conn, %{has_content?: true} = article) do
-    ArticleEvent.visited(article, %{remote_ip: remote_ip_string(conn)})
+    ArticleEvent.visited(article, conn)
     render(conn, "article.html", %{article: article})
   end
 
@@ -31,11 +31,5 @@ defmodule Erlangelist.ArticleController do
   defp render_not_found(conn) do
     ArticleEvent.invalid_article
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
-  end
-
-  defp remote_ip_string(conn) do
-    conn.remote_ip
-    |> Tuple.to_list
-    |> Enum.join(".")
   end
 end

@@ -13,11 +13,25 @@ defmodule Erlangelist.ArticleEvent do
     end
   end
 
-  def visited(article, data) do
-    GenEvent.notify(manager_name, {:article_visited, article, data})
+  def visited(article, conn) do
+    GenEvent.notify(manager_name, {:article_visited, article, data(conn)})
   end
 
   def invalid_article do
     GenEvent.notify(manager_name, :invalid_article)
+  end
+
+  defp data(conn) do
+    %{
+      remote_ip:
+        conn.remote_ip
+        |> Tuple.to_list
+        |> Enum.join("."),
+
+      referers:
+        for referer <- Plug.Conn.get_req_header(conn, "referer") do
+          {URI.parse(referer).host, referer}
+        end
+    }
   end
 end
