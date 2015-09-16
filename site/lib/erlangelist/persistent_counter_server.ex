@@ -17,6 +17,13 @@ defmodule Erlangelist.PersistentCounterServer do
   def start_sup do
     import Supervisor.Spec, warn: false
 
+    Ecto.Migrator.run(
+      Repo,
+      Application.app_dir(:erlangelist, "priv/repo/migrations"),
+      :up,
+      all: true
+    )
+
     Supervisor.start_link(
       [worker(__MODULE__, [], restart: :temporary)],
       name: __MODULE__,
