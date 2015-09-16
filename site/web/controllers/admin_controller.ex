@@ -4,6 +4,8 @@ defmodule Erlangelist.AdminController do
 
   alias Erlangelist.Repo
   alias Erlangelist.Model.ArticleVisit
+  alias Erlangelist.Model.RefererHostVisit
+  alias Erlangelist.Model.RefererVisit
 
   plug :set_layout
 
@@ -12,21 +14,46 @@ defmodule Erlangelist.AdminController do
   end
 
   def index(conn, _params) do
-    max_visits = Repo.all(
-      from visit in grouped_visits,
-      select: [visit.key, max(visit.value)],
-      order_by: [desc: max(visit.value)]
-    )
-
-    render(conn, "index.html", %{article_visits: [
-      recent: article_visits(max_visits, hours: -2),
-      day: article_visits(max_visits, days: -1),
-      month: article_visits(max_visits, months: -1),
-      total: article_visits(max_visits)
-    ]})
+    render(conn, "index.html", all_visits: all_visits)
   end
 
-  defp article_visits(max_visits, span \\ nil) do
+  @periods [
+    recent: [hours: -2],
+    day: [days: -1],
+    month: [months: -1],
+    all: nil
+  ]
+
+  @visit_types [
+    article: ArticleVisit,
+    referer_host: RefererHostVisit,
+    referer_url: RefererVisit
+  ]
+
+  defp all_visits do
+    max_visits =
+      for {_, model} <- @visit_types, into: %{} do
+        {
+          model,
+          Repo.all(
+            from visit in grouped_visits(model),
+            select: [visit.key, max(visit.value)],
+            order_by: [desc: max(visit.value)]
+          )
+        }
+      end
+
+    for {period_name, span} <- @periods do
+      {
+        period_name,
+        for {visit_type, model} <- @visit_types do
+          {visit_type, visit_data(max_visits, model, span)}
+        end
+      }
+    end
+  end
+
+  defp visit_data(max_visits, model, span) do
     past_visits =
       if span do
         {:ok, since} =
@@ -35,7 +62,7 @@ defmodule Erlangelist.AdminController do
           |> Timex.Ecto.DateTime.dump
 
         Repo.all(
-          from visit in grouped_visits,
+          from visit in grouped_visits(model),
           select: [visit.key, max(visit.value)],
           where: visit.created_at < ^since
         )
@@ -45,15 +72,20 @@ defmodule Erlangelist.AdminController do
         %{}
       end
 
-    Stream.map(max_visits, fn([key, count]) ->
+    Stream.map(max_visits[model], fn([key, count]) ->
       past_count = past_visits[key] || 0
       {key, count - past_count}
     end)
     |> Stream.filter(fn({_, count}) -> count > 0 end)
+    |> Enum.sort_by(
+          fn({name, count}) -> {-count, name} end,
+          &<=/2
+        )
+    |> Enum.take(10)
   end
 
-  defp grouped_visits do
-    from visit in ArticleVisit,
+  defp grouped_visits(model) do
+    from visit in model,
       group_by: [visit.key]
   end
 end

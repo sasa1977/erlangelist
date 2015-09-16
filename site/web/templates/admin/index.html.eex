@@ -1,21 +1,22 @@
 <h1>Admin overview</h1>
 
-<div>
-  <%= for {type, visits} <- @article_visits do %>
-    <h2><%= type %></h2>
-    <table>
-      <%= for {article_id, count} <- visits do %>
-        <%
-          title = case Erlangelist.Article.article(article_id) do
-            nil -> article_id
-            article -> article.short_title
-          end
-        %>
-        <tr>
-          <td><%= title %></td>
-          <td><%= count %></td>
-        </tr>
+<div class="container-fluid">
+  <%= for {period_name, period_data} <- @all_visits do %>
+    <div class="row">
+      <h2><%= period_name %></h2>
+      <%= for {visit_type, visit_data} <- period_data do %>
+        <div class="col-md-3">
+          <h3><%= visit_type %></h3>
+          <table>
+          <%= for {title, count} <- visit_data do %>
+            <tr>
+              <td><%= title %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </table>
+        </div>
       <% end %>
-    </table>
+    </div>
   <%= end %>
 </div>
