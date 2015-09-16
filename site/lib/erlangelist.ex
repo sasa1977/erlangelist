@@ -13,7 +13,7 @@ defmodule Erlangelist do
       worker(Erlangelist.ArticleEvent, []),
       supervisor(Erlangelist.OneOff, []),
       supervisor(Erlangelist.PersistentCounterServer, [], function: :start_sup),
-      supervisor(Erlangelist.Endpoint, [])
+      supervisor(Erlangelist.Endpoint.Site, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -25,7 +25,7 @@ defmodule Erlangelist do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Erlangelist.Endpoint.config_change(changed, removed)
+    Erlangelist.Endpoint.Site.config_change(changed, removed)
     :ok
   end
 

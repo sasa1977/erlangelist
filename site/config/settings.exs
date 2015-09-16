@@ -41,7 +41,7 @@ defmodule Erlangelist.Settings do
     ],
 
     erlangelist: [
-      {Erlangelist.Endpoint,
+      {Erlangelist.Endpoint.Site,
         common: [
           url: [host: "localhost"],
           http: [port: 5454],

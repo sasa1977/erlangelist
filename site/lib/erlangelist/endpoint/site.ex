@@ -1,4 +1,4 @@
-defmodule Erlangelist.Endpoint do
+defmodule Erlangelist.Endpoint.Site do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
   socket "/socket", Erlangelist.UserSocket

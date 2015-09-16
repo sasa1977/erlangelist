@@ -21,7 +21,7 @@ defmodule Erlangelist.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint Erlangelist.Endpoint
+      @endpoint Erlangelist.Endpoint.Site
     end
   end
 

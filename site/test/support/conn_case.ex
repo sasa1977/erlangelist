@@ -23,7 +23,7 @@ defmodule Erlangelist.ConnCase do
       import Erlangelist.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Erlangelist.Endpoint
+      @endpoint Erlangelist.Endpoint.Site
 
       import Erlangelist.ConnHelper
     end
