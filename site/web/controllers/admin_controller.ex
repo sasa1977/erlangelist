@@ -49,6 +49,7 @@ defmodule Erlangelist.AdminController do
       past_count = past_views[name] || 0
       {name, count - past_count}
     end)
+    |> Stream.filter(fn({_, count}) -> count > 0 end)
   end
 
   defp grouped_views do

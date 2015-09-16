@@ -4,7 +4,13 @@
   <%= for {type, views} <- @article_views do %>
     <h2><%= type %></h2>
     <table>
-      <%= for {title, count} <- views do %>
+      <%= for {article_id, count} <- views do %>
+        <%
+          title = case Erlangelist.Article.article(article_id) do
+            nil -> article_id
+            article -> article.short_title
+          end
+        %>
         <tr>
           <td><%= title %></td>
           <td><%= count %></td>

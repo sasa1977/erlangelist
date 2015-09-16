@@ -50,5 +50,5 @@ defmodule Erlangelist.Article do
     end
   end
 
-  def article(_), do: false
+  def article(_), do: nil
 end
