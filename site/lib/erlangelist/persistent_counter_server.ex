@@ -29,11 +29,9 @@ defmodule Erlangelist.PersistentCounterServer do
       __MODULE__,
       {category, name},
       [aggregate: Erlangelist.Workex.Counter.new],
-      [name: name(category, name)]
+      [name: {:via, :gproc, {:n, :l, {category, name}}}]
     )
   end
-
-  defp name(category, name), do: {:via, :gproc, {:n, :l, {category, name}}}
 
   def init(state), do: {:ok, state}
 
@@ -66,6 +64,29 @@ defmodule Erlangelist.PersistentCounterServer do
 
     PersistentCounter.new(category, name, latest_count + by)
     |> Repo.insert
+  end
+
+  def compact do
+    {:ok, %{num_rows: num_rows}} = Ecto.Adapters.SQL.query(
+      Repo,
+      ~s{
+        delete from persistent_counters
+        using (
+          select category, name, date(created_at) created_at_date, max(id) id
+          from persistent_counters
+          where date(created_at) < date(now())
+          group by category, name, date(created_at)
+        ) newest
+        where
+          persistent_counters.category=newest.category
+          and persistent_counters.name=newest.name
+          and date(persistent_counters.created_at)=newest.created_at_date
+          and persistent_counters.id < newest.id
+      },
+      []
+    )
+
+    Logger.info("Counters compacted, deleted #{num_rows} rows")
   end
 end
 

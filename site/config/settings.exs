@@ -40,6 +40,18 @@ defmodule Erlangelist.Settings do
       ]
     ],
 
+    erlcron: [
+      crontab: [
+        test: [],
+        common: [
+          {
+            {:daily, {5, 0, :am}},
+            {Erlangelist.PersistentCounterServer, :compact, []}
+          }
+        ]
+      ]
+    ],
+
     erlangelist: [
       # Main site
       {Erlangelist.Endpoint.Site,
