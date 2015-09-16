@@ -3,7 +3,6 @@ defmodule Erlangelist.Repo.Migrations.CreatePersistentCounters do
 
   def change do
     create table(:persistent_counters) do
-      add :category, :text, null: false
       add :name, :text, null: false
       add :value, :bigint, null: false
       add :created_at, :datetime,
@@ -11,7 +10,10 @@ defmodule Erlangelist.Repo.Migrations.CreatePersistentCounters do
         default: fragment("(now() at time zone 'utc')")
     end
 
-    create index(:persistent_counters, [:category, :name], unique: false)
-    create index(:persistent_counters, [:created_at], unique: false)
+    for table <- [:article_visits, :country_visits] do
+      create table(table, options: "inherits(persistent_counters)")
+      create index(table, [:name], unique: false)
+      create index(table, [:created_at], unique: false)
+    end
   end
 end

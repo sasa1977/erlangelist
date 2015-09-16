@@ -4,10 +4,9 @@ defmodule Erlangelist.PersistentCounterServer do
   import Ecto.Query, only: [from: 2]
 
   alias Erlangelist.Repo
-  alias Erlangelist.Model.PersistentCounter
 
-  def inc(category, name, by \\ 1) do
-    case Supervisor.start_child(__MODULE__, [category, name]) do
+  def inc(model, name, by \\ 1) do
+    case Supervisor.start_child(__MODULE__, [model, name]) do
       {:ok, pid} -> pid
       {:error, {:already_started, pid}} -> pid
     end
@@ -31,23 +30,23 @@ defmodule Erlangelist.PersistentCounterServer do
     )
   end
 
-  def start_link(category, name) do
+  def start_link(model, name) do
     Workex.start_link(
       __MODULE__,
-      {category, name},
+      {model, name},
       [aggregate: Erlangelist.Workex.Counter.new],
-      [name: {:via, :gproc, {:n, :l, {category, name}}}]
+      [name: {:via, :gproc, {:n, :l, {model, name}}}]
     )
   end
 
   def init(state), do: {:ok, state}
 
-  def handle(by, {category, name} = state) do
+  def handle(by, {model, name} = state) do
     # Don't really want to crash here, because it might cause too many
     # restarts and ultimately overload the system. This is a non-critical work,
     # so just log error and resume as normal.
     try do
-      {:ok, _} = db_inc(category, name, by)
+      {:ok, _} = db_inc(model, name, by)
     catch
       type, error ->
         Logger.error("#{inspect type}: #{inspect error}")
@@ -59,41 +58,55 @@ defmodule Erlangelist.PersistentCounterServer do
     {:ok, state}
   end
 
-  defp db_inc(category, name, by) do
+  defp db_inc(model, name, by) do
     latest_count =
       Repo.one(
-        from pc in PersistentCounter,
-          select: pc.value,
-          where: pc.category == ^category and pc.name == ^name,
+        from visit in model,
+          select: visit.value,
+          where: visit.name == ^name,
           order_by: [desc: :id],
           limit: 1
       ) || 0
 
-    PersistentCounter.new(category, name, latest_count + by)
+    model.new(name, latest_count + by)
     |> Repo.insert
   end
 
   def compact do
-    {:ok, %{num_rows: num_rows}} = Ecto.Adapters.SQL.query(
-      Repo,
-      ~s{
-        delete from persistent_counters
-        using (
-          select category, name, date(created_at) created_at_date, max(id) id
-          from persistent_counters
-          where date(created_at) < date(now())
-          group by category, name, date(created_at)
-        ) newest
-        where
-          persistent_counters.category=newest.category
-          and persistent_counters.name=newest.name
-          and date(persistent_counters.created_at)=newest.created_at_date
-          and persistent_counters.id < newest.id
-      },
-      []
-    )
+    {:ok, %{rows: inherited_tables}} =
+      Ecto.Adapters.SQL.query(
+        Repo,
+        ~s{
+          select cast(c.relname as text)
+          from pg_inherits
+          join pg_class AS c on (inhrelid=c.oid)
+          join pg_class as p on (inhparent=p.oid)
+          where p.relname = 'persistent_counters'
+        },
+        []
+      )
 
-    Logger.info("Counters compacted, deleted #{num_rows} rows")
+    for [table_name] <- inherited_tables do
+      {:ok, %{num_rows: num_rows}} = Ecto.Adapters.SQL.query(
+        Repo,
+        ~s{
+          delete from #{table_name}
+          using (
+            select name, date(created_at) created_at_date, max(value) max_value
+            from #{table_name}
+            where date(created_at) < date(now())
+            group by name, date(created_at)
+          ) newest
+          where
+            #{table_name}.name=newest.name
+            and date(#{table_name}.created_at)=newest.created_at_date
+            and #{table_name}.value < newest.max_value
+        },
+        []
+      )
+
+      Logger.info("#{table_name} compacted, deleted #{num_rows} rows")
+    end
   end
 end
 

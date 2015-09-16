@@ -1,5 +1,6 @@
 defmodule Erlangelist.GeoIp do
   alias Erlangelist.PersistentCounterServer
+  alias Erlangelist.Model.CountryVisit
 
   def report_metric(ip) do
     ip
@@ -10,7 +11,7 @@ defmodule Erlangelist.GeoIp do
   defp report(nil), do: :ok
   defp report(""), do: :ok
   defp report(country) when is_binary(country) do
-    PersistentCounterServer.inc("country_visit", country)
+    PersistentCounterServer.inc(CountryVisit, country)
   end
 
   if Mix.env == :dev do

@@ -1,10 +1,10 @@
 <h1>Admin overview</h1>
 
 <div>
-  <%= for {type, views} <- @article_views do %>
+  <%= for {type, visits} <- @article_visits do %>
     <h2><%= type %></h2>
     <table>
-      <%= for {article_id, count} <- views do %>
+      <%= for {article_id, count} <- visits do %>
         <%
           title = case Erlangelist.Article.article(article_id) do
             nil -> article_id

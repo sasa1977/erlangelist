@@ -3,7 +3,7 @@ defmodule Erlangelist.AdminController do
   import Ecto.Query, only: [from: 2]
 
   alias Erlangelist.Repo
-  alias Erlangelist.Model.PersistentCounter
+  alias Erlangelist.Model.ArticleVisit
 
   plug :set_layout
 
@@ -12,22 +12,22 @@ defmodule Erlangelist.AdminController do
   end
 
   def index(conn, _params) do
-    max_views = Repo.all(
-      from pc in grouped_views,
-      select: [pc.name, max(pc.value)],
-      order_by: [desc: max(pc.value)]
+    max_visits = Repo.all(
+      from visit in grouped_visits,
+      select: [visit.name, max(visit.value)],
+      order_by: [desc: max(visit.value)]
     )
 
-    render(conn, "index.html", %{article_views: [
-      recent: article_views(max_views, hours: -2),
-      day: article_views(max_views, days: -1),
-      month: article_views(max_views, months: -1),
-      total: article_views(max_views)
+    render(conn, "index.html", %{article_visits: [
+      recent: article_visits(max_visits, hours: -2),
+      day: article_visits(max_visits, days: -1),
+      month: article_visits(max_visits, months: -1),
+      total: article_visits(max_visits)
     ]})
   end
 
-  defp article_views(max_views, span \\ nil) do
-    past_views =
+  defp article_visits(max_visits, span \\ nil) do
+    past_visits =
       if span do
         {:ok, since} =
           Timex.Date.now
@@ -35,9 +35,9 @@ defmodule Erlangelist.AdminController do
           |> Timex.Ecto.DateTime.dump
 
         Repo.all(
-          from pc in grouped_views,
-          select: [pc.name, min(pc.value)],
-          where: pc.created_at >= ^since
+          from pc in grouped_visits,
+          select: [pc.name, max(pc.value)],
+          where: pc.created_at < ^since
         )
         |> Stream.map(&List.to_tuple/1)
         |> Enum.into(%{})
@@ -45,16 +45,15 @@ defmodule Erlangelist.AdminController do
         %{}
       end
 
-    Stream.map(max_views, fn([name, count]) ->
-      past_count = past_views[name] || 0
+    Stream.map(max_visits, fn([name, count]) ->
+      past_count = past_visits[name] || 0
       {name, count - past_count}
     end)
     |> Stream.filter(fn({_, count}) -> count > 0 end)
   end
 
-  defp grouped_views do
-    from pc in PersistentCounter,
-      group_by: [pc.name],
-      where: pc.category == "article_view"
+  defp grouped_visits do
+    from visit in ArticleVisit,
+      group_by: [visit.name]
   end
 end

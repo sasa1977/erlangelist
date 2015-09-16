@@ -1,18 +1,29 @@
-defmodule Erlangelist.Model.PersistentCounter do
-  use Ecto.Model
-  use Timex.Ecto.Timestamps
+defmodule Erlangelist.Model.CounterBase do
+  defmacro __using__(opts) do
+    quote do
+      use Ecto.Model
+      use Timex.Ecto.Timestamps
 
-  schema "persistent_counters" do
-    field :category, :string
-    field :name, :string
-    field :value, :integer
-    field :created_at, Ecto.DateTime
+      schema unquote(opts[:table_name]) do
+        field :name, :string
+        field :value, :integer
+        field :created_at, Ecto.DateTime
+      end
+
+      def new(name, value) do
+        %__MODULE__{name: name, value: value, created_at: Ecto.DateTime.utc}
+      end
+    end
   end
+end
 
-  def new(category, name, value) do
-    %__MODULE__{
-      category: category, name: name, value: value,
-      created_at: Ecto.DateTime.utc
-    }
+for {table_name, module_suffix} <- %{
+    "persistent_counters" => PersistentCounter,
+    "article_visits" => ArticleVisit,
+    "country_visits" => CountryVisit
+  } do
+  defmodule Module.concat(Erlangelist.Model, module_suffix) do
+    @table_name table_name
+    use Erlangelist.Model.CounterBase, table_name: @table_name
   end
 end
