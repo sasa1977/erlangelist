@@ -42,4 +42,4 @@
   "timex": {:hex, :timex, "0.19.4"},
   "timex_ecto": {:hex, :timex_ecto, "0.5.0"},
   "tzdata": {:hex, :tzdata, "0.5.2"},
-  "workex": {:hex, :workex, "0.8.0"}}
+  "workex": {:git, "git://github.com/sasa1977/workex.git", "3d6c39cb5f21c3c5e6a77a518d31f45b108bc352", []}}

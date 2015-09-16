@@ -50,7 +50,7 @@ defmodule Erlangelist.Mixfile do
      {:httpoison, "~> 0.7.3"},
      {:poison, "~> 1.5.0"},
      {:gproc, "~> 0.5.0"},
-     {:workex, "~> 0.8.0"},
+     {:workex, github: "sasa1977/workex"},
      {:timex_ecto, "~> 0.5.0"},
      {:erlcron, github: "erlware/erlcron"}
    ]

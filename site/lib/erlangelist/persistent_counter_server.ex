@@ -39,7 +39,10 @@ defmodule Erlangelist.PersistentCounterServer do
     )
   end
 
-  def init(state), do: {:ok, state}
+
+  @inactivity_timeout :timer.seconds(30)
+
+  def init(state), do: {:ok, state, @inactivity_timeout}
 
   def handle(by, {model, key} = state) do
     # Don't really want to crash here, because it might cause too many
@@ -55,8 +58,11 @@ defmodule Erlangelist.PersistentCounterServer do
     # Some breathing space, so we don't update too often.
     :timer.sleep(:timer.seconds(1))
 
-    {:ok, state}
+    {:ok, state, @inactivity_timeout}
   end
+
+  def handle_message(:timeout, state), do: {:stop, :normal, state}
+  def handle_message(_, state), do: {:ok, state, @inactivity_timeout}
 
   defp db_inc(model, key, by) do
     latest_count =
