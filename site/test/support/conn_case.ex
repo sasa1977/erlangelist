@@ -20,7 +20,7 @@ defmodule Erlangelist.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      import Erlangelist.Router.Helpers
+      import Erlangelist.Router.Site.Helpers
 
       # The default endpoint for testing
       @endpoint Erlangelist.Endpoint.Site

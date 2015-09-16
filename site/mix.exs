@@ -20,7 +20,7 @@ defmodule Erlangelist.Mixfile do
      applications: [
       :phoenix, :phoenix_html, :cowboy, :logger, :postgrex, :con_cache, :timex,
       :runtime_tools, :lager_logger, :lager, :exometer, :httpoison, :poison,
-      :gproc, :workex
+      :gproc, :workex, :timex_ecto
     ]]
   end
 
@@ -50,7 +50,8 @@ defmodule Erlangelist.Mixfile do
      {:httpoison, "~> 0.7.3"},
      {:poison, "~> 1.5.0"},
      {:gproc, "~> 0.5.0"},
-     {:workex, "~> 0.8.0"}
+     {:workex, "~> 0.8.0"},
+     {:timex_ecto, "~> 0.5.0"}
    ]
   end
 end

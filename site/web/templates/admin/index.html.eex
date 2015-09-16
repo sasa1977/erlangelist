@@ -1,0 +1,15 @@
+<h1>Admin overview</h1>
+
+<div>
+  <%= for {type, views} <- @article_views do %>
+    <h2><%= type %></h2>
+    <table>
+      <%= for {title, count} <- views do %>
+        <tr>
+          <td><%= title %></td>
+          <td><%= count %></td>
+        </tr>
+      <% end %>
+    </table>
+  <%= end %>
+</div>

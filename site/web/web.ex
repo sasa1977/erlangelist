@@ -26,7 +26,7 @@ defmodule Erlangelist.Web do
       use Phoenix.Controller
 
       alias Erlangelist.Repo
-      import Erlangelist.Router.Helpers
+      import Erlangelist.Router.Site.Helpers
     end
   end
 
@@ -40,7 +40,7 @@ defmodule Erlangelist.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Erlangelist.Router.Helpers
+      import Erlangelist.Router.Site.Helpers
     end
   end
 

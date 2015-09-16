@@ -41,6 +41,7 @@ defmodule Erlangelist.Settings do
     ],
 
     erlangelist: [
+      # Main site
       {Erlangelist.Endpoint.Site,
         common: [
           url: [host: "localhost"],
@@ -48,7 +49,7 @@ defmodule Erlangelist.Settings do
           root: Path.dirname(__DIR__),
           secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
           render_errors: [accepts: ~w(html json)],
-          pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2],
+          pubsub: [name: Erlangelist.PubSub.Site, adapter: Phoenix.PubSub.PG2],
           http: [compress: true]
         ],
 
@@ -74,6 +75,37 @@ defmodule Erlangelist.Settings do
           url: [host: "theerlangelist.com", port: 80],
           cache_static_manifest: "priv/static/manifest.json"
         ]
+      },
+
+      # Admin site
+      {Erlangelist.Endpoint.Admin,
+        common: [
+          url: [host: "localhost"],
+          http: [port: 5460],
+          root: Path.dirname(__DIR__),
+          secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
+          render_errors: [accepts: ~w(html json)],
+          pubsub: [name: Erlangelist.PubSub.Admin, adapter: Phoenix.PubSub.PG2],
+          http: [compress: true]
+        ],
+
+        dev: [
+          debug_errors: true,
+          code_reloader: true,
+          cache_static_lookup: false,
+          check_origin: false,
+          watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]],
+          live_reload: [
+            patterns: [
+              ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+              ~r{web/views/.*(ex)$},
+              ~r{web/templates/.*(eex)$},
+              ~r{articles/.*$}
+            ]
+          ]
+        ],
+
+        test: [http: [port: 4002], server: false]
       },
 
       {Erlangelist.Repo,

@@ -13,7 +13,8 @@ defmodule Erlangelist do
       worker(Erlangelist.ArticleEvent, []),
       supervisor(Erlangelist.OneOff, []),
       supervisor(Erlangelist.PersistentCounterServer, [], function: :start_sup),
-      supervisor(Erlangelist.Endpoint.Site, [])
+      supervisor(Erlangelist.Endpoint.Site, []),
+      supervisor(Erlangelist.Endpoint.Admin, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

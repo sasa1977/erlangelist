@@ -1,4 +1,4 @@
-defmodule Erlangelist.Endpoint.Site do
+defmodule Erlangelist.Endpoint.Admin do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
   socket "/socket", Erlangelist.UserSocket
@@ -35,5 +35,5 @@ defmodule Erlangelist.Endpoint.Site do
     key: "_erlangelist_key",
     signing_salt: "l8k6qrt3"
 
-  plug Erlangelist.Router.Site
+  plug Erlangelist.Router.Admin
 end

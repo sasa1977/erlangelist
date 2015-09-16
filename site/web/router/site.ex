@@ -1,4 +1,4 @@
-defmodule Erlangelist.Router do
+defmodule Erlangelist.Router.Site do
   require Erlangelist.Article
   use Erlangelist.Web, :router
 
