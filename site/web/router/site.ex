@@ -31,7 +31,7 @@ defmodule Erlangelist.Router.Site do
 
       # redirect to blogspot for non-migrated articles
       if article.redirect do
-        get String.replace(article.redirect, "http://theerlangelist.blogspot.com",""),
+        get article.link,
           OldPostController, :render, private: %{article: article}
       end
     end

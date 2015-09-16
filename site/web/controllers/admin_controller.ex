@@ -12,39 +12,48 @@ defmodule Erlangelist.AdminController do
   end
 
   def index(conn, _params) do
-    render(conn, "index.html", %{article_views: article_views(hours: -2)})
-  end
-
-  defp article_views(span) do
-    {:ok, since} =
-      Timex.Date.now
-      |> Timex.Date.shift(span)
-      |> Timex.Ecto.DateTime.dump
-
-    past_views =
-      Repo.all(
-        from pc in grouped_views(since),
-        select: [pc.name, min(pc.value)]
-      )
-      |> Stream.map(&List.to_tuple/1)
-      |> Enum.into(%{})
-
-    Repo.all(
-      from pc in grouped_views(since),
+    max_views = Repo.all(
+      from pc in grouped_views,
       select: [pc.name, max(pc.value)],
       order_by: [desc: max(pc.value)]
     )
-    |> Stream.map(fn([name, count]) ->
-         past_count = past_views[name] || 0
-         {name, count - past_count}
-       end)
+
+    render(conn, "index.html", %{article_views: [
+      recent: article_views(max_views, hours: -2),
+      day: article_views(max_views, days: -1),
+      month: article_views(max_views, months: -1),
+      total: article_views(max_views)
+    ]})
   end
 
-  defp grouped_views(since) do
+  defp article_views(max_views, span \\ nil) do
+    past_views =
+      if span do
+        {:ok, since} =
+          Timex.Date.now
+          |> Timex.Date.shift(span)
+          |> Timex.Ecto.DateTime.dump
+
+        Repo.all(
+          from pc in grouped_views,
+          select: [pc.name, min(pc.value)],
+          where: pc.created_at >= ^since
+        )
+        |> Stream.map(&List.to_tuple/1)
+        |> Enum.into(%{})
+      else
+        %{}
+      end
+
+    Stream.map(max_views, fn([name, count]) ->
+      past_count = past_views[name] || 0
+      {name, count - past_count}
+    end)
+  end
+
+  defp grouped_views do
     from pc in PersistentCounter,
       group_by: [pc.name],
-      where:
-        pc.category == "article_view"
-        and pc.created_at >= ^since
+      where: pc.category == "article_view"
   end
 end

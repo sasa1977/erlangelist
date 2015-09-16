@@ -5,7 +5,7 @@ defmodule Erlangelist.OldPostController do
 
   def render(%{private: %{article: article}} = conn, _params) do
     ArticleEvent.visited(article, %{remote_ip: remote_ip_string(conn)})
-    redirect(conn, external: "http://theerlangelist.blogspot.com#{conn.request_path}")
+    redirect(conn, external: "http://theerlangelist.blogspot.com#{article.redirect}")
   end
 
   defp remote_ip_string(conn) do

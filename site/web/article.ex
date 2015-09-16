@@ -14,13 +14,9 @@ defmodule Erlangelist.Article do
       |> Map.put(:long_title, data[:long_title] || data[:short_title])
       |> Map.put(:short_title, data[:short_title] || data[:long_title])
       |> Map.put(:link, data[:redirect] || "/article/#{article_id}")
+      |> Map.put(:redirect, data[:redirect])
       |> Map.put(:legacy_url, data[:legacy_url] || nil)
       |> Map.put(:source_link, "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md")
-
-    transformed_meta =
-      if data[:redirect],
-        do: Map.put(transformed_meta, :redirect, "http://theerlangelist.blogspot.com#{data[:redirect]}"),
-        else: Map.put(transformed_meta, :redirect, nil)
 
     transformed_meta
   end
