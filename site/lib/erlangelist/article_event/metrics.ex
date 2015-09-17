@@ -16,8 +16,7 @@ defmodule Erlangelist.ArticleEvent.Metrics do
 
   def handle_event({:article_visited, article, data}, state) do
     OneOff.run(fn -> GeoIp.report_metric(data[:remote_ip]) end)
-    PersistentCounterServer.inc(ArticleVisit, "all")
-    PersistentCounterServer.inc(ArticleVisit, article.id)
+    PersistentCounterServer.inc(ArticleVisit, ["all", article.id])
 
     for {host, url} <- (data[:referers] || []) do
       if host, do: PersistentCounterServer.inc(RefererHostVisit, host)
