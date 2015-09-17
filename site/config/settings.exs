@@ -1,4 +1,9 @@
 defmodule Erlangelist.Settings do
+  peer_ip = case Mix.env do
+    :prod -> "172.17.42.1"
+    _ -> "127.0.0.1"
+  end
+
   apps_settings = [
     kernel: [
       inet_dist_listen_min: [common: 30000],
@@ -126,20 +131,14 @@ defmodule Erlangelist.Settings do
           database: "erlangelist",
           username: "erlangelist",
           password: "",
-          hostname: "127.0.0.1",
+          hostname: peer_ip,
           port: 5432
         ],
 
-        prod: [
-          hostname: "172.17.42.1",
-          port: 5459
-        ]
+        prod: [port: 5459]
       },
 
-      peer_ip: [
-        common: "127.0.0.1",
-        prod: "172.17.42.1"
-      ],
+      peer_ip: [common: peer_ip],
 
       exometer_polling_interval: [
         common: :timer.seconds(5),

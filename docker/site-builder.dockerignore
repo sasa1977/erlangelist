@@ -8,6 +8,7 @@
 !site/package.json
 !site/package.json
 !site/priv/articles
+!site/priv/repo
 !site/rel/vm.args
 !site/mix.exs
 !site/mix.lock
