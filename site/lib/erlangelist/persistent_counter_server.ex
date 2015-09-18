@@ -2,6 +2,7 @@ defmodule Erlangelist.PersistentCounterServer do
   require Logger
   use Workex
 
+  alias Erlangelist.Analytics
   alias Erlangelist.Repo
 
   def inc(model, data) do
@@ -48,7 +49,7 @@ defmodule Erlangelist.PersistentCounterServer do
     # restarts and ultimately overload the system. This is a non-critical work,
     # so just log error and resume as normal.
     try do
-      results = db_inc(model, Enum.to_list(data))
+      results = Analytics.inc(model, Enum.to_list(data))
       for {:error, error} <- results do
         Logger.error("Database error: #{inspect error}")
       end
@@ -65,71 +66,6 @@ defmodule Erlangelist.PersistentCounterServer do
 
   def handle_message(:timeout, state), do: {:stop, :normal, state}
   def handle_message(_, state), do: {:ok, state, @inactivity_timeout}
-
-  defp db_inc(model, data) do
-    table_name = model.__schema__(:source)
-
-    for {key, inc} <- data do
-      Ecto.Adapters.SQL.query(
-        Repo,
-        ~s/
-          insert into #{table_name} (key, value) (
-            select $1, inc + coalesce(previous.value, 0)
-            from
-              (select #{inc} inc) increment
-              left join (
-                select value
-                from #{table_name}
-                where key=$1
-                order by id desc
-                limit 1
-              ) previous on true
-          )
-        /
-        |> String.replace(~r(\s+), " "),
-        [key]
-      )
-    end
-  end
-
-  def compact do
-    {:ok, %{rows: inherited_tables}} =
-      Ecto.Adapters.SQL.query(
-        Repo,
-        ~s{
-          select cast(c.relname as text)
-          from pg_inherits
-          join pg_class AS c on (inhrelid=c.oid)
-          join pg_class as p on (inhparent=p.oid)
-          where p.relname = 'persistent_counters'
-        },
-        []
-      )
-
-    for [table_name] <- inherited_tables do
-      {:ok, %{num_rows: num_rows}} = Ecto.Adapters.SQL.query(
-        Repo,
-        ~s{
-          delete from #{table_name}
-          using (
-            select key, date(created_at) created_at_date, max(value) max_value
-            from #{table_name}
-            where date(created_at) < date(now())
-            group by key, date(created_at)
-          ) newest
-          where
-            #{table_name}.key=newest.key
-            and date(#{table_name}.created_at)=newest.created_at_date
-            and #{table_name}.value < newest.max_value
-        },
-        []
-      )
-
-      if num_rows > 0 do
-        Logger.info("#{table_name} compacted, deleted #{num_rows} rows")
-      end
-    end
-  end
 end
 
 

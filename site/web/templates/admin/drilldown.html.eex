@@ -1,0 +1,14 @@
+<h3><%= @title %></h3>
+
+<div class="container-fluid">
+  <div class="col-md-2">
+    <table class="hits">
+      <%= for {label, value} <- @rows do %>
+        <tr>
+          <td><%= label %></td>
+          <td><%= value %></td>
+        </tr>
+      <%= end %>
+    </table>
+  </div>
+</div>

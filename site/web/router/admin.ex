@@ -13,5 +13,6 @@ defmodule Erlangelist.Router.Admin do
     pipe_through :browser # Use the default browser stack
 
     get "/", AdminController, :index
+    get "/drilldown", AdminController, :drilldown
   end
 end

@@ -51,7 +51,7 @@ defmodule Erlangelist.Settings do
         common: [
           {
             {:daily, {5, 0, :am}},
-            {Erlangelist.PersistentCounterServer, :compact, []}
+            {Erlangelist.Analytics, :compact, []}
           }
         ]
       ]

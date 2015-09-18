@@ -10,7 +10,11 @@
           <table class="hits">
           <%= for {title, count} <- visit_data do %>
             <tr>
-              <td class="title"><div title="<%= title %>"><%= title %></div></td>
+              <td class="title">
+                <a href="/drilldown?period=<%= period_name %>&type=<%= visit_type %>&key=<%= title %>" title="<%= title %>">
+                  <%= title %>
+                </a>
+              </td>
               <td class="count"><%= count %></td>
             </tr>
           <% end %>
