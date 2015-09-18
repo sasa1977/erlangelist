@@ -6,5 +6,6 @@ set -o pipefail
 
 START_ARGS="
   -p 5459:5432
+  -v /erlangelist/persist/database:/var/lib/postgresql/data
   erlangelist/database
 " container_ctl erlangelist-database "$@"

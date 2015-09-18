@@ -1,7 +1,7 @@
 [Unit]
 Description=The Erlangelist site
-Requires=docker.service
-After=docker.service
+Requires=erlangelist-database.service
+After=erlangelist-database.service
 
 [Service]
 ExecStart=/opt/erlangelist/erlangelist-site.sh start

@@ -43,12 +43,15 @@
 
     # Erlangelist systemd services
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=remote_files/erlangelist-database.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-geoip.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=remote_files/erlangelist-database.service dest=/lib/systemd/system/
     - copy: src=remote_files/erlangelist-geoip.service dest=/lib/systemd/system/
     - copy: src=remote_files/erlangelist-graphite.service dest=/lib/systemd/system/
     - copy: src=remote_files/erlangelist-site.service dest=/lib/systemd/system/
+    - service: name=erlangelist-database enabled=yes
     - service: name=erlangelist-geoip enabled=yes
     - service: name=erlangelist-graphite enabled=yes
     - service: name=erlangelist-site enabled=yes
