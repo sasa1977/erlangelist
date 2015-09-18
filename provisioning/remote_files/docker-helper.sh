@@ -1,5 +1,4 @@
 function start_container {
-  echo "${@:2}"
   docker run --rm --name "$1" ${@:2}
 }
 

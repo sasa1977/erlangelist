@@ -6,6 +6,8 @@ After=erlangelist-database.service
 [Service]
 ExecStart=/opt/erlangelist/erlangelist-site.sh start
 ExecStop=/opt/erlangelist/erlangelist-site.sh stop
+Restart=always
+RestartSec=1s
 
 [Install]
 WantedBy=multi-user.target
