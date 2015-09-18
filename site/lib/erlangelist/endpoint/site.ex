@@ -20,7 +20,7 @@ defmodule Erlangelist.Endpoint.Site do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
+  plug Erlangelist.VisitPlug
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

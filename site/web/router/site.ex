@@ -3,7 +3,6 @@ defmodule Erlangelist.Router.Site do
   use Erlangelist.Web, :router
 
   pipeline :browser do
-    plug Erlangelist.Exometer.Visit
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
