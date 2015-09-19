@@ -1,0 +1,3 @@
+- copy: src=remote_files/{{ name }}.sh dest=/opt/erlangelist/ mode=0755
+- copy: src=remote_files/{{ name }}.service dest=/lib/systemd/system/
+- service: name={{ name }} enabled=yes

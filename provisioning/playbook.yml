@@ -4,9 +4,8 @@
   tasks:
     # firewall rules
     - file: path=/opt/erlangelist state=directory mode=0755
-    - copy: src=remote_files/firewall-rules.sh dest=/opt/erlangelist mode=0755
-    - copy: src=remote_files/firewall-rules.service dest=/lib/systemd/system/
-    - service: name=firewall-rules enabled=yes
+    - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
+    - include: tasks/erlangelist_service.yml name=firewall-rules
 
     # install docker
     - apt: name=wget
@@ -34,6 +33,7 @@
       when: erlangelist_repo.stat.exists == false
     - copy: src=remote_files/post-receive dest=/home/git/erlangelist.git/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
+    - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
 
     # collectd
     - apt: name=collectd
@@ -42,17 +42,7 @@
     - service: name=collectd state=restarted
 
     # Erlangelist systemd services
-    - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=remote_files/erlangelist-database.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=remote_files/erlangelist-geoip.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=remote_files/erlangelist-graphite.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=remote_files/erlangelist-site.sh dest=/opt/erlangelist/ mode=0755
-    - copy: src=remote_files/erlangelist-database.service dest=/lib/systemd/system/
-    - copy: src=remote_files/erlangelist-geoip.service dest=/lib/systemd/system/
-    - copy: src=remote_files/erlangelist-graphite.service dest=/lib/systemd/system/
-    - copy: src=remote_files/erlangelist-site.service dest=/lib/systemd/system/
-    - service: name=erlangelist-database enabled=yes
-    - service: name=erlangelist-geoip enabled=yes
-    - service: name=erlangelist-graphite enabled=yes
-    - service: name=erlangelist-site enabled=yes
-    - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
+    - include: tasks/erlangelist_service.yml name=erlangelist-database
+    - include: tasks/erlangelist_service.yml name=erlangelist-geoip
+    - include: tasks/erlangelist_service.yml name=erlangelist-graphite
+    - include: tasks/erlangelist_service.yml name=erlangelist-site
