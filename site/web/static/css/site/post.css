@@ -2,6 +2,37 @@ html,body {
     height: 100%;
 }
 
+a:hover {
+ cursor:pointer;
+}
+
+.privacy-policy {
+  position: fixed;
+  opacity: 0.9;
+  z-index:10;
+  bottom: 0px;
+  width: 100%;
+  background-color:black;
+  color:white;
+}
+
+.privacy-policy .message {
+  margin: 20px;
+}
+
+.privacy-policy .message .actions {
+  float: right;
+}
+
+.privacy-policy .message .actions a {
+  margin-left: 20px;
+}
+
+.cookies-info.allowed .cookies-allowed {display: default;}
+.cookies-info.allowed .cookies-rejected {display: none;}
+.cookies-info.rejected .cookies-allowed {display: none;}
+.cookies-info.rejected .cookies-rejected {display: default;}
+
 /* Phoenix flash messages */
 .alert:empty { display: none; }
 

@@ -5,6 +5,7 @@ defmodule Erlangelist.Router.Site do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug Erlangelist.CookieCompliance
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
@@ -18,6 +19,8 @@ defmodule Erlangelist.Router.Site do
     pipe_through :browser # Use the default browser stack
 
     get "/", ArticleController, :most_recent
+    get "/privacy_policy.html", SiteController, :privacy_policy
+    post "/comments", ArticleController, :comments
     get "/article/:article_id", ArticleController, :article
 
 

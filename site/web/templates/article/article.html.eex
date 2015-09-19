@@ -1,4 +1,7 @@
 <div class="blog-post">
   <%= render "_article_content.html", article: @article %>
-  <%= render "_comments.html", article: @article %>
+  <%= render "_comments.html", article: @article, cookies: (@cookies == "true") %>
 </div>
+<script>
+  window.article_id = "<%= @article.id %>"
+</script>

@@ -23,7 +23,7 @@ defmodule Erlangelist.ArticleController do
 
   defp render_article(conn, %{has_content?: true} = article) do
     ArticleEvent.visited(article, conn)
-    render(conn, "article.html", %{article: article})
+    render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
   end
 
   defp render_article(conn, _), do: render_not_found(conn)
@@ -31,5 +31,14 @@ defmodule Erlangelist.ArticleController do
   defp render_not_found(conn) do
     ArticleEvent.invalid_article
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
+  end
+
+  def comments(conn, %{"article_id" => article_id}) do
+    conn
+    |> put_layout(false)
+    |> render("_comments.html",
+          article: Article.article(article_id),
+          cookies: true
+        )
   end
 end

@@ -18,14 +18,22 @@ defmodule Erlangelist.GeoIp do
     defp country(_), do: ""
   else
     defp country(ip) do
-      %HTTPoison.Response{
-        status_code: 200,
-        body: body
-      } = HTTPoison.get!("#{geoip_site_url}/json/#{ip}")
-
-      Poison.decode!(body)["country_name"]
+      {:ok, json_data} = fetch(ip, :timer.seconds(1))
+      json_data["country_name"]
     end
-
-    defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:peer_ip)}:5458"
   end
+
+  def fetch(ip, timeout) do
+    case HTTPoison.get("#{geoip_site_url}/json/#{ip}", timeout: timeout) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        case Poison.decode(body) do
+          {:ok, _} = success -> success
+          other -> {:error, other}
+        end
+      other ->
+        {:error, other}
+    end
+  end
+
+  defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:peer_ip)}:5458"
 end
