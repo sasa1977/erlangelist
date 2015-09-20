@@ -1058,7 +1058,7 @@ LoadPlugin write_graphite
 <Plugin write_graphite>
  <Node "local">
    Host "127.0.0.1"
-   Port "5456"
+   Port "<%= Erlangelist.Ports.port(:carbon) %>"
    Protocol "tcp"
    LogSendErrors true
    Prefix "collectd/"

@@ -19,7 +19,7 @@ config :exometer,
   reporters: [
     exometer_report_statsd: [
       hostname: '#{Erlangelist.Settings.all[:erlangelist][:peer_ip]}',
-      port: 5457
+      port: Erlangelist.Ports.port(:statsd)
     ],
   ],
 

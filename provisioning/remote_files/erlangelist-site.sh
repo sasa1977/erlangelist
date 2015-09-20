@@ -6,7 +6,10 @@ set -o pipefail
 
 START_ARGS="
   --add-host=\"erlangelist.site:127.0.0.1\"
-  -p 5454:5454 -p 5460:5460 -p 4369:4369 -p 30000:30000
+  -p $ERLANGELIST_SITE_HTTP_PORT:$ERLANGELIST_SITE_HTTP_PORT
+  -p $ERLANGELIST_ADMIN_HTTP_PORT:$ERLANGELIST_ADMIN_HTTP_PORT
+  -p 4369:4369
+  -p $ERLANGELIST_SITE_INET_DIST_PORT:$ERLANGELIST_SITE_INET_DIST_PORT
   erlangelist/site:latest
   /erlangelist/bin/erlangelist foreground
 " container_ctl erlangelist-site "$@"

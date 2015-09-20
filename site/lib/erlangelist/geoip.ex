@@ -35,5 +35,5 @@ defmodule Erlangelist.GeoIp do
     end
   end
 
-  defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:peer_ip)}:5458"
+  defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:peer_ip)}:#{Erlangelist.app_env!(:geo_ip)}"
 end

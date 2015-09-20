@@ -4,7 +4,7 @@ Requires=docker.service
 After=docker.service
 
 [Service]
-ExecStart=/opt/erlangelist/erlangelist-database.sh start
+ExecStart=/opt/erlangelist/erlangelist-database.sh startf
 ExecStop=/opt/erlangelist/erlangelist-database.sh stop
 Restart=always
 RestartSec=1s

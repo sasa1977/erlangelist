@@ -6,8 +6,8 @@ defmodule Erlangelist.Settings do
 
   apps_settings = [
     kernel: [
-      inet_dist_listen_min: [common: 30000],
-      inet_dist_listen_max: [common: 30000]
+      inet_dist_listen_min: [common: Erlangelist.Ports.port(:site_inet_dist)],
+      inet_dist_listen_max: [common: Erlangelist.Ports.port(:site_inet_dist)]
     ],
 
     lager: [
@@ -62,7 +62,7 @@ defmodule Erlangelist.Settings do
       {Erlangelist.Endpoint.Site,
         common: [
           url: [host: "localhost"],
-          http: [port: 5454],
+          http: [port: Erlangelist.Ports.port(:site_http)],
           root: Path.dirname(__DIR__),
           secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
           render_errors: [accepts: ~w(html json)],
@@ -98,7 +98,7 @@ defmodule Erlangelist.Settings do
       {Erlangelist.Endpoint.Admin,
         common: [
           url: [host: "localhost"],
-          http: [port: 5460],
+          http: [port: Erlangelist.Ports.port(:admin_http)],
           root: Path.dirname(__DIR__),
           secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
           render_errors: [accepts: ~w(html json)],
@@ -135,10 +135,11 @@ defmodule Erlangelist.Settings do
           port: 5432
         ],
 
-        prod: [port: 5459]
+        prod: [port: Erlangelist.Ports.port(:postgres)]
       },
 
       peer_ip: [common: peer_ip],
+      geo_ip: [common: Erlangelist.Ports.port(:geo_ip)],
 
       exometer_polling_interval: [
         common: :timer.seconds(5),

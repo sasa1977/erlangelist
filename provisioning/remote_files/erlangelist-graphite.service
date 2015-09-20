@@ -4,7 +4,7 @@ Requires=docker.service
 After=docker.service
 
 [Service]
-ExecStart=/opt/erlangelist/erlangelist-graphite.sh start
+ExecStart=/opt/erlangelist/erlangelist-graphite.sh startf
 ExecStop=/opt/erlangelist/erlangelist-graphite.sh stop
 Restart=always
 RestartSec=1s

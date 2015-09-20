@@ -13,6 +13,7 @@ config :erlangelist, Erlangelist.Repo,
   hostname: "localhost"
 
 
+Code.require_file("config/ports.exs")
 Code.require_file("config/settings.exs")
 
 var!(config, Mix.Config) =

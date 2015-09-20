@@ -1,5 +1,7 @@
+. $(dirname ${BASH_SOURCE[0]})/erlangelist-ports.sh
+
 function start_container {
-  docker run --rm --name "$1" ${@:2}
+  docker run --name "$1" ${@:2}
 }
 
 function stop_container {
@@ -14,12 +16,16 @@ function stop_container {
 
 function container_ctl {
   case "$2" in
-    start)
-      start_container $1 $START_ARGS
+    startf)
+      start_container $1 "--rm $START_ARGS"
+      ;;
+
+    startd)
+      start_container $1 "-d $START_ARGS"
       ;;
 
     console)
-      start_container $1 -it $START_ARGS
+      start_container $1 "--rm -it $START_ARGS"
       ;;
 
     stop)

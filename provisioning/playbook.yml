@@ -4,6 +4,7 @@
   tasks:
     # firewall rules
     - file: path=/opt/erlangelist state=directory mode=0755
+    - copy: src=remote_files/erlangelist-ports.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
     - include: tasks/erlangelist_service.yml name=firewall-rules
 
