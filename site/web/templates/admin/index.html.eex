@@ -4,14 +4,14 @@
   <%= for {period_name, period_data} <- @all_visits do %>
     <div class="row">
       <h2><%= period_name %></h2>
-      <%= for {visit_type, visit_data} <- period_data do %>
+      <%= for {model, visit_data} <- period_data do %>
         <div class="col-md-2">
-          <h3><%= visit_type %></h3>
+          <h3><%= model_display(model) %></h3>
           <table class="hits">
           <%= for {title, count} <- visit_data do %>
             <tr>
               <td class="title">
-                <a href="/drilldown?period=<%= period_name %>&type=<%= visit_type %>&key=<%= title %>" title="<%= title %>">
+                <a href="/drilldown?period=<%= period_name %>&model=<%= model %>&key=<%= title %>" title="<%= title %>">
                   <%= title %>
                 </a>
               </td>

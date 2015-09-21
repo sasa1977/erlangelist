@@ -135,6 +135,10 @@ defmodule Erlangelist.Settings do
           port: 5432
         ],
 
+        test: [
+          database: "erlangelist_test"
+        ],
+
         prod: [port: Erlangelist.Ports.port(:postgres)]
       },
 

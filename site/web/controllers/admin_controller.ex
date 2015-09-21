@@ -12,17 +12,17 @@ defmodule Erlangelist.AdminController do
     render(conn, "index.html", all_visits: Analytics.all)
   end
 
-
   def drilldown(conn, params) do
     render(conn, "drilldown.html", %{
-      title: "#{params["type"]}(#{params["key"]}) / #{params["period"]}",
-      rows: Analytics.drilldown(
-        String.to_existing_atom(params["type"]),
-        params["key"],
-        params["period"]
-      )
+      model: params["model"],
+      key: params["key"],
+      period: params["period"],
+      rows:
+        Analytics.drilldown(
+          String.to_existing_atom(params["model"]),
+          params["key"],
+          params["period"]
+        )
     })
   end
-
-
 end
