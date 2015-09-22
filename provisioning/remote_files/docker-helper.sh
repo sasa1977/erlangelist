@@ -14,6 +14,29 @@ function stop_container {
   done
 }
 
+function needs_restart {
+  if [ -z "$(docker ps --filter=name=$1 | grep -v CONTAINER)" ]; then
+    echo "yes"
+  else
+    image_id=$(docker inspect -f="{{.Image}}" $1)
+    image_name=$(
+      docker images --no-trunc |
+      awk "{if (\$3 == \"$image_id\" && \$1 ~ /^erlangelist\/.+$/) print \$1}" |
+      sort |
+      uniq
+    )
+
+    latest_id=$(
+      docker images --no-trunc |
+      awk "{if (\$1 == \"$image_name\" && \$1 ~ /^erlangelist\/.+$/ && \$2 == \"latest\") print \$3}" |
+      sort |
+      uniq
+    )
+
+    if [ "$image_id" == "$latest_id" ]; then echo "no"; else echo "yes"; fi
+  fi
+}
+
 function container_ctl {
   case "$2" in
     startf)
@@ -34,6 +57,10 @@ function container_ctl {
 
     ssh)
       docker exec -u root -it $1 /bin/bash
+      ;;
+
+    needs_restart)
+      needs_restart $1
       ;;
 
     exec)

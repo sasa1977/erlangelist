@@ -7,7 +7,17 @@ rm -rf erlangelist || true
 git clone ~/erlangelist
 cd erlangelist
 docker/build-images.sh
-sudo systemctl restart erlangelist-database
-sudo systemctl restart erlangelist-geoip
-sudo systemctl restart erlangelist-graphite
-sudo systemctl restart erlangelist-site
+
+function restart_if_needed {
+  if [ $(/opt/erlangelist/$1.sh needs_restart) == "yes" ]; then
+    echo "Restarting service $1"
+    sudo systemctl restart $1
+  else
+    echo "$1 already running the latest version"
+  fi
+}
+
+restart_if_needed erlangelist-database
+restart_if_needed erlangelist-geoip
+restart_if_needed erlangelist-graphite
+restart_if_needed erlangelist-site
