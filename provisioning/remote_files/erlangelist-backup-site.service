@@ -1,0 +1,12 @@
+[Unit]
+Description=The Erlangelist site
+After=erlangelist-database.service
+
+[Service]
+ExecStart=/opt/erlangelist/erlangelist-backup-site.sh start
+ExecStop=/opt/erlangelist/erlangelist-backup-site.sh stop
+Restart=always
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

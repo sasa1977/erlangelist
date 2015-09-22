@@ -47,3 +47,5 @@
     - include: tasks/erlangelist_service.yml name=erlangelist-geoip
     - include: tasks/erlangelist_service.yml name=erlangelist-graphite
     - include: tasks/erlangelist_service.yml name=erlangelist-site
+    - include: tasks/erlangelist_service.yml name=erlangelist-backup-site
+    - service: name=erlangelist-backup-site enabled=no

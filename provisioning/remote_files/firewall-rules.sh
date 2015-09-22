@@ -22,7 +22,7 @@ iptables -t mangle -A PREROUTING -i eth1 -p tcp --dport $ERLANGELIST_SITE_HTTP_P
 # whatever Docker (or anyone else) is doing.
 
 # 80 -> $ERLANGELIST_SITE_HTTP_PORT
-iptables -t nat -i eth1 -I PREROUTING 1 -p tcp --dport 80 -j REDIRECT --to-port $ERLANGELIST_SITE_HTTP_PORT
+iptables -t nat -I PREROUTING 1 -i eth1 -p tcp --dport 80 -j REDIRECT --to-port $ERLANGELIST_SITE_HTTP_PORT
 
 # No one else in the nat table touches our eth connections :-)
 iptables -t nat -I PREROUTING 2 -i eth1 -j RETURN

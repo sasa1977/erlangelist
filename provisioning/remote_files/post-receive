@@ -2,6 +2,8 @@
 
 set -o pipefail
 
+. /opt/erlangelist/docker-helper.sh
+
 cd /tmp
 rm -rf erlangelist || true
 git clone ~/erlangelist
@@ -17,7 +19,27 @@ function restart_if_needed {
   fi
 }
 
+
+SITE_NEEDS_RESTART=$(container_ctl erlangelist-site needs_restart)
+
+if [ "$SITE_NEEDS_RESTART" == "yes" ]; then
+  echo "starting the backup site"
+  sudo systemctl start erlangelist-backup-site
+fi
+
 restart_if_needed erlangelist-database
 restart_if_needed erlangelist-geoip
 restart_if_needed erlangelist-graphite
-restart_if_needed erlangelist-site
+
+if [ "$SITE_NEEDS_RESTART" == "yes" ]; then
+  wait_for_site $(($ERLANGELIST_SITE_HTTP_PORT + 500))
+
+  echo "restarting the main site"
+  sudo systemctl restart erlangelist-site
+  wait_for_site $(($ERLANGELIST_SITE_HTTP_PORT))
+
+  echo "stopping the backup site"
+  sudo systemctl stop erlangelist-backup-site
+else
+  echo "erlangelist-site already running the latest version"
+fi

@@ -68,3 +68,16 @@ function container_ctl {
       docker exec -it $1 /bin/bash -c "$command"
   esac
 }
+
+function http_site_up {
+  curl --silent http://127.0.0.1:$1 > /dev/null || return 1
+  return 0
+}
+
+function wait_for_site {
+  until http_site_up $1; do
+    echo "waiting for the localhost:$1 ..."
+    sleep 1
+  done
+  echo "localhost:$1 running"
+}
