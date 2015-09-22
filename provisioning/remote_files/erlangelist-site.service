@@ -1,6 +1,5 @@
 [Unit]
 Description=The Erlangelist site
-Requires=erlangelist-database.service
 After=erlangelist-database.service
 
 [Service]
