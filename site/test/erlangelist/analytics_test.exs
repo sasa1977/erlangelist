@@ -9,85 +9,87 @@ defmodule Erlangelist.AnalyticsTest do
   alias Erlangelist.Repo
 
   setup do
-    for model <- Queries.table_sources do
-      table_name = model.__schema__(:source)
-      Ecto.Adapters.SQL.query(Repo, "truncate table #{table_name}", [])
-    end
+    create_test_data
     :ok
   end
 
-  for period <- ["recent", "day", "month", "all"],
-      model <- Queries.table_sources
-  do
-    @period period
+  for model <- Queries.table_sources do
     @model model
 
-    test "#{period}/#{model}" do
-      assert count(@model, "bar", @period) == 0
+    test "#{model}" do
+      assert count(@model, "foo", "recent") == 3
+      assert count(@model, "foo", "day") == 3
+      assert count(@model, "foo", "month") == 9
+      assert count(@model, "foo", "all") == 9
 
-      Analytics.inc(@model, [{"foo", 1}, {"bar", 2}])
-      assert count(@model, "foo", @period) == 1
-      assert count(@model, "bar", @period) == 2
-
-      Analytics.inc(@model, [{"foo", 1}, {"bar", 2}])
-      assert count(@model, "foo", @period) == 2
-      assert count(@model, "bar", @period) == 4
+      assert count(@model, "bar", "recent") == 30
+      assert count(@model, "bar", "day") == 30
+      assert count(@model, "bar", "month") == 90
+      assert count(@model, "bar", "all") == 90
     end
 
-    test "drilldown #{period}/#{model}" do
-      Analytics.inc(@model, [{"foo", 1}, {"bar", 2}])
-      Analytics.inc(@model, [{"foo", 2}, {"bar", 3}])
-      assert match?([{_, 5}], Analytics.drilldown(@model, "bar", @period))
-    end
+    test "drilldown #{model}" do
+      assert match?([{_, 3}], Analytics.drilldown(@model, "foo", "recent"))
+      assert match?([{_, 3}], Analytics.drilldown(@model, "foo", "day"))
+      assert match?([{_, 3}, {_, 3}, {_, 3}], Analytics.drilldown(@model, "foo", "month"))
+      assert match?([{_, 9}], Analytics.drilldown(@model, "foo", "all"))
 
-    defp count(model, key, period) do
-      Analytics.all
-      |> Enum.into(%{})
-      |> Map.get(period)
-      |> Keyword.get(model)
-      |> Enum.into(%{})
-      |> Map.get(key)
-      |> Kernel.||(0)
+      assert match?([{_, 30}], Analytics.drilldown(@model, "bar", "recent"))
+      assert match?([{_, 30}], Analytics.drilldown(@model, "bar", "day"))
+      assert match?([{_, 30}, {_, 30}, {_, 30}], Analytics.drilldown(@model, "bar", "month"))
+      assert match?([{_, 90}], Analytics.drilldown(@model, "bar", "all"))
     end
   end
 
   test "compact" do
+    Analytics.compact
     for model <- Queries.table_sources do
-      table_name = model.__schema__(:source)
-      Ecto.Adapters.SQL.query(Repo, "truncate table #{table_name}", [])
-
-      for i <- 1..9 do
-        Analytics.inc(model, [{"foo", 1}])
-        assert match?(
-          {:ok, %{num_rows: 1}},
-          Ecto.Adapters.SQL.query(
-            Repo,
-            "
-              update #{table_name}
-              set created_at=created_at - interval '#{div(9 - i, 3)} day'
-              where value=#{i}
-            ",
-            []
-          )
-        )
-      end
-
-      assert count(model, "foo", "day") == 3
-      assert count(model, "foo", "all") == 9
-
-      Analytics.compact
       assert count(model, "foo", "day") == 3
       assert count(model, "foo", "all") == 9
 
       # Two rows for previous two days + three rows for today
       assert match?(
-        {:ok, %{rows: [[5]]}},
+        {:ok, %{rows: [[10]]}},
         Ecto.Adapters.SQL.query(
           Repo,
-          "select count(*) from #{table_name}",
+          "select count(*) from #{model.__schema__(:source)}",
           []
         )
       )
+    end
+  end
+
+  defp count(model, key, period) do
+    Analytics.all
+    |> Enum.into(%{})
+    |> Map.get(period)
+    |> Keyword.get(model)
+    |> Enum.into(%{})
+    |> Map.get(key)
+    |> Kernel.||(0)
+  end
+
+  defp create_test_data do
+    for model <- Queries.table_sources do
+      table_name = model.__schema__(:source)
+      Ecto.Adapters.SQL.query(Repo, "truncate table #{table_name}", [])
+
+      for i <- 1..9 do
+        Analytics.inc(model, [{"foo", 1}, {"bar", 10}])
+
+        assert match?(
+          {:ok, %{num_rows: 2}},
+          Ecto.Adapters.SQL.query(
+            Repo,
+            "
+              update #{table_name}
+              set created_at=created_at - interval '#{div(9 - i, 3)} day'
+              where value in (#{i}, #{i * 10})
+            ",
+            []
+          )
+        )
+      end
     end
   end
 end
