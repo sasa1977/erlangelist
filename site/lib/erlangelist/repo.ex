@@ -3,6 +3,7 @@ defmodule Erlangelist.Repo do
   use Ecto.Repo, otp_app: :erlangelist
 
   alias Erlangelist.OneOff
+  alias Erlangelist.Metrics
 
   defoverridable start_link: 0, start_link: 1
   def start_link(opts \\ []) do
@@ -27,5 +28,17 @@ defmodule Erlangelist.Repo do
       :timer.sleep(:timer.seconds(5))
       migrate
     end
+  end
+
+  def log(log_entry) do
+    queue_time = (log_entry.queue_time || 0) / 1000
+    total_time = log_entry.query_time / 1000 + queue_time
+    OneOff.run(fn ->
+      Metrics.sample_histogram([:site, :db, :queries, :queue_time], queue_time)
+      Metrics.sample_histogram([:site, :db, :queries, :total_time], total_time)
+      Metrics.inc_spiral([:site, :db, :queries, :count])
+    end)
+
+    super(log_entry)
   end
 end
