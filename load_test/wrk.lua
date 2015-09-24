@@ -15,6 +15,7 @@ requests = {
 length = #requests
 
 request = function()
+  wrk.headers["Cookie"] = "cookies=true"
   wrk.method = "GET"
   return wrk.format(nil, requests[math.random(length)])
 end
