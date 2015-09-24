@@ -25,7 +25,7 @@ defmodule Erlangelist.ArticleControllerTest do
       {:event,
         {:article_visited,
           %{has_content?: true, id: ^article_id},
-          %{remote_ip: "127.0.0.1"}
+          %{remote_ip: {127,0,0,1}}
         }
       }
     )
