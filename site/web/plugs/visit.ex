@@ -11,11 +11,7 @@ defmodule Erlangelist.VisitPlug do
 
     Logger.info([
       conn.method, " ", conn.request_path,
-      " remote: ",
-      conn.remote_ip
-      |> Tuple.to_list
-      |> Stream.map(&Integer.to_string/1)
-      |> Enum.join(".")
+      " remote: ", Erlangelist.Helper.ip_string(conn.remote_ip)
     ])
 
     start_time = :os.timestamp

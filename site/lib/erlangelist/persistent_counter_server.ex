@@ -47,11 +47,11 @@ defmodule Erlangelist.PersistentCounterServer do
       end
     catch
       type, error ->
-        Logger.error("#{inspect type}: #{inspect error}")
+        Logger.error(inspect({type, error, System.stacktrace}))
     end
 
     # Some breathing space, so we don't update too often.
-    :timer.sleep(:timer.seconds(5))
+    :timer.sleep(:timer.seconds(10))
 
     {:ok, model, @inactivity_timeout}
   end

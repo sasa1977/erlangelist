@@ -8,10 +8,18 @@ defmodule Erlangelist do
 
     children = [
       supervisor(Erlangelist.OneOff, []),
-      worker(Erlangelist.Repo, []),
+      worker(Erlangelist.Repo, [], function: :start_repo),
       worker(ConCache, [app_env!(:articles_cache), [name: :articles_cache]], id: :articles_cache),
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
+      worker(ConCache,
+        [
+          [ttl_check: :timer.minutes(1), ttl: :timer.seconds(30)],
+          [name: :geoip_cache]
+        ],
+        id: :geoip_cache
+      ),
       worker(Erlangelist.ArticleEvent, []),
+      worker(Erlangelist.RequestDbLogger, []),
       supervisor(Erlangelist.PersistentCounterServer, [], function: :start_sup),
       supervisor(Erlangelist.Endpoint.Site, []),
       supervisor(Erlangelist.Endpoint.Admin, [])

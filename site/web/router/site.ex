@@ -5,7 +5,12 @@ defmodule Erlangelist.Router.Site do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug Erlangelist.CookieCompliance
+
+    unless Mix.env == :test do
+      plug Erlangelist.DbLoggerPlug
+      plug Erlangelist.CookieCompliance
+    end
+
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers

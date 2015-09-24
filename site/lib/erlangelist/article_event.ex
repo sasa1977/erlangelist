@@ -23,11 +23,7 @@ defmodule Erlangelist.ArticleEvent do
 
   defp data(conn) do
     %{
-      remote_ip:
-        conn.remote_ip
-        |> Tuple.to_list
-        |> Enum.join("."),
-
+      remote_ip: Erlangelist.Helper.ip_string(conn.remote_ip),
       referers:
         for referer <- Plug.Conn.get_req_header(conn, "referer") do
           {URI.parse(referer).host, referer}

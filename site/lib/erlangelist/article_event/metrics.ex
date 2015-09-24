@@ -9,7 +9,7 @@ defmodule Erlangelist.ArticleEvent.Metrics do
   alias Erlangelist.Model.RefererHostVisit
 
   def handle_event(:invalid_article, state) do
-    OneOff.run(fn -> Metrics.inc_spiral([:article, :invalid_article, :requests]) end)
+    Metrics.inc_spiral([:article, :invalid_article, :requests])
     PersistentCounterServer.inc(ArticleVisit, "invalid_article")
     {:ok, state}
   end

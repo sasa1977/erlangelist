@@ -18,8 +18,7 @@ defmodule Erlangelist.CookieCompliance do
   defp explicit_opt_in_needed?(conn) do
     try do
       conn.remote_ip
-      |> Tuple.to_list
-      |> Enum.join(".")
+      |> Erlangelist.Helper.ip_string
       |> GeoIp.fetch(:timer.seconds(1))
       |> from_eu?
     catch type, error ->
