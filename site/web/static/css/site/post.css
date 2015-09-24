@@ -28,6 +28,10 @@ a:hover {
   margin-left: 20px;
 }
 
+.cookies-info {
+  margin-top:20px;
+}
+
 .cookies-info.allowed .cookies-allowed {display: default;}
 .cookies-info.allowed .cookies-rejected {display: none;}
 .cookies-info.rejected .cookies-allowed {display: none;}

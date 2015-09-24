@@ -9,7 +9,9 @@ defmodule Erlangelist.CookieCompliance do
   def call(conn, _config) do
     if conn.cookies["cookies"] == nil && !explicit_opt_in_needed?(conn) do
       # No need to explicitly opt in -> store cookie for future reference.
-      Plug.Conn.put_resp_cookie(conn, "cookies", "true")
+      Plug.Conn.put_resp_cookie(conn, "cookies", "true",
+        path: "/", max_age: 60*60*24*365*30
+      )
     else
       conn
     end
@@ -25,7 +27,7 @@ defmodule Erlangelist.CookieCompliance do
       # Bypassing "let-it-crash", since this is not critical. Whatever goes
       # wrong here, we pessimistically conclude that the visitor needs
       # to opt in.
-      Logger.error("Error fetching geolocation: #{inspect {type, error}}")
+      Logger.error(inspect({type, error, System.stacktrace}))
       true
     end
   end

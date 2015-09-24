@@ -1,13 +1,14 @@
 <div class="cookies-info <%= if @cookies, do: "allowed", else: "rejected" %>">
+  <p><b>By using this site you agree to the Privacy Policy.</b></p>
   <h3>Cookies</h3>
   <p>
-    This site uses Disqus for site comments and Google Analytics to collect some usage information. Both of these services store 3rd party cookies.
+    This site uses Disqus for site comments and Google Analytics to collect some usage information. Both of these services store cookies.
 
     <span class="cookies-allowed">
-      Your current settings allow storing of these cookies. <a data-action="reject_cookies">Click here</a> if you want to disable 3rd party cookies on this site.
+      Your current settings allow storing of these cookies. <a data-action="reject_cookies">Click here</a> if you want to disable cookies on this site.
     </span>
     <span class="cookies-rejected">
-      Your current settings disable storing of these cookies <a data-action="allow_cookies">Click here</a> if you want to allow 3rd party cookies on this site.
+      Your current settings disable storing of these cookies <a data-action="allow_cookies">Click here</a> if you want to allow cookies on this site.
     </span>
   </p>
   <p>
@@ -21,7 +22,7 @@
   <h3>Logs</h3>
   <div>
     <p>
-      Regardless of cookies settings, some data, such as your IP address, geolocation, accessed page, is stored in server logs and database. This data is used for analytical purposes only.
+      Regardless of cookies settings, some data, such as your IP address, geolocation, accessed page, user agent, is stored in server logs. This data by itself doesn't reveal your identity. The collected data is used for analytical purposes only and is not disclosed to third parties.
     </p>
   </div>
 </div>
