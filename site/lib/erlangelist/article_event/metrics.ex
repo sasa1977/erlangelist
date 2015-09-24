@@ -3,6 +3,7 @@ defmodule Erlangelist.ArticleEvent.Metrics do
 
   alias Erlangelist.OneOff
   alias Erlangelist.GeoIp
+  alias Erlangelist.Metrics
   alias Erlangelist.PersistentCounterServer
   alias Erlangelist.Model.ArticleVisit
   alias Erlangelist.Model.RefererVisit
