@@ -18,6 +18,7 @@ defmodule Erlangelist.Endpoint.Site do
   end
 
   plug Plug.RequestId
+  plug Plug.Logger, log: :debug
   plug Erlangelist.VisitPlug
 
   plug Plug.Parsers,
