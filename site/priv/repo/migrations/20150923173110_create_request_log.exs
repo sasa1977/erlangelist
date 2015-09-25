@@ -4,6 +4,7 @@ defmodule Erlangelist.Repo.Migrations.CreateRequestLog do
   def change do
     create table(:request_log) do
       add :path, :text
+      add :ip, :text
       add :country, :text
       add :referer, :text
       add :user_agent, :text

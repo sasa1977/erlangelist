@@ -26,9 +26,10 @@ defmodule Erlangelist.DbLoggerPlug do
     # avoid needlessly computing data which won't be used.
     RequestDbLogger.log(
       fn ->
-        country = country(Erlangelist.Helper.ip_string(remote_ip))
+        ip = Erlangelist.Helper.ip_string(remote_ip)
+        country = country(ip)
         for referer <- pad(referers), user_agent <- pad(user_agents) do
-          {request_path, country, referer, user_agent}
+          {request_path, ip, country, referer, user_agent}
         end
       end
     )

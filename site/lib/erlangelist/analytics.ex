@@ -89,20 +89,20 @@ defmodule Erlangelist.Analytics do
     {placeholders, values} =
       for {values, segment} <- Stream.with_index(entries),
           {value, offset} <- Stream.with_index(Tuple.to_list(values)) do
-        {"$#{segment * 4 + offset + 1}", value}
+        {"$#{segment * 5 + offset + 1}", value}
       end
       |> :lists.unzip
 
     placeholders =
       placeholders
-      |> Stream.chunk(4, 4)
+      |> Stream.chunk(5, 5)
       |> Enum.map(&"(#{Enum.join(&1, ",")})")
       |> Enum.join(",")
 
     {:ok, _} =
       raw_query({
         "
-          insert into request_log(path, country, referer, user_agent)
+          insert into request_log(path, ip, country, referer, user_agent)
           values #{placeholders}
         "
         |> String.replace(~r(\s+), " "),
