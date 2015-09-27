@@ -5,9 +5,13 @@ defmodule Erlangelist.PersistentCounterServer do
   alias Erlangelist.Analytics
 
   def inc(model, data) do
-    case Supervisor.start_child(__MODULE__, [model]) do
-      {:ok, pid} -> pid
-      {:error, {:already_started, pid}} -> pid
+    case :gproc.whereis_name({:n, :l, {:updater, model}}) do
+      :undefined ->
+        case Supervisor.start_child(__MODULE__, [model]) do
+          {:ok, pid} -> pid
+          {:error, {:already_started, pid}} -> pid
+        end
+      pid -> pid
     end
     |> Workex.push(data)
   end
@@ -32,9 +36,7 @@ defmodule Erlangelist.PersistentCounterServer do
   end
 
 
-  @inactivity_timeout :timer.seconds(30)
-
-  def init(state), do: {:ok, state, @inactivity_timeout}
+  def init(state), do: {:ok, state}
 
   def handle(data, model) do
     # Don't really want to crash here, because it might cause too many
@@ -53,19 +55,12 @@ defmodule Erlangelist.PersistentCounterServer do
     # Some breathing space, so we don't update too often.
     :timer.sleep(:timer.seconds(10))
 
-    {:ok, model, @inactivity_timeout}
+    {:ok, model, :hibernate}
   end
-
-  def handle_message(:timeout, state), do: {:stop, :normal, state}
-  def handle_message(_, state), do: {:ok, state, @inactivity_timeout}
 end
 
 
 defmodule Erlangelist.Workex.Counts do
-  @moduledoc """
-  Aggregates messages in the queue like fashion. The aggregated value will be a list
-  that preserves the order of messages.
-  """
   defstruct counts: %{}
 
   def new, do: %__MODULE__{}

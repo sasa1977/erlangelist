@@ -21,8 +21,13 @@ defmodule Erlangelist.CookieCompliance do
     try do
       conn.remote_ip
       |> Erlangelist.Helper.ip_string
-      |> GeoIp.fetch(:timer.seconds(1))
+      |> GeoIp.country
       |> from_eu?
+      |> case do
+            :no -> false
+            :yes -> true
+            :dont_know -> true
+          end
     catch type, error ->
       # Bypassing "let-it-crash", since this is not critical. Whatever goes
       # wrong here, we pessimistically conclude that the visitor needs
@@ -65,9 +70,11 @@ defmodule Erlangelist.CookieCompliance do
     ""
     ]
 
+  defp from_eu?(nil), do: :dont_know
+
   for country_code <- eu_country_codes do
-    defp from_eu?({:ok, %{"country_code" => unquote(country_code)}}), do: true
+    defp from_eu?(%{"country_code" => unquote(country_code)}), do: :yes
   end
-  defp from_eu?({:ok, _}), do: false
-  defp from_eu?(_), do: true
+
+  defp from_eu?(_), do: :no
 end

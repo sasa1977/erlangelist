@@ -1,25 +1,33 @@
 defmodule Erlangelist.GeoIp do
-  if Mix.env == :dev do
-    def country(_), do: ""
-  else
-    def country(ip) do
-      {:ok, json_data} = fetch(ip, :timer.seconds(1))
-      json_data["country_name"]
+  require Logger
+
+  def country(ip) do
+    case Erlangelist.run_limited(:geoip_query, fn -> get_country(ip) end) do
+      {:ok, value} -> value
+      _ -> nil
     end
   end
 
-  def fetch(ip, timeout) do
-    ConCache.get_or_store(:geoip_cache, ip, fn ->
-      case HTTPoison.get("#{geoip_site_url}/json/#{ip}", timeout: timeout) do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          case Poison.decode(body) do
-            {:ok, _} = success -> success
-            other -> {:error, other}
+  defp get_country(ip) do
+    ConCache.get_or_store(:geoip_cache, ip,
+      fn ->
+        try do
+          case fetch(ip)["country_name"] do
+            "" -> nil
+            other -> other
           end
-        other ->
-          {:error, other}
-      end
+        catch type, error ->
+          Logger.error(inspect({type, error, System.stacktrace}))
+          nil
+        end
     end)
+  end
+
+  defp fetch(ip) do
+    %HTTPoison.Response{status_code: 200, body: body} =
+      HTTPoison.get!("#{geoip_site_url}/json/#{ip}", timeout: :timer.seconds(1))
+
+    Poison.decode!(body)
   end
 
   defp geoip_site_url, do: "http://#{Erlangelist.app_env!(:peer_ip)}:#{Erlangelist.app_env!(:geo_ip)}"

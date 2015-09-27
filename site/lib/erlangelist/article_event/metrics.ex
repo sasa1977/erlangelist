@@ -1,9 +1,8 @@
 defmodule Erlangelist.ArticleEvent.Metrics do
   use GenEvent
 
-  alias Erlangelist.OneOff
-  alias Erlangelist.GeoIp
   alias Erlangelist.Metrics
+  alias Erlangelist.GeolocationReporter
   alias Erlangelist.PersistentCounterServer
   alias Erlangelist.Model.ArticleVisit
   alias Erlangelist.Model.RefererVisit
@@ -15,11 +14,11 @@ defmodule Erlangelist.ArticleEvent.Metrics do
     {:ok, state}
   end
 
-  def handle_event({:article_visited, article, data}, state) do
-    report_geoip_metric(data[:remote_ip])
+  def handle_event({:article_visited, article, %{referer: referer, remote_ip: remote_ip}}, state) do
+    GeolocationReporter.report(remote_ip)
     PersistentCounterServer.inc(ArticleVisit, ["all", article.id])
 
-    for referer <- data[:referer] do
+    for referer <- referer do
       {host, url} = {URI.parse(referer).host, referer}
       if host, do: PersistentCounterServer.inc(RefererHostVisit, host)
       if url, do: PersistentCounterServer.inc(RefererVisit, url)
@@ -30,19 +29,5 @@ defmodule Erlangelist.ArticleEvent.Metrics do
 
   def handle_event(_event, state) do
     {:ok, state}
-  end
-
-  defp report_geoip_metric(remote_ip) do
-    OneOff.run(fn ->
-      remote_ip
-      |> Erlangelist.Helper.ip_string
-      |> GeoIp.country
-      |> case do
-            nil -> :ok
-            "" -> :ok
-            country when is_binary(country) ->
-              PersistentCounterServer.inc(CountryVisit, country)
-          end
-    end)
   end
 end

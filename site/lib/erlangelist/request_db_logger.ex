@@ -5,19 +5,14 @@ defmodule Erlangelist.RequestDbLogger do
   alias Erlangelist.Analytics
 
   def log(data_producer) do
-    Workex.push(__MODULE__, data_producer)
+    Erlangelist.run_limited(
+      :request_db_log,
+      fn -> Workex.push(__MODULE__, data_producer) end
+    )
   end
 
-  # store max 10 entries per 10 seconds
-  @max_entries 10
-  @throttle_interval :timer.seconds(10)
-
   def start_link do
-    Workex.start_link(
-      __MODULE__, nil,
-      [max_size: @max_entries],
-      [name: __MODULE__]
-    )
+    Workex.start_link(__MODULE__, nil, [], [name: __MODULE__])
   end
 
   def init(_), do: {:ok, nil}
@@ -33,13 +28,12 @@ defmodule Erlangelist.RequestDbLogger do
     # so just log error and resume as normal.
     try do
       Analytics.insert_log_entries(entries)
-      :timer.sleep(@throttle_interval)
     catch
       type, error ->
         Logger.error(inspect({type, error, System.stacktrace}))
     end
 
-    {:ok, state}
+    {:ok, state, :hibernate}
   end
 
   def handle_message(_, state), do: {:ok, state}

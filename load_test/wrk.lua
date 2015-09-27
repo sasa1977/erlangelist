@@ -1,5 +1,5 @@
 -- Simple test wrk script. Run as:
---   wrk -t10 -c10 -d60s --timeout 1000 -s wrk.lua "http://IP"
+--   wrk --latency -t100 -c100 -d60s --timeout 1000 -s wrk.lua "http://IP"
 
 requests = {
   "/article/outside_elixir",

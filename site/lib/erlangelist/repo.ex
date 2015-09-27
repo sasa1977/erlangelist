@@ -2,15 +2,12 @@ defmodule Erlangelist.Repo do
   require Logger
   use Ecto.Repo, otp_app: :erlangelist
 
-  alias Erlangelist.OneOff
   alias Erlangelist.Metrics
 
-  def start_repo(opts \\ []) do
-    result = start_link(opts)
+  def start_migration do
     # Asynchronous migrations, so we don't crash if the database is down.
     # Allows us to start the site even if db is not available.
-    OneOff.run(&migrate/0)
-    result
+    Task.start_link(&migrate/0)
   end
 
   defp migrate do

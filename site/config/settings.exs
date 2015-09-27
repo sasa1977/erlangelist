@@ -62,7 +62,7 @@ defmodule Erlangelist.Settings do
       {Erlangelist.Endpoint.Site,
         common: [
           url: [host: "localhost"],
-          http: [port: Erlangelist.Ports.port(:site_http)],
+          http: [port: Erlangelist.Ports.port(:site_http), max_connections: 1000],
           root: Path.dirname(__DIR__),
           secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
           render_errors: [accepts: ~w(html json)],
@@ -163,6 +163,30 @@ defmodule Erlangelist.Settings do
       article_event_handlers: [
         common: [Erlangelist.ArticleEvent.Metrics],
         test: []
+      ],
+
+      rate_limiters: [
+        common: [
+          {:per_second, :timer.seconds(1)},
+          {:per_minute, :timer.minutes(1)}
+        ]
+      ],
+      rate_limited_operations: [
+        common: [
+          plug_logger: nil,
+          limit_warn_log: {:per_second, 0},
+          request_db_log: nil,
+          geoip_query: {:per_second, 0},
+          geolocation_reporter: nil
+        ],
+
+        prod: [
+          plug_logger: {:per_second, 100},
+          limit_warn_log: {:per_minute, 1},
+          request_db_log: {:per_second, 10},
+          geoip_query: {:per_second, 50},
+          geolocation_reporter: {:per_second, 30}
+        ]
       ]
     ]
   ]
