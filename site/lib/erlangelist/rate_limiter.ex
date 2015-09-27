@@ -20,7 +20,12 @@ defmodule Erlangelist.RateLimiter do
   end
 
   def allow?(limiter_name, operation_name, max_rate) do
-    cnt = :ets.update_counter(limiter_name, operation_name, 1, {operation_name, 0})
+    cnt = :ets.update_counter(
+      limiter_name,
+      operation_name,
+      {2, 1, max_rate, max_rate+1},
+      {operation_name, 0}
+    )
     cnt <= max_rate
   end
 end
