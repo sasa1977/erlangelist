@@ -28,6 +28,10 @@ defmodule Erlangelist.Settings do
         ]
       ],
 
+      sync_threshold: [
+        1000
+      ],
+
       level: [
         dev: :debug,
         test: :warn,
