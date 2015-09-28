@@ -14,11 +14,18 @@ defmodule Erlangelist.ArticleEvent do
   end
 
   def visited(article, conn) do
-    GenEvent.notify(manager_name, {:article_visited, article, data(conn)})
+    notify({:article_visited, article, data(conn)})
   end
 
   def invalid_article do
-    GenEvent.notify(manager_name, :invalid_article)
+    notify(:invalid_article)
+  end
+
+  defp notify(event) do
+    Erlangelist.run_limited(
+      :article_events,
+      fn -> GenEvent.notify(manager_name, event) end
+    )
   end
 
   defp data(conn) do
