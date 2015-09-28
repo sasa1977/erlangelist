@@ -3,26 +3,18 @@ defmodule Erlangelist.PersistentCounterServer do
   use Workex
 
   alias Erlangelist.Analytics
+  alias Erlangelist.Analytics.Queries
 
   def inc(model, data) do
-    case :gproc.whereis_name({:n, :l, {:updater, model}}) do
-      :undefined ->
-        case Supervisor.start_child(__MODULE__, [model]) do
-          {:ok, pid} -> pid
-          {:error, {:already_started, pid}} -> pid
-        end
-      pid -> pid
-    end
-    |> Workex.push(data)
+    Workex.push(model, data)
   end
 
   def start_sup do
     import Supervisor.Spec, warn: false
 
     Supervisor.start_link(
-      [worker(__MODULE__, [], restart: :temporary)],
-      name: __MODULE__,
-      strategy: :simple_one_for_one
+      Enum.map(Queries.table_sources, &worker(__MODULE__, [&1], id: &1)),
+      strategy: :one_for_one
     )
   end
 
@@ -31,7 +23,7 @@ defmodule Erlangelist.PersistentCounterServer do
       __MODULE__,
       model,
       [aggregate: Erlangelist.Workex.Counts.new],
-      [name: {:via, :gproc, {:n, :l, {:updater, model}}}]
+      [name: model]
     )
   end
 
