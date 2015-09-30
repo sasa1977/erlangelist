@@ -177,7 +177,6 @@ defmodule Erlangelist.Settings do
       ],
       rate_limited_operations: [
         common: [
-          http_access: nil,
           plug_logger: nil,
           article_events: nil,
           limit_warn_log: {:per_second, 0},
@@ -187,7 +186,6 @@ defmodule Erlangelist.Settings do
         ],
 
         prod: [
-          http_access: {:per_minute, 1000},
           plug_logger: {:per_second, 100},
           article_events: {:per_minute, 10000},
           limit_warn_log: {:per_minute, 1},

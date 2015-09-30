@@ -67,12 +67,14 @@ defmodule Erlangelist do
     if rate_limit_allows?(operation_name) do
       {:ok, fun.()}
     else
-      log_limit_exceeded(operation_name)
+      if rate_limit_allows?(:limit_warn_log, {:limit_warn_log, operation_name}) do
+        Logger.warn("Rate exceeded for #{inspect operation_name}")
+      end
       :error
     end
   end
 
-  def rate_limit_allows?(operation_name, operation_id \\ nil) do
+  defp rate_limit_allows?(operation_name, operation_id \\ nil) do
     case app_env!(:rate_limited_operations)[operation_name] do
       nil -> true
       {limiter_name, rate} ->
@@ -81,12 +83,6 @@ defmodule Erlangelist do
           operation_id || operation_name,
           rate
         )
-    end
-  end
-
-  def log_limit_exceeded(operation_name) do
-    if rate_limit_allows?(:limit_warn_log, {:limit_warn_log, operation_name}) do
-      Logger.warn("Rate exceeded for #{inspect operation_name}")
     end
   end
 

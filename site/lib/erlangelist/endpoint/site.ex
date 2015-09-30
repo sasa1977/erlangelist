@@ -1,8 +1,6 @@
 defmodule Erlangelist.Endpoint.Site do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
-  plug Erlangelist.Plug.RateLimit, with: :http_access, for: [:remote_ip]
-
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
