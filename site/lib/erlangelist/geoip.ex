@@ -9,18 +9,15 @@ defmodule Erlangelist.GeoIp do
   end
 
   defp get_country(ip) do
-    ConCache.get_or_store(:geoip_cache, ip,
-      fn ->
-        try do
-          case fetch(ip)["country_name"] do
-            "" -> nil
-            other -> other
-          end
-        catch type, error ->
-          Logger.error(inspect({type, error, System.stacktrace}))
-          nil
-        end
-    end)
+    try do
+      case fetch(ip)["country_name"] do
+        "" -> nil
+        other -> other
+      end
+    catch type, error ->
+      Logger.error(inspect({type, error, System.stacktrace}))
+      nil
+    end
   end
 
   defp fetch(ip) do
