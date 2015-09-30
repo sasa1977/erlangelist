@@ -10,11 +10,12 @@ defmodule Erlangelist.RateLimiter do
       [:named_table, :public, read_concurrency: true, write_concurrency: true]
     )
 
-    timeout_after(interval)
+    :timer.send_interval(interval, :purge_counts)
+
     initial_state(limiter_name)
   end
 
-  defhandleinfo :timeout, state: limiter_name do
+  defhandleinfo :purge_counts, state: limiter_name do
     :ets.delete_all_objects(limiter_name)
     noreply
   end
