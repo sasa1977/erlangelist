@@ -26,5 +26,5 @@ START_ARGS="
   -p $INET_DIST_PORT:$ERLANGELIST_SITE_INET_DIST_PORT
   -p $EPMD_PORT:4369
   erlangelist/site:latest
-  /erlangelist/bin/erlangelist foreground
+  /erlangelist/run.sh
 " container_ctl $CONTAINER_NAME "$@"

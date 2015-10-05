@@ -6,7 +6,7 @@ function start_container {
 
 function stop_container {
   for container in $(docker ps | grep "$1" | awk '{print $1}'); do
-    docker stop -t 2 $container > /dev/null
+    docker stop -t 10 $container > /dev/null
   done
 
   for container in $(docker ps -a | grep "$1" | awk '{print $1}'); do

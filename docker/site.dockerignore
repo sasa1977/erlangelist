@@ -3,3 +3,4 @@
 
 # whitelist only needed stuff, to reduce docker context
 !tmp
+!docker/site

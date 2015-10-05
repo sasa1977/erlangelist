@@ -10,6 +10,7 @@ defmodule Erlangelist.PersistentCounterServer do
   end
 
   defstart start_link do
+    Process.flag(:trap_exit, true)
     :ets.new(
       __MODULE__,
       [:named_table, :public, read_concurrency: true, write_concurrency: true]
@@ -19,6 +20,15 @@ defmodule Erlangelist.PersistentCounterServer do
   end
 
   defhandleinfo :persist_counts do
+    store
+    noreply
+  end
+
+  defhandleinfo _, do: :noreply
+
+  def terminate(_, _), do: store
+
+  defp store do
     data = :ets.tab2list(__MODULE__)
 
     data
@@ -32,11 +42,7 @@ defmodule Erlangelist.PersistentCounterServer do
         _other -> :ok
       end
     end
-
-    noreply
   end
-
-  defhandleinfo _, do: :noreply
 
   defp update_counter({{model, label}, count}) do
     # Don't really want to crash here, because it might cause too many

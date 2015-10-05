@@ -10,6 +10,10 @@ defmodule Erlangelist.Settings do
       inet_dist_listen_max: [common: Erlangelist.Ports.port(:site_inet_dist)]
     ],
 
+    sasl: [
+      sasl_error_logger: [common: false]
+    ],
+
     lager: [
       error_logger_redirect: [common: false],
       error_logger_whitelist: [common: [Logger.ErrorHandler]],
@@ -29,7 +33,7 @@ defmodule Erlangelist.Settings do
       ],
 
       sync_threshold: [
-        1000
+        common: 1000
       ],
 
       level: [
