@@ -75,7 +75,8 @@ defmodule Erlangelist.AnalyticsTest do
       Ecto.Adapters.SQL.query(Repo, "truncate table #{table_name}", [])
 
       for i <- 1..9 do
-        Analytics.inc(model, [{"foo", 1}, {"bar", 10}])
+        Analytics.inc(model, "foo", 1)
+        Analytics.inc(model, "bar", 10)
 
         assert match?(
           {:ok, %{num_rows: 2}},

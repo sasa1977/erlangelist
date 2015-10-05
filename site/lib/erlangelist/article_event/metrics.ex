@@ -16,7 +16,8 @@ defmodule Erlangelist.ArticleEvent.Metrics do
 
   def handle_event({:article_visited, article, %{referer: referer, remote_ip: remote_ip}}, state) do
     GeolocationReporter.report(remote_ip)
-    PersistentCounterServer.inc(ArticleVisit, ["all", article.id])
+    PersistentCounterServer.inc(ArticleVisit, "all")
+    PersistentCounterServer.inc(ArticleVisit, article.id)
 
     for referer <- referer do
       {host, url} = {URI.parse(referer).host, referer}

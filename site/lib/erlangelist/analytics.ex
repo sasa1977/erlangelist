@@ -4,10 +4,8 @@ defmodule Erlangelist.Analytics do
   alias Erlangelist.Repo
   alias Erlangelist.Analytics.Queries
 
-  def inc(model, increments) do
-    for {key, increment} <- increments do
-      raw_query(Queries.increment(model, key, increment))
-    end
+  def inc(model, key, increment) do
+    raw_query(Queries.increment(model, key, increment))
   end
 
   def all do

@@ -23,7 +23,7 @@ defmodule Erlangelist do
       worker(Erlangelist.ArticleEvent, []),
       worker(Erlangelist.GeolocationReporter, []),
       worker(Erlangelist.RequestDbLogger, []),
-      supervisor(Erlangelist.PersistentCounterServer, [], function: :start_sup),
+      supervisor(Erlangelist.PersistentCounterServer, []),
       supervisor(Erlangelist.Endpoint.Site, []),
       supervisor(Erlangelist.Endpoint.Admin, [])
     ]
