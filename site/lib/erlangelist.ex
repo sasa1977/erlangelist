@@ -20,7 +20,6 @@ defmodule Erlangelist do
         id: :articles_cache
       ),
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
-      worker(Erlangelist.ArticleEvent, []),
       worker(Erlangelist.GeolocationReporter, []),
       worker(Erlangelist.RequestDbLogger, []),
       supervisor(Erlangelist.PersistentCounterServer, []),

@@ -164,11 +164,6 @@ defmodule Erlangelist.Settings do
         ]
       ],
 
-      article_event_handlers: [
-        common: [Erlangelist.ArticleEvent.Metrics],
-        test: []
-      ],
-
       rate_limiters: [
         common: [
           {:per_second, :timer.seconds(1)},
@@ -178,7 +173,6 @@ defmodule Erlangelist.Settings do
       rate_limited_operations: [
         common: [
           plug_logger: nil,
-          article_events: nil,
           limit_warn_log: {:per_second, 0},
           request_db_log: nil,
           geoip_query: {:per_second, 0},
@@ -187,7 +181,6 @@ defmodule Erlangelist.Settings do
 
         prod: [
           plug_logger: {:per_second, 100},
-          article_events: {:per_minute, 10000},
           limit_warn_log: {:per_minute, 1},
           request_db_log: {:per_second, 10},
           geoip_query: {:per_second, 50},

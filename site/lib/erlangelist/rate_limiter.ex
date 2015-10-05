@@ -15,10 +15,14 @@ defmodule Erlangelist.RateLimiter do
     initial_state(limiter_name)
   end
 
+
   defhandleinfo :purge_counts, state: limiter_name do
     :ets.delete_all_objects(limiter_name)
     noreply
   end
+
+  defhandleinfo _, do: :noreply
+
 
   def allow?(limiter_name, operation_name, max_rate) do
     cnt = :ets.update_counter(
