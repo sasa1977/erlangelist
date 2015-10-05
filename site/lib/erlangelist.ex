@@ -22,7 +22,7 @@ defmodule Erlangelist do
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
       worker(Erlangelist.GeolocationReporter, []),
       worker(Erlangelist.RequestDbLogger, []),
-      supervisor(Erlangelist.PersistentCounterServer, []),
+      supervisor(Erlangelist.DbCounter, []),
       supervisor(Erlangelist.Endpoint.Site, []),
       supervisor(Erlangelist.Endpoint.Admin, [])
     ]

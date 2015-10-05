@@ -1,4 +1,4 @@
-defmodule Erlangelist.PersistentCounterServer do
+defmodule Erlangelist.DbCounter do
   require Logger
   use ExActor.GenServer, export: __MODULE__
 

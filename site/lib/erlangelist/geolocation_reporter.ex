@@ -4,7 +4,7 @@ defmodule Erlangelist.GeolocationReporter do
 
   alias Erlangelist.GeoIp
   alias Erlangelist.Model.CountryVisit
-  alias Erlangelist.PersistentCounterServer
+  alias Erlangelist.DbCounter
 
   def report(remote_ip) do
     Erlangelist.run_limited(
@@ -24,7 +24,7 @@ defmodule Erlangelist.GeolocationReporter do
     |> Enum.map(&Task.async(fn -> try_get_country(&1) end))
     |> Stream.map(&Task.await/1)
     |> Stream.filter(&(&1 != nil))
-    |> Enum.each(&PersistentCounterServer.inc(CountryVisit, &1))
+    |> Enum.each(&DbCounter.inc(CountryVisit, &1))
 
     {:ok, state, :hibernate}
   end
