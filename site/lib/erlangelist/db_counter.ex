@@ -4,9 +4,9 @@ defmodule Erlangelist.DbCounter do
 
   alias Erlangelist.Analytics
 
-  def inc(model, label) do
+  def inc(model, label, count \\ 1) do
     key = {model, label}
-    :ets.update_counter(__MODULE__, key, 1, {key, 0})
+    :ets.update_counter(__MODULE__, key, count, {key, 0})
   end
 
   defstart start_link do
@@ -15,7 +15,10 @@ defmodule Erlangelist.DbCounter do
       __MODULE__,
       [:named_table, :public, read_concurrency: true, write_concurrency: true]
     )
-    :timer.send_interval(:timer.seconds(10), :persist_counts)
+
+    Erlangelist.app_env!(:db_counter_save_interval)
+    |> :timer.send_interval(:persist_counts)
+
     initial_state(nil)
   end
 
@@ -24,7 +27,7 @@ defmodule Erlangelist.DbCounter do
     noreply
   end
 
-  defhandleinfo _, do: :noreply
+  defhandleinfo _, do: noreply
 
   def terminate(_, _), do: store
 

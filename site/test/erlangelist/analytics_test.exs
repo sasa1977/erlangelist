@@ -78,8 +78,7 @@ defmodule Erlangelist.AnalyticsTest do
         Analytics.inc(model, "foo", 1)
         Analytics.inc(model, "bar", 10)
 
-        assert match?(
-          {:ok, %{num_rows: 2}},
+        assert {:ok, _} =
           Ecto.Adapters.SQL.query(
             Repo,
             "
@@ -89,7 +88,6 @@ defmodule Erlangelist.AnalyticsTest do
             ",
             []
           )
-        )
       end
     end
   end

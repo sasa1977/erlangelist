@@ -168,6 +168,11 @@ defmodule Erlangelist.Settings do
         ]
       ],
 
+      db_counter_save_interval: [
+        common: :timer.seconds(10),
+        test: 1
+      ],
+
       rate_limiters: [
         common: [
           {:per_second, :timer.seconds(1)},
