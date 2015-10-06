@@ -69,21 +69,43 @@ function build_versioned_image {
   fi
 }
 
+function run_tests {
+  test_db_container=$(docker run -d --name="test_db" erlangelist/database)
+  db_ip=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' $test_db_container)
+  docker run --rm erlangelist/site-builder:latest '/bin/sh' '-c' \
+    "cd /tmp/erlangelist/site &&
+      ERLANGELIST_SERVER=$db_ip ERLANGELIST_DB=erlangelist mix test" \
+    ||  {
+          docker stop $test_db_container > /dev/null || true
+          docker rm $test_db_container > /dev/null || true
+          exit 1
+        }
+
+  docker stop $test_db_container > /dev/null || true
+  docker rm $test_db_container > /dev/null || true
+}
+
+function copy_release {
+  mkdir -p tmp
+  rm -rf tmp/* || true
+  id=$(docker create "erlangelist/site-builder:latest")
+  docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar
+  docker stop $id > /dev/null
+  docker rm -v $id > /dev/null
+
+  cd tmp && tar -xf erlangelist.tar --to-stdout | tar -xzf - && cd ..
+  rm tmp/erlangelist.tar
+  rm tmp/releases/0.0.1/*.tar.gz || true
+}
+
 cd $(dirname ${BASH_SOURCE[0]})/..
 
 build_versioned_image erlangelist/database database.dockerfile
 build_versioned_image erlangelist/graphite graphite.dockerfile
 build_versioned_image erlangelist/geoip geoip.dockerfile
-
 build_versioned_image erlangelist/site-builder site-builder.dockerfile
-id=$(docker create "erlangelist/site-builder:latest")
-mkdir -p tmp
-rm -rf tmp/* || true
-docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar
-docker stop $id > /dev/null
-docker rm -v $id > /dev/null
 
-cd tmp && tar -xf erlangelist.tar --to-stdout | tar -xzf - && cd ..
-rm tmp/erlangelist.tar
-rm tmp/releases/0.0.1/*.tar.gz || true
+run_tests
+copy_release
+
 build_versioned_image erlangelist/site site.dockerfile

@@ -144,7 +144,8 @@ defmodule Erlangelist.Settings do
         ],
 
         test: [
-          database: "erlangelist_test"
+          hostname: System.get_env("ERLANGELIST_SERVER") || peer_ip,
+          database: System.get_env("ERLANGELIST_DB") || "erlangelist_test"
         ],
 
         prod: [port: Erlangelist.Ports.port(:postgres)]

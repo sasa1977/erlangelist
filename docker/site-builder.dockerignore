@@ -15,4 +15,5 @@
 !site/config
 !site/lib
 !site/web
+!site/test
 !web

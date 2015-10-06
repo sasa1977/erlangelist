@@ -16,7 +16,7 @@ RUN cat /tmp/mix.lock \
       | sed s/ac499360fe263a5d24b4a47185691fa2e54c10f7/474ebd59dc834b2549ea46e176722e446bb8f7ef/ \
       > /tmp/erlangelist/site/mix.lock
 
-RUN cd /tmp/erlangelist/site && mix deps.get && MIX_ENV=prod mix deps.compile
+RUN cd /tmp/erlangelist/site && mix deps.get && MIX_ENV=prod mix deps.compile && MIX_ENV=test mix deps.compile
 
 COPY site /tmp/erlangelist/site
 
