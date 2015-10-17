@@ -1,6 +1,6 @@
-FROM msaraiva/alpine-elixir-base:18.0
+FROM msaraiva/alpine-erlang-base:3.2
 
-RUN apk --update add erlang-sasl bash && rm -rf /var/cache/apk/*
+RUN apk --update add ncurses-libs=6.0-r0 bash && rm -rf /var/cache/apk/*
 ENV SHELL=/bin/bash TERM=xterm
 
 RUN adduser -h /erlangelist -s /bin/bash -D erlangelist

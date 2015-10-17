@@ -8,7 +8,7 @@ defmodule Erlangelist.AnalyticsTest do
   alias Erlangelist.Analytics.Queries
   alias Erlangelist.Repo
 
-  setup do
+  setup_all do
     create_test_data
     :ok
   end
@@ -47,13 +47,16 @@ defmodule Erlangelist.AnalyticsTest do
       assert count(model, "foo", "day") == 3
       assert count(model, "foo", "all") == 9
 
-      # Two rows for previous two days + three rows for today
+      # 2x (two rows for previous two days + three rows today)
       assert match?(
         {:ok, %{rows: [[10]]}},
         Ecto.Adapters.SQL.query(
           Repo,
-          "select count(*) from #{model.__schema__(:source)}",
-          []
+          "
+            select count(*) from #{model.__schema__(:source)}
+            where key in ($1, $2)
+          ",
+          ["foo", "bar"]
         )
       )
     end

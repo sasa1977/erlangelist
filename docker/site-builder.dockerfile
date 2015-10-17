@@ -1,8 +1,14 @@
-FROM msaraiva/elixir-dev:1.0.5
+FROM msaraiva/alpine-erlang-base:3.2
+
+RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
 
 RUN apk --update add \
-  erlang-runtime-tools erlang-snmp curl nodejs \
+  elixir erlang-runtime-tools erlang-snmp erlang-crypto erlang-syntax-tools \
+  erlang-inets erlang-ssl erlang-public-key erlang-eunit \
+  erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev \
+  wget git curl nodejs \
   && rm -rf /var/cache/apk/*
+RUN mix local.hex --force && mix local.rebar --force
 RUN npm install -g brunch
 
 COPY site/package.json /tmp/erlangelist/site/

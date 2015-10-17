@@ -4,7 +4,7 @@ defmodule Erlangelist.Mixfile do
   def project do
     [app: :erlangelist,
      version: "0.0.1",
-     elixir: "~> 1.0",
+     elixir: "~> 1.1",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -33,14 +33,14 @@ defmodule Erlangelist.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [{:phoenix, "~> 1.0.0"},
-     {:phoenix_ecto, "~> 1.0.0"},
+     {:phoenix_ecto, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:earmark, "~> 0.1"},
      {:con_cache, "~> 0.9.0"},
-     {:timex, "~> 0.19.2"},
+     {:timex, "~> 0.19.5"},
      {:exrm, "~> 0.19.2"},
      {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
      {:exometer, github: "PSPDFKit-labs/exometer"},

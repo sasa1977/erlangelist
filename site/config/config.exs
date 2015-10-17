@@ -8,16 +8,9 @@ use Mix.Config
 Code.require_file("config/ports.exs")
 Code.require_file("config/settings.exs")
 
-var!(config, Mix.Config) =
-  Enum.reduce(
-    Erlangelist.Settings.all,
-    var!(config, Mix.Config),
-    fn({app, settings}, acc) ->
-      var!(config, Mix.Config) = acc
-      config(app, settings)
-      var!(config, Mix.Config)
-    end
-  )
+for {app, settings} <- Erlangelist.Settings.all do
+  config(app, settings)
+end
 
 import_config "exometer.exs"
 
