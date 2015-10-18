@@ -54,7 +54,7 @@
 
       <div class="col-md-3 right-bar">
         <div class="eia-image-link">
-          <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric" title="Elixir in Action"><img src="/images/EIA_150.jpg"/></a>
+          <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric" title="Elixir in Action"><img src="<%= static_path(@conn, "/images/EIA_150.jpg") %>"></a>
         </div>
         <%= Erlangelist.ArticleView.articles_links_html %>
         <a href="/privacy_policy.html">Privacy policy</a>
