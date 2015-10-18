@@ -18,15 +18,9 @@ iptables -t mangle -A PREROUTING -i eth0 -p tcp --dport $ERLANGELIST_SITE_HTTP_P
 
 # nat
 
-# Insert nat rules for eth at the top. We'll deal with them ourselves and bypass
-# whatever Docker (or anyone else) is doing.
-
-# 80 -> $ERLANGELIST_SITE_HTTP_PORT
-iptables -t nat -I PREROUTING 1 -i eth0 -p tcp --dport 80 -j REDIRECT --to-port $ERLANGELIST_SITE_HTTP_PORT
-
-# No one else in the nat table touches our eth connections :-)
-iptables -t nat -I PREROUTING 2 -i eth0 -j RETURN
-
+# Don't allow docker to route incoming traffic on eth0. The site service will insert a custom rule
+# at the top to manually route traffic on port 80.
+iptables -t nat -I PREROUTING -i eth0 -j RETURN
 
 # filter
 
@@ -39,8 +33,8 @@ iptables -A INPUT -p icmp -j ACCEPT
 # reject marked connection (direct access to $ERLANGELIST_SITE_HTTP_PORT)
 iptables -A INPUT -i eth0 -m mark --mark 1 -p tcp --dport $ERLANGELIST_SITE_HTTP_PORT -j LOG_AND_REJECT
 
-# We allow only these ports
-iptables -A INPUT -i eth0 -p tcp --match multiport --dports 22,80,$ERLANGELIST_SITE_HTTP_PORT -j ACCEPT
+# Allow ssh
+iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT
 
 # Drop broadcast/multicast without logging
 iptables -A INPUT -i eth0 -m pkttype --pkt-type broadcast -j DROP

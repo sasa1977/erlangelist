@@ -6,6 +6,9 @@
     - apt: name=curl update_cache=yes
     - apt: name=htop
 
+    # don't write systemd to syslog
+    - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='ForwardToSyslog=no'"
+
     - file: path=/opt/erlangelist state=directory mode=0755
     - copy: src=remote_files/erlangelist-ports.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
@@ -19,6 +22,10 @@
     - stat: path=/usr/bin/docker
       register: docker
     - shell: wget -qO- https://get.docker.com/ | sh
+      when: docker.stat.exists == false
+    - copy: src=remote_files/docker.service dest=/etc/systemd/system/docker.service owner=root group=root mode=0755
+    - command: systemctl daemon-reload
+    - service: name=docker state=restarted
       when: docker.stat.exists == false
 
     # install uuid-runtime
@@ -53,5 +60,6 @@
     - include: tasks/erlangelist_service.yml name=erlangelist-geoip
     - include: tasks/erlangelist_service.yml name=erlangelist-graphite
     - include: tasks/erlangelist_service.yml name=erlangelist-site
+    - include: tasks/erlangelist_service.yml name=erlangelist-site-firewall
     - include: tasks/erlangelist_service.yml name=erlangelist-backup-site
     - service: name=erlangelist-backup-site enabled=no

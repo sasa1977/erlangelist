@@ -1,0 +1,13 @@
+[Unit]
+Description=Firewall for site
+After=erlangelist-site.service
+Requires=erlangelist-site.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/erlangelist/erlangelist-site-firewall.sh start erlangelist-site
+ExecStop=/opt/erlangelist/erlangelist-site-firewall.sh stop erlangelist-site
+
+[Install]
+WantedBy=multi-user.target
