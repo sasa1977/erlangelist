@@ -2,11 +2,17 @@
 - hosts: all
   sudo: true
   tasks:
-    # firewall rules
+    # some supporting tools
+    - apt: name=curl update_cache=yes
+    - apt: name=htop
+
     - file: path=/opt/erlangelist state=directory mode=0755
     - copy: src=remote_files/erlangelist-ports.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
+
+    # firewall rules
     - include: tasks/erlangelist_service.yml name=firewall-rules
+    - service: name=firewall-rules state=started
 
     # install docker
     - apt: name=wget
