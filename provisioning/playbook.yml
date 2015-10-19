@@ -6,12 +6,18 @@
     - apt: name=curl update_cache=yes
     - apt: name=htop
 
-    # don't write systemd to syslog
-    - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='ForwardToSyslog=no'"
-
+    # required files
     - file: path=/opt/erlangelist state=directory mode=0755
     - copy: src=remote_files/erlangelist-ports.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
+
+    # don't write systemd to syslog
+    - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='ForwardToSyslog=no'"
+
+    # iptables log
+    - copy: src=remote_files/iptables dest=/etc/logrotate.d/ owner=root group=root
+    - copy: src=remote_files/iptables.conf dest=/etc/rsyslog.d/ owner=root group=root
+    - service: name=rsyslog state=restarted
 
     # firewall rules
     - include: tasks/erlangelist_service.yml name=firewall-rules
