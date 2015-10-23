@@ -2,25 +2,29 @@ defmodule Erlangelist.GeoIp do
   require Logger
 
   def country(ip) do
-    case Erlangelist.run_limited(:geoip_query, fn -> get_country(ip) end) do
-      {:ok, value} -> value
-      _ -> nil
-    end
+    empty_to_nil(fetch(ip)["country_name"])
   end
 
-  defp get_country(ip) do
+  def country_code(ip) do
+    empty_to_nil(fetch(ip)["country_code"])
+  end
+
+  defp empty_to_nil(""), do: nil
+  defp empty_to_nil(x), do: x
+
+  defp fetch(ip) do
     try do
-      case fetch(ip)["country_name"] do
-        "" -> nil
-        other -> other
+      case Erlangelist.run_limited(:geoip_query, fn -> do_fetch(ip) end) do
+        {:ok, value} -> value
+        _ -> nil
       end
     catch type, error ->
       Logger.error(inspect({type, error, System.stacktrace}))
-      nil
+      %{}
     end
   end
 
-  defp fetch(ip) do
+  defp do_fetch(ip) do
     %HTTPoison.Response{status_code: 200, body: body} =
       HTTPoison.get!("#{geoip_site_url}/json/#{ip}", timeout: :timer.seconds(1))
 

@@ -21,7 +21,7 @@ defmodule Erlangelist.CookieCompliance do
     try do
       conn.remote_ip
       |> Erlangelist.Helper.ip_string
-      |> GeoIp.country
+      |> GeoIp.country_code
       |> from_eu?
       |> case do
             :no -> false
@@ -66,14 +66,14 @@ defmodule Erlangelist.CookieCompliance do
     "FI",
     "SE",
     "UK",
-    "EU",
-    ""
+    "EU"
     ]
 
   defp from_eu?(nil), do: :dont_know
+  defp from_eu?(""), do: :dont_know
 
   for country_code <- eu_country_codes do
-    defp from_eu?(%{"country_code" => unquote(country_code)}), do: :yes
+    defp from_eu?(unquote(country_code)), do: :yes
   end
 
   defp from_eu?(_), do: :no
