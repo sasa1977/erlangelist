@@ -9,7 +9,7 @@ conditionally_create_user()
         SELECT *
         FROM pg_catalog.pg_user
         WHERE usename = '\'"${user}"\'') THEN
-      CREATE USER '"${user}"';
+      CREATE USER '"${user}"' WITH PASSWORD '"'$POSTGRES_PASSWORD'"';
     END IF;
   END
   $body$'

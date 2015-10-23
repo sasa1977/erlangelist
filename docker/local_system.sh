@@ -3,8 +3,13 @@
 set -o pipefail
 
 function start {
-  elixir -r ../site/config/ports.exs -e "Erlangelist.Ports.generate_export_script"
-  ./build-images.sh
+  # generate some files based on the ports defined in ports.exs
+  MIX_ENV=prod elixir \
+    -e 'Application.start(:mix)' \
+    -r ../site/config/system_settings.exs \
+    -e 'File.write!("../provisioning/remote_files/erlangelist-settings.sh", Erlangelist.SystemSettings.env_vars)'
+
+  . ../provisioning/remote_files/erlangelist-settings.sh
 
   ../provisioning/remote_files/erlangelist-database.sh startd
   ../provisioning/remote_files/erlangelist-geoip.sh startd

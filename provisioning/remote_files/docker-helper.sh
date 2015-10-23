@@ -1,4 +1,4 @@
-. $(dirname ${BASH_SOURCE[0]})/erlangelist-ports.sh
+. $(dirname ${BASH_SOURCE[0]})/erlangelist-settings.sh
 
 function start_container {
   docker run --name "$1" ${@:2}

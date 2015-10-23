@@ -5,25 +5,24 @@ set -o pipefail
 cd $(dirname ${BASH_SOURCE[0]})
 
 machine="$1"
+external_network_interface="$2"
 
-if [ "$machine" == "" ]; then
-  printf "\nSyntax:\n\n  ${BASH_SOURCE[0]} target_machine\n\n"
+if [ "$machine" == "" ] || [ "$external_network_interface" == "" ]; then
+  printf "\nSyntax:\n\n  ${BASH_SOURCE[0]} target_machine external_network_interface\n\n"
   exit 1
 fi
 
 # generate some files based on the ports defined in ports.exs
-elixir \
-  -r ../site/config/ports.exs \
-  -e '
-    File.write!("remote_files/erlangelist-ports.sh",
-      for {type, port} <- Erlangelist.Ports.all do
-        "export ERLANGELIST_#{String.upcase(to_string(type))}_PORT=#{port}\n"
-      end
-    )
-  '
+MIX_ENV=prod elixir \
+  -e 'Application.start(:mix)' \
+  -r ../site/config/system_settings.exs \
+  -e 'File.write!("remote_files/erlangelist-settings.sh", Erlangelist.SystemSettings.env_vars)'
 
-elixir \
-  -r ../site/config/ports.exs \
+echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" >> remote_files/erlangelist-settings.sh
+
+MIX_ENV=prod elixir \
+  -e 'Application.start(:mix)' \
+  -r ../site/config/system_settings.exs \
   -e '
     File.write!("remote_files/collectd.conf",
       File.read!("remote_files/collectd.conf.eex")
@@ -31,4 +30,4 @@ elixir \
     )
   '
 
-ansible-playbook -v -i "$1," playbook.yml
+ansible-playbook -v -i "$machine," playbook.yml

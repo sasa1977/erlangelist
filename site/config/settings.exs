@@ -4,10 +4,12 @@ defmodule Erlangelist.Settings do
     _ -> "127.0.0.1"
   end
 
+  secret_key_base = Erlangelist.SystemSettings.value(:secret_key_base) || String.duplicate("1", 64)
+
   apps_settings = [
     kernel: [
-      inet_dist_listen_min: [common: Erlangelist.Ports.port(:site_inet_dist)],
-      inet_dist_listen_max: [common: Erlangelist.Ports.port(:site_inet_dist)]
+      inet_dist_listen_min: [common: Erlangelist.SystemSettings.value(:site_inet_dist_port)],
+      inet_dist_listen_max: [common: Erlangelist.SystemSettings.value(:site_inet_dist_port)]
     ],
 
     sasl: [
@@ -70,9 +72,9 @@ defmodule Erlangelist.Settings do
       {Erlangelist.Endpoint.Site,
         common: [
           url: [host: "localhost"],
-          http: [port: Erlangelist.Ports.port(:site_http), max_connections: 1000],
+          http: [port: Erlangelist.SystemSettings.value(:site_http_port), max_connections: 1000],
           root: Path.dirname(__DIR__),
-          secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
+          secret_key_base: secret_key_base,
           render_errors: [accepts: ~w(html json)],
           pubsub: [name: Erlangelist.PubSub.Site, adapter: Phoenix.PubSub.PG2],
           http: [compress: true]
@@ -106,9 +108,9 @@ defmodule Erlangelist.Settings do
       {Erlangelist.Endpoint.Admin,
         common: [
           url: [host: "localhost"],
-          http: [port: Erlangelist.Ports.port(:admin_http)],
+          http: [port: Erlangelist.SystemSettings.value(:admin_http_port)],
           root: Path.dirname(__DIR__),
-          secret_key_base: "ija3ahutZFpFyiWJLfLX9uJ1MGVv5knZDT1cxEY+1cbkAdnw3R858Xhdk2lIgxOh",
+          secret_key_base: secret_key_base,
           render_errors: [accepts: ~w(html json)],
           pubsub: [name: Erlangelist.PubSub.Admin, adapter: Phoenix.PubSub.PG2],
           http: [compress: true]
@@ -138,7 +140,7 @@ defmodule Erlangelist.Settings do
           adapter: Ecto.Adapters.Postgres,
           database: "erlangelist",
           username: "erlangelist",
-          password: "",
+          password: Erlangelist.SystemSettings.value(:db_password) || "",
           hostname: peer_ip,
           port: 5432
         ],
@@ -148,11 +150,11 @@ defmodule Erlangelist.Settings do
           database: System.get_env("ERLANGELIST_DB") || "erlangelist_test"
         ],
 
-        prod: [port: Erlangelist.Ports.port(:postgres)]
+        prod: [port: Erlangelist.SystemSettings.value(:postgres_port)]
       },
 
       peer_ip: [common: peer_ip],
-      geo_ip: [common: Erlangelist.Ports.port(:geo_ip)],
+      geo_ip: [common: Erlangelist.SystemSettings.value(:geo_ip_port)],
 
       exometer_polling_interval: [
         common: :timer.seconds(5),

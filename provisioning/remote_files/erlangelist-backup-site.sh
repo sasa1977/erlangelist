@@ -11,8 +11,8 @@ case "$1" in
     wait_for_site $BACKUP_HTTP_PORT
 
     # Temporary redirect to the backup site
-    iptables -t mangle -A PREROUTING -i eth0 -p tcp --dport $BACKUP_HTTP_PORT -j MARK --set-mark 1
-    iptables -I INPUT 1 -i eth0 -m mark --mark 1 -p tcp --dport $BACKUP_HTTP_PORT -j LOG_AND_REJECT
+    iptables -t mangle -A PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport $BACKUP_HTTP_PORT -j MARK --set-mark 1
+    iptables -I INPUT 1 -i $ERLANGELIST_NETWORK_IF -m mark --mark 1 -p tcp --dport $BACKUP_HTTP_PORT -j LOG_AND_REJECT
 
     /opt/erlangelist/erlangelist-site-firewall.sh start erlangelist-backup-site
     wait
@@ -21,8 +21,8 @@ case "$1" in
   stop)
     # revert back to the main site
     /opt/erlangelist/erlangelist-site-firewall.sh stop erlangelist-backup-site
-    iptables -D INPUT -i eth0 -m mark --mark 1 -p tcp --dport $BACKUP_HTTP_PORT -j LOG_AND_REJECT || true
-    iptables -t mangle -D PREROUTING -i eth0 -p tcp --dport $BACKUP_HTTP_PORT -j MARK --set-mark 1 || true
+    iptables -D INPUT -i $ERLANGELIST_NETWORK_IF -m mark --mark 1 -p tcp --dport $BACKUP_HTTP_PORT -j LOG_AND_REJECT || true
+    iptables -t mangle -D PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport $BACKUP_HTTP_PORT -j MARK --set-mark 1 || true
 
     $(dirname ${BASH_SOURCE[0]})/erlangelist-site.sh backup stop
     ;;

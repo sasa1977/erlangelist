@@ -22,13 +22,13 @@ case "$1" in
   start)
     destination=$(site_url $2)
     echo "Redirecting port 80 to $destination"
-    iptables -t nat -I PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination "$destination"
+    iptables -t nat -I PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 80 -j DNAT --to-destination "$destination"
     ;;
 
   stop)
     destination=$(site_url $2)
     echo "Removing redirection from port 80 to $destination"
-    iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination "$destination" || true
+    iptables -t nat -D PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 80 -j DNAT --to-destination "$destination" || true
     ;;
 
   *)

@@ -8,6 +8,7 @@ cd /tmp
 rm -rf erlangelist || true
 git clone ~/erlangelist
 cd erlangelist
+cp -rp ~/prod_settings.exs site/config/
 docker/build-images.sh
 
 function restart_if_needed {

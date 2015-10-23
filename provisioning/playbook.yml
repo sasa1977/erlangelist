@@ -8,7 +8,7 @@
 
     # required files
     - file: path=/opt/erlangelist state=directory mode=0755
-    - copy: src=remote_files/erlangelist-ports.sh dest=/opt/erlangelist/ mode=0755
+    - copy: src=remote_files/erlangelist-settings.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
 
     # don't write systemd to syslog
@@ -42,6 +42,7 @@
     - user: name=git group=git groups=docker,sudo shell=/bin/bash
     - file: path=/home/git/.ssh state=directory owner=git group=git mode=0700
     - assemble: remote_src=false src=git_keys dest=/home/git/.ssh/authorized_keys owner=git group=git mode=0600
+    - copy: src=../site/config/prod_settings.exs dest=/home/git/ owner=git group=git mode=0755
 
     # create git repo with post-receive hook
     - stat: path=/home/git/erlangelist.git
