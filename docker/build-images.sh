@@ -89,7 +89,7 @@ function run_tests {
 function copy_release {
   mkdir -p tmp
   rm -rf tmp/* || true
-  id=$(docker create "erlangelist/site-builder:latest")
+  id=$(docker create "erlangelist/site-builder:latest" /bin/sh)
   docker cp $id:/tmp/erlangelist/site/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz - > ./tmp/erlangelist.tar
   docker stop $id > /dev/null
   docker rm -v $id > /dev/null
