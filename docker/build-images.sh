@@ -74,7 +74,7 @@ function run_tests {
   db_ip=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' $test_db_container)
   docker run --rm erlangelist/site-builder:latest '/bin/sh' '-c' \
     "cd /tmp/erlangelist/site &&
-      ERLANGELIST_SERVER=$db_ip ERLANGELIST_DB=erlangelist MIX_ENV=test mix do ecto.migrate, test
+      ERLANGELIST_DB_SERVER=$db_ip ERLANGELIST_DB=erlangelist MIX_ENV=test mix do ecto.migrate, test
     " \
     ||  {
           docker stop $test_db_container > /dev/null || true

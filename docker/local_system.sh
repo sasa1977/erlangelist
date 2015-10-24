@@ -6,8 +6,8 @@ function start {
   # generate some files based on the ports defined in ports.exs
   MIX_ENV=prod elixir \
     -e 'Application.start(:mix)' \
-    -r ../site/config/system_settings.exs \
-    -e 'File.write!("../provisioning/remote_files/erlangelist-settings.sh", Erlangelist.SystemSettings.env_vars)'
+    -r ../site/config/settings.exs \
+    -e 'File.write!("../provisioning/remote_files/erlangelist-settings.sh", Erlangelist.Settings.env_vars)'
 
   . ../provisioning/remote_files/erlangelist-settings.sh
 

@@ -5,11 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
-Code.require_file("config/system_settings.exs")
 Code.require_file("config/settings.exs")
 
 for {app, settings} <- Erlangelist.Settings.all do
   config(app, settings)
 end
-
-import_config "exometer.exs"

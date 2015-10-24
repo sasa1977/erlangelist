@@ -1,225 +1,270 @@
 defmodule Erlangelist.Settings do
-  peer_ip = case Mix.env do
-    :prod -> "172.17.42.1"
-    _ -> "127.0.0.1"
-  end
+  def all do
+    peer_ip = case Mix.env do
+      :prod -> "172.17.42.1"
+      _ -> "127.0.0.1"
+    end
 
-  secret_key_base = Erlangelist.SystemSettings.value(:secret_key_base) || String.duplicate("1", 64)
+    secret_key_base = system_setting(:secret_key_base) || String.duplicate("1", 64)
 
-  apps_settings = [
-    kernel: [
-      inet_dist_listen_min: [common: Erlangelist.SystemSettings.value(:site_inet_dist_port)],
-      inet_dist_listen_max: [common: Erlangelist.SystemSettings.value(:site_inet_dist_port)]
-    ],
+    exometer_polling_interval = for_env(
+      common: :timer.seconds(5),
+      dev: :timer.seconds(1)
+    )
 
-    sasl: [
-      sasl_error_logger: [common: false]
-    ],
+    [
+      kernel: [
+        inet_dist_listen_min: system_setting(:site_inet_dist_port),
+        inet_dist_listen_max: system_setting(:site_inet_dist_port)
+      ],
 
-    lager: [
-      error_logger_redirect: [common: false],
-      error_logger_whitelist: [common: [Logger.ErrorHandler]],
-      crash_log: [common: false],
-      handlers: [common: [{LagerLogger, [level: :info]}]]
-    ],
+      sasl: [
+        sasl_error_logger: false
+      ],
 
-    logger: [
-      console: [
-        common: [
-          format: "$time $metadata[$level] $message\n",
-          metadata: [:request_id]
+      lager: [
+        error_logger_redirect: false,
+        error_logger_whitelist: [Logger.ErrorHandler],
+        crash_log: false,
+        handlers: [{LagerLogger, [level: :info]}]
+      ],
+
+      logger: [
+        console: [
+          format: for_env(
+            prod: "$time $metadata[$level] $message\n",
+            dev: "[$level] $message\n"
+          ),
+          metadata: for_env(prod: [:request_id])
         ],
-        dev: [
-          format: "[$level] $message\n"
-        ]
+
+        sync_threshold: 1000,
+
+        level: for_env(dev: :debug, test: :warn, prod: :info)
       ],
 
-      sync_threshold: [
-        common: 1000
+      phoenix: [
+        stacktrace_depth: for_env(dev: 20, test: 20),
+        serve_endpoints: for_env(prod: true)
       ],
 
-      level: [
-        dev: :debug,
-        test: :warn,
-        prod: :info
-      ]
-    ],
-
-    phoenix: [
-      stacktrace_depth: [
-        dev: 20,
-        test: 20
+      erlcron: [
+        crontab: for_env(prod: [{{:daily, {5, 0, :am}}, {Erlangelist.Analytics, :compact, []}}])
       ],
-      serve_endpoints: [
-        prod: true
-      ]
-    ],
 
-    erlcron: [
-      crontab: [
-        test: [],
-        common: [
+      exometer: [
+        predefined: [
           {
-            {:daily, {5, 0, :am}},
-            {Erlangelist.Analytics, :compact, []}
+            ~w(erlang memory)a,
+            {:function, :erlang, :memory, [], :proplist, ~w(atom binary ets processes total)a},
+            []
+          },
+          {
+            ~w(erlang statistics)a,
+            {:function, :erlang, :statistics, [:'$dp'], :value, [:run_queue]},
+            []
           }
-        ]
-      ]
-    ],
+        ],
 
-    erlangelist: [
-      # Main site
-      {Erlangelist.Endpoint.Site,
-        common: [
-          url: [host: "localhost"],
-          http: [port: Erlangelist.SystemSettings.value(:site_http_port), max_connections: 1000],
+        reporters: [
+          exometer_report_statsd: [
+            hostname: '#{peer_ip}',
+            port: system_setting(:statsd_port)
+          ],
+        ],
+
+        report: [
+          subscribers: [
+            {
+              :exometer_report_statsd,
+              [:erlang, :memory],
+              ~w(atom binary ets processes total)a,
+              exometer_polling_interval
+            }
+          ]
+        ]
+      ],
+
+      erlangelist: [
+        # Main site
+        {Erlangelist.Endpoint.Site,
+          url: for_env(
+            common: [host: "localhost"],
+            prod: [host: "theerlangelist.com", port: 80]
+          ),
+
+          http: [
+            port: for_env(
+              common: system_setting(:site_http_port),
+              test: 4001
+            ),
+            max_connections: 1000,
+            compress: true
+          ],
+
           root: Path.dirname(__DIR__),
           secret_key_base: secret_key_base,
           render_errors: [accepts: ~w(html json)],
           pubsub: [name: Erlangelist.PubSub.Site, adapter: Phoenix.PubSub.PG2],
-          http: [compress: true]
-        ],
 
-        dev: [
-          debug_errors: true,
-          code_reloader: true,
-          cache_static_lookup: false,
-          check_origin: false,
-          watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]],
-          live_reload: [
+          debug_errors: for_env(dev: true),
+          code_reloader: for_env(dev: true),
+          cache_static_lookup: for_env(dev: false),
+          check_origin: for_env(dev: false),
+          watchers: for_env(dev: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]),
+          live_reload: for_env(dev: [
             patterns: [
               ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
               ~r{web/views/.*(ex)$},
               ~r{web/templates/.*(eex)$},
               ~r{articles/.*$}
             ]
-          ]
-        ],
+          ]),
 
-        test: [http: [port: 4001], server: false],
+          server: for_env(test: false),
+          cache_static_manifest: for_env(prod: "priv/static/manifest.json")
+        },
 
-        prod: [
-          url: [host: "theerlangelist.com", port: 80],
-          cache_static_manifest: "priv/static/manifest.json"
-        ]
-      },
-
-      # Admin site
-      {Erlangelist.Endpoint.Admin,
-        common: [
+        # Admin site
+        {Erlangelist.Endpoint.Admin,
           url: [host: "localhost"],
-          http: [port: Erlangelist.SystemSettings.value(:admin_http_port)],
+          http: [port: system_setting(:admin_http_port)],
           root: Path.dirname(__DIR__),
           secret_key_base: secret_key_base,
           render_errors: [accepts: ~w(html json)],
           pubsub: [name: Erlangelist.PubSub.Admin, adapter: Phoenix.PubSub.PG2],
-          http: [compress: true]
-        ],
+          http: [compress: true],
 
-        dev: [
-          debug_errors: true,
-          code_reloader: true,
-          cache_static_lookup: false,
-          check_origin: false,
-          watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]],
-          live_reload: [
+          debug_errors: for_env(dev: true),
+          code_reloader: for_env(dev: true),
+          cache_static_lookup: for_env(dev: false),
+          check_origin: for_env(dev: false),
+          watchers: for_env(dev: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]),
+          live_reload: for_env(dev: [
             patterns: [
               ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
               ~r{web/views/.*(ex)$},
               ~r{web/templates/.*(eex)$},
               ~r{articles/.*$}
             ]
-          ]
-        ],
+          ]),
 
-        test: [http: [port: 4002], server: false]
-      },
+          test: [http: [port: 4002], server: false]
+        },
 
-      {Erlangelist.Repo,
-        common: [
+        {Erlangelist.Repo,
           adapter: Ecto.Adapters.Postgres,
-          database: "erlangelist",
+          hostname: System.get_env("ERLANGELIST_DB_SERVER") || peer_ip,
+          port: for_env(common: 5432, prod: system_setting(:postgres_port)),
+          database: System.get_env("ERLANGELIST_DB") || for_env(common: "erlangelist", test: "erlangelist_test"),
           username: "erlangelist",
-          password: Erlangelist.SystemSettings.value(:db_password) || "",
-          hostname: peer_ip,
-          port: 5432
-        ],
+          password: system_setting(:db_password) || ""
+        },
 
-        test: [
-          hostname: System.get_env("ERLANGELIST_SERVER") || peer_ip,
-          database: System.get_env("ERLANGELIST_DB") || "erlangelist_test"
-        ],
+        peer_ip: peer_ip,
+        geo_ip: system_setting(:geo_ip_port),
 
-        prod: [port: Erlangelist.SystemSettings.value(:postgres_port)]
-      },
+        exometer_polling_interval: exometer_polling_interval,
 
-      peer_ip: [common: peer_ip],
-      geo_ip: [common: Erlangelist.SystemSettings.value(:geo_ip_port)],
+        articles_cache: for_env(
+          # keeps items forever
+          common: [],
+          # quick expiration in dev
+          dev: [
+            ttl_check: :timer.seconds(1),
+            ttl: :timer.seconds(1)
+          ]
+        ),
 
-      exometer_polling_interval: [
-        common: :timer.seconds(5),
-        dev: :timer.seconds(1)
-      ],
+        db_counter_save_interval: for_env(common: :timer.seconds(10), test: 1),
 
-      articles_cache: [
-        # keeps items forever
-        common: [],
-        # quick expiration in dev
-        dev: [
-          ttl_check: :timer.seconds(1),
-          ttl: :timer.seconds(1)
-        ]
-      ],
-
-      db_counter_save_interval: [
-        common: :timer.seconds(10),
-        test: 1
-      ],
-
-      rate_limiters: [
-        common: [
+        rate_limiters: [
           {:per_second, :timer.seconds(1)},
           {:per_minute, :timer.minutes(1)}
-        ]
-      ],
-      rate_limited_operations: [
-        common: [
-          plug_logger: nil,
-          limit_warn_log: {:per_second, 0},
-          request_db_log: nil,
-          geoip_query: {:per_second, 0},
-          geolocation_reporter: nil
         ],
-
-        prod: [
-          plug_logger: {:per_second, 100},
-          limit_warn_log: {:per_minute, 1},
-          request_db_log: {:per_second, 10},
-          geoip_query: {:per_second, 50},
-          geolocation_reporter: {:per_second, 30}
+        rate_limited_operations: [
+          plug_logger: for_env(prod: {:per_second, 100}),
+          limit_warn_log: {:per_minute, for_env(prod: 1, common: 0)},
+          request_db_log: for_env(prod: {:per_second, 10}),
+          geoip_query: {:per_second, for_env(prod: 50, common: 0)},
+          geolocation_reporter: for_env(prod: {:per_second, 30})
         ]
       ]
     ]
+    |> remove_undefined
+  end
+
+  defp for_env(choices) do
+    case Keyword.fetch(choices, Mix.env) do
+      {:ok, value} -> value
+      :error ->
+        case Keyword.fetch(choices, :common) do
+          {:ok, value} -> value
+          :error -> undefined
+        end
+    end
+  end
+
+  @undefined {__MODULE__, :undefined}
+  defp undefined, do: @undefined
+
+  defp remove_undefined([]), do: []
+  defp remove_undefined([{_name, @undefined} | rest]), do: remove_undefined(rest)
+  defp remove_undefined([head | rest]), do: [remove_undefined(head) | remove_undefined(rest)]
+  defp remove_undefined(%{} = map) do
+    map
+    |> Map.to_list
+    |> remove_undefined
+    |> Enum.into(%{})
+  end
+  defp remove_undefined(tuple) when is_tuple(tuple) do
+    tuple
+    |> Tuple.to_list
+    |> remove_undefined
+    |> List.to_tuple
+  end
+  defp remove_undefined(term), do: term
+
+
+  # System settings (valid for multiple containers)
+  base_port = String.to_integer(System.get_env("ERLANGELIST_BASE_PORT") || "20000")
+
+  port_offsets = [
+    site_http: 0,
+    admin_http: 1,
+    postgres: 2,
+    graphite_nginx: 3,
+    carbon: 4,
+    statsd: 5,
+    geo_ip: 6,
+    site_inet_dist: 7
   ]
 
-  def all, do: unquote(
-    for {app, settings} <- apps_settings do
-      {
-        app,
-        for {name, value} <- settings do
-          common_value = value[:common]
-          specific_value = value[Mix.env] || common_value
-
-          [{^app, [{^name, value}]}] =
-            Mix.Config.merge(
-              [{app, [{name, common_value}]}],
-              [{app, [{name, specific_value}]}]
-            )
-
-          Macro.escape({name, value})
-        end
-        |> Enum.filter(&(not match?({_, nil}, &1)))
-      }
+  system_settings =
+    for {type, offset} <- port_offsets do
+      {:"#{type}_port", base_port + offset}
     end
-  )
+
+  system_settings =
+    if Mix.env == :prod do
+      {additional_settings, _bindings} = Code.eval_file(
+        "#{Path.dirname(__ENV__.file)}/prod_settings.exs"
+      )
+      Keyword.merge(system_settings, additional_settings)
+    else
+      system_settings
+    end
+
+  for {name, value} <- system_settings do
+    def system_setting(unquote(name)), do: unquote(value)
+  end
+  def system_setting(_), do: nil
+
+  def env_vars do
+    unquote(
+      for {name, value} <- system_settings do
+        "export #{String.upcase("ERLANGELIST_#{name}")}=#{to_string(value)}\n"
+      end
+    )
+  end
 end
