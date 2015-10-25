@@ -1,6 +1,8 @@
 defmodule Erlangelist.GeoIp do
   require Logger
 
+  alias Erlangelist.Metrics
+
   def country(ip) do
     empty_to_nil(fetch(ip)["country_name"])
   end
@@ -28,7 +30,12 @@ defmodule Erlangelist.GeoIp do
     ConCache.get_or_store(:geoip_cache, ip,
       fn ->
         %HTTPoison.Response{status_code: 200, body: body} =
-          HTTPoison.get!("#{geoip_site_url}/json/#{ip}", timeout: :timer.seconds(1))
+          Metrics.measure(
+            [:site, :geoip_query],
+            fn ->
+              HTTPoison.get!("#{geoip_site_url}/json/#{ip}", timeout: :timer.seconds(1))
+            end
+          )
 
         Poison.decode!(body)
       end

@@ -11,6 +11,19 @@ defmodule Erlangelist.Metrics do
     |> :exometer.update(value)
   end
 
+  def measure(metric_name, fun) do
+    inc_spiral(metric_name ++ [:count])
+
+    start_time = :os.timestamp
+    try do
+      fun.()
+    after
+      end_time = :os.timestamp
+      diff = :timer.now_diff(end_time, start_time)
+      sample_histogram(metric_name ++ [:time], diff / 1000)
+    end
+  end
+
   defp ensure_metric(
     metric_name,
     metric_type,
