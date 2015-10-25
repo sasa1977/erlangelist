@@ -21,6 +21,10 @@ defmodule Erlangelist.Endpoint.Site do
   plug Erlangelist.Plug.Logger
   plug Erlangelist.VisitPlug
 
+  unless Mix.env == :test do
+    plug Erlangelist.DbLoggerPlug
+  end
+
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],

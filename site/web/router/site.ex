@@ -7,7 +7,6 @@ defmodule Erlangelist.Router.Site do
     plug :fetch_session
 
     unless Mix.env == :test do
-      plug Erlangelist.DbLoggerPlug
       plug Erlangelist.CookieCompliance
     end
 
