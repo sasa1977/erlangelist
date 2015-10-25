@@ -20,6 +20,13 @@ defmodule Erlangelist do
         id: :articles_cache
       ),
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
+      worker(ConCache,
+        [
+          [ttl_check: :timer.seconds(10), ttl: :timer.seconds(1)],
+          [name: :geoip_cache]
+        ],
+        id: :geoip_cache
+      ),
       worker(Erlangelist.GeolocationReporter, []),
       worker(Erlangelist.RequestDbLogger, []),
       supervisor(Erlangelist.DbCounter, []),
