@@ -154,8 +154,8 @@ defmodule Erlangelist.Settings do
         ],
         rate_limited_operations: [
           plug_logger: for_env(prod: {:per_second, 100}),
+          request_db_log: for_env(prod: {:per_minute, 600}),
           limit_warn_log: {:per_minute, for_env(prod: 1, common: 0)},
-          request_db_log: for_env(prod: {:per_second, 10}),
           geoip_query: {:per_second, for_env(prod: 50, common: 0)}
         ]
       ]
