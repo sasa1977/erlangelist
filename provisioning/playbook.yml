@@ -13,6 +13,7 @@
 
     # don't write systemd to syslog
     - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='ForwardToSyslog=no'"
+    - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='Storage=persistent'"
 
     # iptables log
     - copy: src=remote_files/iptables dest=/etc/logrotate.d/ owner=root group=root
