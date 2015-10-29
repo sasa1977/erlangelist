@@ -2,7 +2,7 @@ defmodule Erlangelist.ArticleController do
   use Erlangelist.Web, :controller
 
   alias Erlangelist.Article
-  alias Erlangelist.ArticleEvent
+  alias Erlangelist.Metrics
 
   def most_recent(conn, _params) do
     render_article(conn, Article.most_recent)
@@ -22,14 +22,13 @@ defmodule Erlangelist.ArticleController do
 
 
   defp render_article(conn, %{has_content?: true} = article) do
-    ArticleEvent.visited(article, conn)
     render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
   end
 
   defp render_article(conn, _), do: render_not_found(conn)
 
   defp render_not_found(conn) do
-    ArticleEvent.invalid_article
+    Metrics.inc_spiral([:article, :invalid_article, :requests])
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
   end
 

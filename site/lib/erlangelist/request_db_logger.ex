@@ -2,8 +2,6 @@ defmodule Erlangelist.RequestDbLogger do
   require Logger
   use Workex
 
-  alias Erlangelist.Analytics
-
   def log(data_producer) do
     Erlangelist.run_limited(
       :request_db_log,
@@ -27,7 +25,7 @@ defmodule Erlangelist.RequestDbLogger do
     # restarts and ultimately overload the system. This is a non-critical work,
     # so just log error and resume as normal.
     try do
-      Analytics.insert_log_entries(entries)
+      insert_log_entries(entries)
     catch
       type, error ->
         Logger.error(inspect({type, error, System.stacktrace}))
@@ -45,5 +43,31 @@ defmodule Erlangelist.RequestDbLogger do
       Logger.error(inspect({type, error, System.stacktrace}))
       []
     end
+  end
+
+  def insert_log_entries(entries) do
+    {placeholders, values} =
+      for {values, segment} <- Stream.with_index(entries),
+          {value, offset} <- Stream.with_index(Tuple.to_list(values)) do
+        {"$#{segment * 5 + offset + 1}", value}
+      end
+      |> :lists.unzip
+
+    placeholders =
+      placeholders
+      |> Stream.chunk(5, 5)
+      |> Enum.map(&"(#{Enum.join(&1, ",")})")
+      |> Enum.join(",")
+
+    {:ok, _} =
+      Ecto.Adapters.SQL.query(
+        Erlangelist.Repo,
+        "
+          insert into request_log(path, ip, country, referer, user_agent)
+          values #{placeholders}
+        "
+        |> String.replace(~r(\s+), " "),
+        values
+      )
   end
 end

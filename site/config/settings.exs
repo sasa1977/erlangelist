@@ -49,7 +49,7 @@ defmodule Erlangelist.Settings do
       ],
 
       erlcron: [
-        crontab: for_env(prod: [{{:daily, {5, 0, :am}}, {Erlangelist.Analytics, :compact, []}}])
+        crontab: for_env(prod: [])
       ],
 
       exometer: [
@@ -86,7 +86,6 @@ defmodule Erlangelist.Settings do
       ],
 
       erlangelist: [
-        # Main site
         {Erlangelist.Endpoint.Site,
           url: for_env(
             common: [host: "localhost"],
@@ -125,33 +124,6 @@ defmodule Erlangelist.Settings do
           cache_static_manifest: for_env(prod: "priv/static/manifest.json")
         },
 
-        # Admin site
-        {Erlangelist.Endpoint.Admin,
-          url: [host: "localhost"],
-          http: [port: system_setting(:admin_http_port)],
-          root: Path.dirname(__DIR__),
-          secret_key_base: secret_key_base,
-          render_errors: [accepts: ~w(html json)],
-          pubsub: [name: Erlangelist.PubSub.Admin, adapter: Phoenix.PubSub.PG2],
-          http: [compress: true],
-
-          debug_errors: for_env(dev: true),
-          code_reloader: for_env(dev: true),
-          cache_static_lookup: for_env(dev: false),
-          check_origin: for_env(dev: false),
-          watchers: for_env(dev: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]),
-          live_reload: for_env(dev: [
-            patterns: [
-              ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-              ~r{web/views/.*(ex)$},
-              ~r{web/templates/.*(eex)$},
-              ~r{articles/.*$}
-            ]
-          ]),
-
-          test: [http: [port: 4002], server: false]
-        },
-
         {Erlangelist.Repo,
           adapter: Ecto.Adapters.Postgres,
           hostname: System.get_env("ERLANGELIST_DB_SERVER") || peer_ip,
@@ -176,8 +148,6 @@ defmodule Erlangelist.Settings do
           ]
         ),
 
-        db_counter_save_interval: for_env(common: :timer.seconds(10), test: 1),
-
         rate_limiters: [
           {:per_second, :timer.seconds(1)},
           {:per_minute, :timer.minutes(1)}
@@ -186,8 +156,7 @@ defmodule Erlangelist.Settings do
           plug_logger: for_env(prod: {:per_second, 100}),
           limit_warn_log: {:per_minute, for_env(prod: 1, common: 0)},
           request_db_log: for_env(prod: {:per_second, 10}),
-          geoip_query: {:per_second, for_env(prod: 50, common: 0)},
-          geolocation_reporter: for_env(prod: {:per_second, 30})
+          geoip_query: {:per_second, for_env(prod: 50, common: 0)}
         ]
       ]
     ]
@@ -231,7 +200,7 @@ defmodule Erlangelist.Settings do
 
   port_offsets = [
     site_http: 0,
-    admin_http: 1,
+    # offset 1 was used for the admin site which no longer exists
     postgres: 2,
     graphite_nginx: 3,
     carbon: 4,

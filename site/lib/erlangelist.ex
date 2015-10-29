@@ -27,11 +27,8 @@ defmodule Erlangelist do
         ],
         id: :geoip_cache
       ),
-      worker(Erlangelist.GeolocationReporter, []),
       worker(Erlangelist.RequestDbLogger, []),
-      supervisor(Erlangelist.DbCounter, []),
-      supervisor(Erlangelist.Endpoint.Site, []),
-      supervisor(Erlangelist.Endpoint.Admin, [])
+      supervisor(Erlangelist.Endpoint.Site, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

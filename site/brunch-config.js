@@ -19,8 +19,7 @@ exports.config = {
     },
     stylesheets: {
       joinTo: {
-        'css/app.css': /^(web\/static\/css\/site)/,
-        'css/admin.css': /^(web\/static\/css\/admin)|(deps)/
+        'css/app.css': /^(web\/static\/css\/site)/
       }
     },
     templates: {
