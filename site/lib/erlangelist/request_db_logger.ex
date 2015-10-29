@@ -45,17 +45,19 @@ defmodule Erlangelist.RequestDbLogger do
     end
   end
 
-  def insert_log_entries(entries) do
+  defp insert_log_entries([]), do: :ok
+  defp insert_log_entries([first_entry | _] = entries) do
+    num_values = tuple_size(first_entry)
     {placeholders, values} =
       for {values, segment} <- Stream.with_index(entries),
           {value, offset} <- Stream.with_index(Tuple.to_list(values)) do
-        {"$#{segment * 5 + offset + 1}", value}
+        {"$#{segment * num_values + offset + 1}", value}
       end
       |> :lists.unzip
 
     placeholders =
       placeholders
-      |> Stream.chunk(5, 5)
+      |> Stream.chunk(num_values, num_values)
       |> Enum.map(&"(#{Enum.join(&1, ",")})")
       |> Enum.join(",")
 
@@ -69,5 +71,8 @@ defmodule Erlangelist.RequestDbLogger do
         |> String.replace(~r(\s+), " "),
         values
       )
+
+    :gproc.lookup_pids({:p, :l, __MODULE__})
+    |> Enum.each(&send(&1, :inserted))
   end
 end
