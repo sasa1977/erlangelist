@@ -160,6 +160,8 @@ defmodule Erlangelist.Settings do
           ]
         ),
 
+        google_analytics: for_env(common: false, prod: true),
+
         rate_limiters: [
           {:per_second, :timer.seconds(1)},
           {:per_minute, :timer.minutes(1)}
