@@ -51,4 +51,12 @@ defmodule Erlangelist.Article do
   end
 
   def article(_), do: nil
+
+  def id_from_string(string) do
+    try do
+      String.to_existing_atom(string)
+    catch _,_ ->
+      :undefined
+    end
+  end
 end
