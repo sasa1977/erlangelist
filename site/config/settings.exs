@@ -156,7 +156,7 @@ defmodule Erlangelist.Settings do
           plug_logger: for_env(prod: {:per_second, 100}),
           request_db_log: for_env(prod: {:per_minute, 600}),
           limit_warn_log: {:per_minute, for_env(prod: 1, common: 0)},
-          geoip_query: {:per_second, for_env(prod: 50, common: 0)}
+          geoip_query: {:per_minute, for_env(prod: 100, common: 0)}
         ]
       ]
     ]

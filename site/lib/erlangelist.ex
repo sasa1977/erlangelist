@@ -22,7 +22,7 @@ defmodule Erlangelist do
       worker(ConCache, [[], [name: :metrics_cache]], id: :metrics_cache),
       worker(ConCache,
         [
-          [ttl_check: :timer.seconds(10), ttl: :timer.seconds(1)],
+          [ttl_check: :timer.seconds(30), ttl: :timer.seconds(10)],
           [name: :geoip_cache]
         ],
         id: :geoip_cache
