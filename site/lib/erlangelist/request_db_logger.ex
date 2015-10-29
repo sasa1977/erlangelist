@@ -61,18 +61,41 @@ defmodule Erlangelist.RequestDbLogger do
       |> Enum.map(&"(#{Enum.join(&1, ",")})")
       |> Enum.join(",")
 
-    {:ok, _} =
-      Ecto.Adapters.SQL.query(
-        Erlangelist.Repo,
-        "
-          insert into request_log(path, ip, country, referer, user_agent)
-          values #{placeholders}
-        "
-        |> String.replace(~r(\s+), " "),
-        values
-      )
+    exec_sql!(
+      "INSERT INTO request_log(path, ip, country, referer, user_agent) VALUES #{placeholders}",
+      values)
 
     :gproc.lookup_pids({:p, :l, __MODULE__})
     |> Enum.each(&send(&1, :inserted))
+  end
+
+  def archive_logs do
+    Erlangelist.Repo.transaction(fn ->
+      exec_sql!("DELETE FROM request_log_archive WHERE created_at <= current_date - interval '6 months'")
+
+      exec_sql!("SELECT max(id) FROM request_log WHERE created_at <= current_date - interval '7 days'")
+      |> transfer_log_rows
+    end)
+
+    exec_sql!("VACUUM ANALYZE")
+
+    :ok
+  end
+
+  defp transfer_log_rows(%{rows: [[nil]]}), do: :ok
+  defp transfer_log_rows(%{rows: [[id]]}) do
+    exec_sql!("INSERT INTO request_log_archive SELECT * FROM request_log WHERE id <= $1", [id])
+    %{num_rows: num_rows} = exec_sql!("DELETE FROM request_log WHERE id <= $1", [id])
+    Logger.info("Archived #{num_rows} log entries")
+  end
+
+  defp exec_sql!(sql, params \\ []) do
+    {:ok, result} = Ecto.Adapters.SQL.query(
+      Erlangelist.Repo,
+      String.replace(sql, ~r(\s+), " "),
+      params
+    )
+
+    result
   end
 end

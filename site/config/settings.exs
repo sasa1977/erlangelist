@@ -49,7 +49,19 @@ defmodule Erlangelist.Settings do
       ],
 
       erlcron: [
-        crontab: for_env(prod: [])
+        crontab: [
+          for_env(
+            test: undefined,
+            common:
+              {
+                for_env(
+                  prod: {:daily, {5, 0, :am}},
+                  dev: {:daily, {:every, {60, :sec}, {:between, {0, :am}, {11, 59, 59, :pm}}}}
+                ),
+                {Erlangelist.RequestDbLogger, :archive_logs, []}
+              }
+          )
+        ]
       ],
 
       exometer: [
@@ -179,6 +191,7 @@ defmodule Erlangelist.Settings do
 
   defp remove_undefined([]), do: []
   defp remove_undefined([{_name, @undefined} | rest]), do: remove_undefined(rest)
+  defp remove_undefined([@undefined | rest]), do: remove_undefined(rest)
   defp remove_undefined([head | rest]), do: [remove_undefined(head) | remove_undefined(rest)]
   defp remove_undefined(%{} = map) do
     map
