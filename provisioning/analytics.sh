@@ -49,7 +49,9 @@ eval $settings
 ssh -L $ERLANGELIST_POSTGRES_PORT:127.0.0.1:$ERLANGELIST_POSTGRES_PORT $machine "sleep infinity" &
 pid=$!
 
-sleep 2
+until nc -z 127.0.0.1 $ERLANGELIST_POSTGRES_PORT; do
+  sleep 0.1
+done
 
 basic_filter="
   created_at > now() - INTERVAL '$interval'
