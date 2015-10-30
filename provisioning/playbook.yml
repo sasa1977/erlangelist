@@ -11,6 +11,10 @@
     - copy: src=remote_files/erlangelist-settings.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
 
+    # disable ssh password login
+    - lineinfile: "dest=/etc/ssh/sshd_config create=no line='PasswordAuthentication no'"
+    - service: name=ssh state=reloaded
+
     # don't write systemd to syslog
     - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='ForwardToSyslog=no'"
     - lineinfile: "dest=/etc/systemd/journald.conf create=yes line='Storage=persistent'"
