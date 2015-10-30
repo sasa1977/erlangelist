@@ -19,14 +19,14 @@ defmodule Erlangelist.Router.Site do
     plug :accepts, ["json"]
   end
 
+  # Known links for the browser
   scope "/", Erlangelist do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
 
     get "/", ArticleController, :most_recent
     get "/privacy_policy.html", SiteController, :privacy_policy
     post "/comments", ArticleController, :comments
     get "/article/:article_id", ArticleController, :article
-
 
     for article <- Erlangelist.Article.all do
       # old-style urls
@@ -43,8 +43,16 @@ defmodule Erlangelist.Router.Site do
     end
   end
 
+  # rss feed
   scope "/", Erlangelist do
     get "/rss", RssController, :index
-    get "/feeds/posts/default", RssController, :index
+    get "/feeds/posts/*any", RssController, :index
+  end
+
+  # unknown links
+  scope "/", Erlangelist do
+    pipe_through :browser
+
+    get "*rest", ArticleController, :not_found
   end
 end
