@@ -12,18 +12,41 @@ function run_sql {
 }
 
 machine="$1"
+shift
 
 if [ "$machine" == "" ]; then
   printf "\nSyntax:\n\n  ${BASH_SOURCE[0]} target_machine [psql_interval]\n\n"
   exit 1
 fi
 
-interval=${2:-"2 hours"}
+# defaults
+interval="2 hours"
+
+# parse options
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -i)
+      interval="$2"
+      shift 2
+      ;;
+
+    -no-rss)
+      no_rss="true"
+      shift
+      ;;
+
+    *)
+      echo "Unknown parameter $1"
+      exit 1
+      ;;
+  esac
+done
+
 
 settings=$(ssh $machine "cat /opt/erlangelist/erlangelist-settings.sh")
 eval $settings
 
-ssh -L $ERLANGELIST_POSTGRES_PORT:127.0.0.1:$ERLANGELIST_POSTGRES_PORT $1 "sleep infinity" &
+ssh -L $ERLANGELIST_POSTGRES_PORT:127.0.0.1:$ERLANGELIST_POSTGRES_PORT $machine "sleep infinity" &
 pid=$!
 
 sleep 2
@@ -34,7 +57,7 @@ basic_filter="
   and path not like '/2015/%'
 "
 
-if [ "$3" == "no_rss" ]; then
+if [ "$no_rss" == "true" ]; then
   basic_filter="
     $basic_filter
     and ip not in (
