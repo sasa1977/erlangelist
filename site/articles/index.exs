@@ -1,4 +1,9 @@
 [
+  opensourcing_erlangelist: [
+    short_title: "Open-sourcing Erlangelist",
+    posted_at: "2015-11-01"
+  ],
+
   outside_elixir: [
     long_title: "Outside Elixir: running external programs with ports",
     short_title: "Outside Elixir",
