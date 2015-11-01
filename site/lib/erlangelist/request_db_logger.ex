@@ -26,9 +26,8 @@ defmodule Erlangelist.RequestDbLogger do
     # so just log error and resume as normal.
     try do
       insert_log_entries(entries)
-    catch
-      type, error ->
-        Logger.error(inspect({type, error, System.stacktrace}))
+    catch type, error ->
+      Logger.error(inspect({type, error, System.stacktrace}))
     end
 
     {:ok, state, :hibernate}

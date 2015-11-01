@@ -55,7 +55,7 @@ defmodule Erlangelist.Article do
   def id_from_string(string) do
     try do
       String.to_existing_atom(string)
-    catch _,_ ->
+    rescue ArgumentError ->
       :undefined
     end
   end

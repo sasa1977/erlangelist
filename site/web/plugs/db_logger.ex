@@ -27,7 +27,7 @@ defmodule Erlangelist.DbLoggerPlug do
     RequestDbLogger.log(
       fn ->
         ip = Erlangelist.Helper.ip_string(remote_ip)
-        country = country(ip)
+        country = GeoIp.country(ip)
         for referer <- pad(referers), user_agent <- pad(user_agents) do
           {request_path, ip, country, referer, user_agent}
         end
@@ -37,14 +37,4 @@ defmodule Erlangelist.DbLoggerPlug do
 
   defp pad([]), do: [""]
   defp pad(list), do: list
-
-  defp country(remote_ip) do
-    try do
-      GeoIp.country(remote_ip)
-    catch type, error ->
-      # Bypassing "let-it-crash", since this is not critical.
-      Logger.error("Error fetching geolocation: #{inspect {type, error, System.stacktrace}}")
-      ""
-    end
-  end
 end
