@@ -15,6 +15,6 @@ RUN \
   password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;) \
   && printf "$password\n$password\n" | passwd root
 
-COPY docker/site/run.sh /erlangelist/
-
 USER erlangelist
+
+ENTRYPOINT ["/erlangelist/bin/erlangelist"]
