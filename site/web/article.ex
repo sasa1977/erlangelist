@@ -9,6 +9,7 @@ defmodule Erlangelist.Article do
       |> Enum.into(%{})
       |> Map.put(:id, article_id)
       |> Map.put(:posted_at, Timex.DateFormat.format!(date, "%B %d, %Y", :strftime))
+      |> Map.put(:copyright_year, date.year)
       |> Map.put(:posted_at_rfc822, Timex.DateFormat.format!(date, "{RFC822}"))
       |> Map.put(:has_content?, data[:redirect] == nil)
       |> Map.put(:long_title, data[:long_title] || data[:short_title])
