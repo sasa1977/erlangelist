@@ -33,6 +33,15 @@ defmodule Erlangelist.ArticleController do
     not_found(conn, params)
   end
 
+  def comments(conn, %{"article_id" => article_id}) do
+    conn
+    |> put_layout(false)
+    |> render("_comments.html",
+          article: Article.article(Article.id_from_string(article_id)),
+          cookies: true
+        )
+  end
+
 
   def not_found(conn, _params) do
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
