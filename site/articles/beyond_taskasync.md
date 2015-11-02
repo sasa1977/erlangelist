@@ -368,7 +368,7 @@ defmodule TaskRunnerClient do
 
             {:timeout, _runner} ->
               {:timeout, Aggregator.value(aggregator)}
-          enda
+          end
       end
     end
   end
