@@ -1,4 +1,9 @@
 [
+  eia_elixir_12: [
+    short_title: "Elixir 1.2 and Elixir in Action",
+    posted_at: "2016-01-06"
+  ],
+
   opensourcing_erlangelist: [
     short_title: "Open-sourcing Erlangelist",
     posted_at: "2015-11-01"
