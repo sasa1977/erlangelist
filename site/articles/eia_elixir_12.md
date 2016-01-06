@@ -22,7 +22,7 @@ For Elixir in Action, this means that all the code that's using `HashDict` shoul
 
 ## Protocol consolidation
 
-Starting Elixir 1.2, protocols are consolidated by default in all build environments. As a result, the subsection "Protocol Consolidation" (page 326) becomes redundant. With new Elixir you don't need to worry about consolidation.
+Starting Elixir 1.2, protocols are consolidated by default in all build environments (you can change this by setting `consolidate_protocols: false` in the project config). As a result, the subsection "Protocol Consolidation" (page 326) becomes redundant. With new Elixir you don't need to worry about consolidation.
 
 
 ## Embedded build and permanent applications
