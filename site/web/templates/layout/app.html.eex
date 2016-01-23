@@ -48,7 +48,7 @@
 
             <i>Hi, I'm Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using various languages, such as Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the <a href="https://www.manning.com/books/elixir-in-action?a_aid=sjuric">Elixir in Action</a> book. In this blog you can read about Elixir, Erlang, and other programming related topics. You can subscribe to the <a href="/rss">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</i>
 
-          <%= @inner %>
+          <%= render @view_module, @view_template, assigns %>
         </div>
       </div>
 
