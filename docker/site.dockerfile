@@ -1,8 +1,8 @@
-FROM alpine:3.2
+FROM alpine:3.3
 
 RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
     && echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
-    && apk --update add ncurses-libs=6.0-r0 bash && rm -rf /var/cache/apk/*
+    && apk --update add ncurses-libs=6.0-r7 bash && rm -rf /var/cache/apk/*
 
 ENV SHELL=/bin/bash TERM=xterm
 
