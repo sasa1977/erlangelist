@@ -4,4 +4,8 @@ Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
   config.vm.hostname = "erlangelist"
   config.vm.network "private_network", ip: ENV["VM_IP"] if ARGV[0]=="up"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
 end
