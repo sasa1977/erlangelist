@@ -30,9 +30,14 @@
 
     # install docker
     - apt: name=wget
+    - apt: name=apt-transport-https
     - stat: path=/usr/bin/docker
       register: docker
-    - shell: wget -qO- https://get.docker.com/ | sh
+    - command: apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+      when: docker.stat.exists == false
+    - lineinfile: "dest=/etc/apt/sources.list.d/docker.list create=yes line='deb https://apt.dockerproject.org/repo debian-jessie main'"
+      when: docker.stat.exists == false
+    - apt: name=docker-engine=1.8.3-0~jessie update_cache=yes
       when: docker.stat.exists == false
     - copy: src=remote_files/docker.service dest=/etc/systemd/system/docker.service owner=root group=root mode=0755
     - command: systemctl daemon-reload
