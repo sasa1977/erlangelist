@@ -18,9 +18,9 @@ defmodule Erlangelist.Mixfile do
   def application do
     [mod: {Erlangelist, []},
      applications: [
-      :phoenix, :phoenix_html, :cowboy, :logger, :postgrex, :con_cache,
+      :phoenix, :phoenix_html, :phoenix_ecto, :cowboy, :logger, :postgrex, :con_cache,
       :runtime_tools, :lager_logger, :lager, :exometer, :httpoison, :poison,
-      :gproc, :workex, :erlcron, :ecto
+      :gproc, :workex, :erlcron, :ecto, :connection
     ]]
   end
 
@@ -35,13 +35,13 @@ defmodule Erlangelist.Mixfile do
     [{:phoenix, "~> 1.1"},
      {:phoenix_ecto, "~> 2.0"},
      {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.3"},
+     {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
-     {:earmark, "~> 0.1"},
-     {:con_cache, "~> 0.9.0"},
-     {:timex, "~> 0.19.5"},
-     {:exrm, "~> 0.19.2"},
+     {:earmark, "~> 0.2"},
+     {:con_cache, "~> 0.10.0"},
+     {:timex, "~> 1.0"},
+     {:exrm, "~> 1.0.0-rc"},
      {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
      {:exometer, github: "PSPDFKit-labs/exometer"},
      {:edown, github: "uwiger/edown", tag: "0.7", override: true},
@@ -50,7 +50,7 @@ defmodule Erlangelist.Mixfile do
      {:httpoison, "~> 0.7.3"},
      {:poison, "~> 1.5.0"},
      {:gproc, "~> 0.5.0"},
-     {:workex, "~> 0.9.0"},
+     {:workex, "~> 0.10.0"},
      {:ecto, "~> 1.1"},
      {:erlcron, github: "erlware/erlcron"}
    ]
