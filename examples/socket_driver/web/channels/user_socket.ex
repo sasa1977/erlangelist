@@ -2,7 +2,7 @@ defmodule SocketDriver.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", SocketDriver.RoomChannel
+  channel "ping_topic", SocketDriver.PingChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
