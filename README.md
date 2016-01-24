@@ -16,7 +16,7 @@ If you want to contribute a minor correction to some article (e.g. language and 
 Prerequisites:
 
 - Erlang 18
-- Elixir 1.1
+- Elixir 1.2
 - PostgreSQL (preferably 9.4)
 
 1. Start the database server on the port 5432.
