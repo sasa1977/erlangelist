@@ -1,4 +1,9 @@
 [
+  driving_phoenix_sockets: [
+    short_title: "Driving Phoenix sockets",
+    posted_at: "2016-01-25"
+  ],
+
   eia_elixir_12: [
     short_title: "Elixir 1.2 and Elixir in Action",
     posted_at: "2016-01-06"
