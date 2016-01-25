@@ -37,7 +37,7 @@ iex(3)> flush
 Finally, I can also push a message to the socket and verify the outgoing message:
 
 ```elixir
-iex(4)> SocketDriver.push(driver, "ping_topic", "ping", %{})
+iex(4)> SocketDriver.push(socket_pid, "ping_topic", "ping", %{})
 
 iex(5)> flush
 {:message,
