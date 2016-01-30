@@ -1,53 +1,45 @@
 defmodule Erlangelist.Article do
   @external_resource "articles/index.exs"
 
-  article_map = fn({article_id, data}) ->
-    date = Timex.DateFormat.parse!(data[:posted_at], "{ISOdate}")
+  article_meta = fn({article_id, article_spec}) ->
+    date = Timex.DateFormat.parse!(article_spec[:posted_at], "{ISOdate}")
 
-    transformed_meta =
-      data
-      |> Enum.into(%{})
-      |> Map.put(:id, article_id)
-      |> Map.put(:posted_at, Timex.DateFormat.format!(date, "%B %d, %Y", :strftime))
-      |> Map.put(:copyright_year, date.year)
-      |> Map.put(:posted_at_rfc822, Timex.DateFormat.format!(date, "{RFC822}"))
-      |> Map.put(:has_content?, data[:redirect] == nil)
-      |> Map.put(:long_title, data[:long_title] || data[:short_title])
-      |> Map.put(:short_title, data[:short_title] || data[:long_title])
-      |> Map.put(:link, data[:redirect] || "/article/#{article_id}")
-      |> Map.put(:redirect, data[:redirect])
-      |> Map.put(:legacy_url, data[:legacy_url] || nil)
-      |> Map.put(:source_link, "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md")
-
-    transformed_meta
-  end
-
-  html = fn(article_id) ->
-    "articles/#{article_id}.md"
-    |> File.read!
-    |> Earmark.to_html
+    Enum.into(article_spec,
+      %{
+        id: article_id,
+        posted_at: Timex.DateFormat.format!(date, "%B %d, %Y", :strftime),
+        copyright_year: date.year,
+        posted_at_rfc822: Timex.DateFormat.format!(date, "{RFC822}"),
+        has_content?: article_spec[:redirect] == nil,
+        long_title: article_spec[:long_title] || article_spec[:short_title],
+        short_title: article_spec[:short_title] || article_spec[:long_title],
+        link: article_spec[:redirect] || "/article/#{article_id}",
+        redirect: article_spec[:redirect],
+        legacy_url: article_spec[:legacy_url] || nil,
+        source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md"
+      }
+    )
   end
 
 
+  {articles_specs, _} = Code.eval_file("articles/index.exs")
+  articles_meta = Enum.map(articles_specs, article_meta)
 
-  {articles_data, _} = Code.eval_file("articles/index.exs")
+  def all, do: unquote(Macro.escape(articles_meta))
+  def most_recent, do: unquote(Macro.escape(hd(articles_meta)))
 
-  for {article_id, _} <- articles_data, do: @external_resource "articles/#{article_id}.md"
-
-  ordered_articles = Enum.map(articles_data, article_map)
-  def all do
-    unquote(Macro.escape(ordered_articles))
-  end
-
-  def most_recent do
-    unquote(Macro.escape(hd(ordered_articles)))
-  end
-
-  for article <- ordered_articles do
+  for article <- articles_meta do
     def article(unquote(article.id)), do: unquote(Macro.escape(article))
 
     if article.has_content? do
-      def html(%{id: unquote(article.id)}), do: unquote(html.(article.id))
+      @external_resource "articles/#{article.id}.md"
+
+      def html(%{id: unquote(article.id)}), do:
+        unquote(
+          "articles/#{article.id}.md"
+          |> File.read!
+          |> Earmark.to_html
+        )
     end
   end
 
