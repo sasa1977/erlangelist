@@ -64,9 +64,9 @@ function build_versioned_image {
   fi
 
   dangling_images=$(docker images -f "dangling=true" -q)
-  if [ "$dangling_images" != "" ]; then
-    docker rmi "$dangling_images" > /dev/null || true
-  fi
+  for image in $dangling_images; do
+    docker rmi $image > /dev/null || true
+  done
 }
 
 function run_tests {

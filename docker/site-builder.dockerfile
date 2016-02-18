@@ -1,8 +1,10 @@
-FROM mhart/alpine-node:5.5.0
+FROM mhart/alpine-node:5.6.0
 
 # install OS packages
 RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
     && echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
+    && apk update \
+    && apk upgrade \
     && apk --update add \
         ncurses-libs=6.0-r7 \
         elixir=1.2.1-r0 erlang-runtime-tools erlang-snmp erlang-crypto erlang-syntax-tools \
