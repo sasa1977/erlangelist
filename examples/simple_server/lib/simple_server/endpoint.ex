@@ -4,6 +4,8 @@ defmodule SimpleServer.Endpoint do
   plug :render
 
   def render(conn, _opts) do
-    Plug.Conn.send_resp(conn, 200, "Hello World!")
+    conn
+    |> Plug.Conn.put_resp_content_type("text/html")
+    |> Plug.Conn.send_resp(200, SimpleServer.View.render("index.html"))
   end
 end

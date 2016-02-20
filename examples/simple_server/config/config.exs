@@ -5,6 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
+config :phoenix, :format_encoders, html: Phoenix.HTML.Engine
+
 # Configures the endpoint
 config :simple_server, SimpleServer.Endpoint,
   url: [host: "localhost"],
