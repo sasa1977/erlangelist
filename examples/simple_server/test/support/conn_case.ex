@@ -20,8 +20,6 @@ defmodule SimpleServer.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      import SimpleServer.Router.Helpers
-
       # The default endpoint for testing
       @endpoint SimpleServer.Endpoint
     end
