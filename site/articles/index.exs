@@ -1,4 +1,9 @@
 [
+  phoenix_is_modular: [
+    short_title: "Phoenix is modular",
+    posted_at: "2016-02-22"
+  ],
+
   driving_phoenix_sockets: [
     short_title: "Driving Phoenix sockets",
     posted_at: "2016-01-25"
