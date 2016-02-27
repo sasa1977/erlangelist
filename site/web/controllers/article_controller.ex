@@ -9,16 +9,19 @@ defmodule Erlangelist.ArticleController do
   end
 
   def article(conn, %{"article_id" => article_id}) do
-    article = Article.article(Article.id_from_string(article_id))
-
-    conn
-    |> assign(:title_suffix, article.short_title)
-    |> render_article(article)
+    case Article.article(Article.id_from_string(article_id)) do
+      %{has_content?: true} = article ->
+        conn
+        |> assign(:title_suffix, article.short_title)
+        |> render_article(article)
+      _ ->
+        not_found(conn)
+    end
   end
 
-  def article(conn, params) do
+  def article(conn, _params) do
     Metrics.inc_spiral([:article, :invalid_article, :requests])
-    not_found(conn, params)
+    not_found(conn)
   end
 
   def article_from_old_path(%{private: %{article: article}} = conn, _params) do
@@ -28,13 +31,8 @@ defmodule Erlangelist.ArticleController do
   end
 
 
-  defp render_article(conn, %{has_content?: true} = article) do
+  defp render_article(conn, article) do
     render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
-  end
-
-  defp render_article(conn, params) do
-    Metrics.inc_spiral([:article, :invalid_article, :requests])
-    not_found(conn, params)
   end
 
   def comments(conn, %{"article_id" => article_id}) do
@@ -47,7 +45,7 @@ defmodule Erlangelist.ArticleController do
   end
 
 
-  def not_found(conn, _params) do
+  def not_found(conn) do
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
   end
 end
