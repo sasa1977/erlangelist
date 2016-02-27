@@ -9,7 +9,11 @@ defmodule Erlangelist.ArticleController do
   end
 
   def article(conn, %{"article_id" => article_id}) do
-    render_article(conn, Article.article(Article.id_from_string(article_id)))
+    article = Article.article(Article.id_from_string(article_id))
+
+    conn
+    |> assign(:title_suffix, article.short_title)
+    |> render_article(article)
   end
 
   def article(conn, params) do
