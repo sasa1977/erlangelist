@@ -1,4 +1,10 @@
 [
+  phoenix_latency: [
+    short_title: "Low latency in Phoenix",
+    long_title: "Observing low latency in Phoenix with wrk",
+    posted_at: "2016-06-12"
+  ],
+
   phoenix_is_modular: [
     short_title: "Phoenix is modular",
     posted_at: "2016-02-22"
