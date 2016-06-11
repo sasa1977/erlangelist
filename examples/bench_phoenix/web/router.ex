@@ -7,5 +7,7 @@ defmodule BenchPhoenix.Router do
 
   scope "/api", BenchPhoenix do
     pipe_through :api
+
+    post "/sum", ApiController, :sum
   end
 end
