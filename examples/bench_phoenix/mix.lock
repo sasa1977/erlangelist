@@ -1,7 +1,14 @@
-%{"cowboy": {:hex, :cowboy, "1.0.4"},
+%{"bbmustache": {:hex, :bbmustache, "1.0.4"},
+  "cf": {:hex, :cf, "0.2.1"},
+  "cowboy": {:hex, :cowboy, "1.0.4"},
   "cowlib": {:hex, :cowlib, "1.0.2"},
+  "erlware_commons": {:hex, :erlware_commons, "0.19.0"},
+  "exrm": {:hex, :exrm, "1.0.5"},
+  "getopt": {:hex, :getopt, "0.8.2"},
   "gettext": {:hex, :gettext, "0.11.0"},
   "phoenix": {:hex, :phoenix, "1.1.6"},
   "plug": {:hex, :plug, "1.1.5"},
   "poison": {:hex, :poison, "2.1.0"},
-  "ranch": {:hex, :ranch, "1.2.1"}}
+  "providers": {:hex, :providers, "1.6.0"},
+  "ranch": {:hex, :ranch, "1.2.1"},
+  "relx": {:hex, :relx, "3.19.0"}}
