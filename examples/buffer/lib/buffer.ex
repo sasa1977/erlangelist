@@ -1,0 +1,2 @@
+defmodule Buffer do
+end
