@@ -22,7 +22,7 @@ defmodule BufferTracer do
         {key, %{
           percentiles: Enum.zip(percentiles, percentiles(times, Enum.map(percentiles, &(&1 / 100)))),
           count: count,
-          avg: round(Enum.sum(times) / count),
+          avg: Float.round(Enum.sum(times) / count, 2),
           worst_10:
             times
             |> Enum.reverse()
