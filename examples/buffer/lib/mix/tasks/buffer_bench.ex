@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Buffer.Prof do
+defmodule Mix.Tasks.Buffer.Bench do
   use Mix.Task
 
   alias Buffer.Server
@@ -43,7 +43,7 @@ defmodule Mix.Tasks.Buffer.Prof do
     Enum.each(1..buffer_size, fn(_) -> Server.pull(buffer_pid) end)
     Enum.each(1..buffer_size, &Server.push(buffer_pid, new_message(&1)))
 
-    IO.puts "Profiling #{buffer_mod} using #{pulls} pulls and #{pushes} pushes per cycle..."
+    IO.puts "Benching #{buffer_mod} using #{pulls} pulls and #{pushes} pushes per cycle..."
     {:ok, tracer_pid} = BufferTracer.start_link(buffer_pid)
 
     Enum.each(1..num_cycles, fn(cycle) ->
