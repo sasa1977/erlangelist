@@ -1,4 +1,10 @@
 [
+  reducing_maximum_latency: [
+    short_title: "Reducing the maximum latency",
+    long_title: "Reducing the maximum latency of a bound buffer",
+    posted_at: "2016-12-19"
+  ],
+
   phoenix_latency: [
     short_title: "Low latency in Phoenix",
     long_title: "Observing low latency in Phoenix with wrk",
