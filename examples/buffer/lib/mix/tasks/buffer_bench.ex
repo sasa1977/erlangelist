@@ -58,7 +58,7 @@ defmodule Mix.Tasks.Buffer.Bench do
     IO.puts "\r\n"
     print_percentiles(stats)
 
-    IO.puts "Buffer process memory: #{round((Process.info(buffer_pid) |> Keyword.fetch!(:total_heap_size)) * :erlang.system_info(:wordsize) / 1000)} KB"
+    IO.puts "Buffer process memory: #{round((Process.info(buffer_pid, :memory) |> elem(1)) / 1000)} KB"
     IO.puts "Total memory used: #{round((:erlang.memory() |> Keyword.fetch!(:total)) / 1_000_000)} MB\n"
   end
 
