@@ -35,8 +35,8 @@ defmodule Buffer.Ets do
 
   def pull(%__MODULE__{size: 0}), do: {:error, :empty}
   def pull(%__MODULE__{pull_index: pull_index} = buffer) do
-    [{^pull_index, result}] = :ets.lookup(buffer.ets, pull_index)
-    {:ok, {result,
+    {:ok, {
+      :ets.lookup_element(buffer.ets, pull_index, 2),
       %__MODULE__{buffer |
         size: buffer.size - 1,
         pull_index: rem(pull_index + 1, buffer.max_size)
