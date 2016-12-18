@@ -66,12 +66,12 @@ defmodule Mix.Tasks.Buffer.Bench do
 
   defp print_percentiles(stats) do
     for {key, data} <- stats do
-      IO.puts("#{key} (#{data.count} times, average: #{data.avg} us)")
+      IO.puts("#{key} (#{data.count} times, average: #{data.avg} μs)")
 
       data.percentiles
-      |> Enum.each(fn({label, time}) ->  IO.puts "  #{label}%: #{time} us" end)
+      |> Enum.each(fn({label, time}) ->  IO.puts "  #{label}%: #{time} μs" end)
 
-      IO.puts "  Longest 10 (us): #{Enum.join(data.worst_10, " ")}\n"
+      IO.puts "  Longest 10 (μs): #{Enum.join(data.worst_10, " ")}\n"
     end
   end
 end
