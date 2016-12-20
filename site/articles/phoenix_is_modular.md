@@ -19,7 +19,7 @@ When a request arrives, the Plug library will create a `Plug.Conn` struct (aka _
 
 So essentially, our request handler is a function that takes a conn and transforms it. In particular, each function that takes two arguments (a conn and arbitrary options) is called a _plug_. Additionally, a plug can be a module that implements two functions `init/1` which provides the options, and `call/2` which takes a conn and options, and returns the transformed conn.
 
-Request handler can be implemented as a chain of such plugs, with the help of [Plug.Builder](http://hexdocs.pm/plug/Plug.Builder.html). Since a plug is basically a function, your request handler boils down to a chain of functions threading the conn struct. Each function takes a conn, does it's own processing, and produces a transformed version of it. Then the next function in the chain is invoked to do its job.
+Request handlers can be implemented as a chain of such plugs, with the help of [Plug.Builder](http://hexdocs.pm/plug/Plug.Builder.html). Since a plug is basically a function, your request handler boils down to a chain of functions threading the conn struct. Each function takes a conn, does it's own processing, and produces a transformed version of it. Then the next function in the chain is invoked to do its job.
 
 Each plug in the chain can do various tasks, such as logging (`Plug.Logger`), converting the input (for example `Plug.Head` which transforms a `HEAD` request into `GET`), or producing the output (e.g. `Plug.Static` which serves files from the disk). It is also easy to write your own plugs, for example to authenticate users, or to perform some other custom action. For example, for this site [I implemented a plug which counts visits, measures the processing time, and sends stats to graphite](https://github.com/sasa1977/erlangelist/blob/master/site/web/plugs/visit.ex). Typically, the last function in the chain will be the "core" handler which performs some request-specific processing, such as data manipulation, or some computation, and produces the response.
 
@@ -56,12 +56,12 @@ defmodule SimpleServer.Endpoint do
 end
 ```
 
-And there you have it! A Phoenix powered "Hello World" in less than 10 lines of code. Not so bad :-)
+And there you have it! A Phoenix-powered "Hello World" in less than 10 lines of code. Not so bad :-)
 
 
 ## Reusing desired Phoenix pieces
 
-Since Phoenix is modular, it's fairly easy to reintroduce some parts of it if needed. For example, if you want to log requests, you can simply add following plugs to your endpoint:
+Since Phoenix is modular, it's fairly easy to reintroduce some parts of it if needed. For example, if you want to log requests, you can simply add the following plugs to your endpoint:
 
 ```elixir
 plug Plug.RequestId
@@ -123,7 +123,7 @@ It's worth noting that by throwing most of the default stuff out, we also lost m
 
 ## What's the point?
 
-To be honest, I usually wouldn't recommend this fully sliced-down approach. My impression is that the default code generated with `mix phoenix.new` is a sensible start for most web projects. Sure, you have to spend some time understanding the flow of a request, and roles of endpoint, router, view, and template, but I think it will be worth the effort. At the end of the day, as Chris frequently said, Phoenix aims to provide the "battery included" experience, so the framework is bound to have some inherent complexity. I wouldn't say it's super complex though. You need to take some time to let it sink in, and you're good to go. It's a one off investment, and not a very expensive one.
+To be honest, I usually wouldn't recommend this fully sliced-down approach. My impression is that the default code generated with `mix phoenix.new` is a sensible start for most web projects. Sure, you have to spend some time understanding the flow of a request, and roles of endpoint, router, view, and template, but I think it will be worth the effort. At the end of the day, as Chris frequently said, Phoenix aims to provide the "batteries included" experience, so the framework is bound to have some inherent complexity. I wouldn't say it's super complex though. You need to take some time to let it sink in, and you're good to go. It's a one off investment, and not a very expensive one.
 
 That being said, if you have simpler needs, or you're overwhelmed by many different Phoenix concepts, throwing some stuff out might help. Hopefully it's now obvious that Phoenix is quite tunable. Once you understand Plug it's fairly easy to grasp how a request is handled in Phoenix. Tweaking the server to your own needs is just a matter of removing the plugs you don't want. In my opinion, this is the evidence of a good and flexible design. All the steps are spelled out for you in your project's code, so everything is explicit and you can tweak it as you please.
 
