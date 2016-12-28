@@ -15,13 +15,13 @@ defmodule Erlangelist.ArticleController do
         |> assign(:title_suffix, article.short_title)
         |> render_article(article)
       _ ->
-        not_found(conn)
+        not_found(conn, nil)
     end
   end
 
   def article(conn, _params) do
     Metrics.inc_spiral([:article, :invalid_article, :requests])
-    not_found(conn)
+    not_found(conn, nil)
   end
 
   def article_from_old_path(%{private: %{article: article}} = conn, _params) do
@@ -45,7 +45,7 @@ defmodule Erlangelist.ArticleController do
   end
 
 
-  def not_found(conn, _opts \\ nil) do
+  def not_found(conn, _opts) do
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
   end
 end
