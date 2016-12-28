@@ -20,7 +20,7 @@ defmodule Erlangelist.Mixfile do
      applications: [
       :phoenix, :phoenix_html, :phoenix_ecto, :cowboy, :logger, :postgrex, :con_cache,
       :runtime_tools, :lager_logger, :lager, :exometer, :httpoison, :poison,
-      :gproc, :workex, :erlcron, :ecto, :connection
+      :gproc, :workex, :erlcron, :ecto, :connection, :phoenix_pubsub
     ]]
   end
 
@@ -33,7 +33,8 @@ defmodule Erlangelist.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [{:phoenix, "~> 1.1"},
-     {:phoenix_ecto, "~> 2.0"},
+     {:phoenix_ecto, "~> 3.0"},
+     {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.4"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
@@ -41,18 +42,18 @@ defmodule Erlangelist.Mixfile do
      {:earmark, "~> 0.2"},
      {:con_cache, "~> 0.10.0"},
      {:timex, "~> 1.0"},
-     {:exrm, "~> 1.0.0-rc"},
+     {:exrm, "~> 1.0.8"},
      {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
      {:exometer, github: "PSPDFKit-labs/exometer"},
      {:edown, github: "uwiger/edown", tag: "0.7", override: true},
-     {:lager, "~> 2.1", override: true},
+     {:lager, "~> 3.2.0", override: true},
      {:lager_logger, "~> 1.0"},
      {:httpoison, "~> 0.7.3"},
      {:poison, "~> 1.5.0"},
      {:gproc, "~> 0.5.0"},
      {:workex, "~> 0.10.0"},
-     {:ecto, "~> 1.1"},
-     {:erlcron, github: "erlware/erlcron"}
+     {:ecto, "~> 2.0"},
+     {:erlcron, github: "maxkitapp/erlcron"}
    ]
   end
 end

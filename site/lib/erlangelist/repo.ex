@@ -26,7 +26,8 @@ defmodule Erlangelist.Repo do
     end
   end
 
-  def log(log_entry) do
+  defoverridable __log__: 1
+  def __log__(log_entry) do
     queue_time = (log_entry.queue_time || 0) / 1000
     total_time = log_entry.query_time / 1000 + queue_time
 
