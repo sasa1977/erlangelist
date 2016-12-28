@@ -42,7 +42,7 @@ defmodule Erlangelist.Mixfile do
      {:earmark, "~> 0.2"},
      {:con_cache, "~> 0.10.0"},
      {:timex, "~> 1.0"},
-     {:exrm, "~> 1.0.8"},
+     {:distillery, "~> 1.0"},
      {:exometer_core, github: "PSPDFKit-labs/exometer_core", override: true},
      {:exometer, github: "PSPDFKit-labs/exometer"},
      {:edown, github: "uwiger/edown", tag: "0.7", override: true},
