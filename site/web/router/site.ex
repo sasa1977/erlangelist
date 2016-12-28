@@ -53,6 +53,6 @@ defmodule Erlangelist.Router.Site do
   scope "/", Erlangelist do
     pipe_through :browser
 
-    get "*rest", ArticleController, :not_found
+    get "/*rest", ArticleController, :not_found
   end
 end

@@ -14,7 +14,7 @@ defmodule Erlangelist.ConnHelper do
       expected_regex: expected_regex
     ] do
       test "#{verb} #{path}" do
-        conn = unquote(verb)(conn, unquote(path))
+        conn = unquote(verb)(build_conn, unquote(path))
         assert(
           test_response_type(
             conn,
