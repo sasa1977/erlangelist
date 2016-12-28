@@ -145,6 +145,8 @@ defmodule Erlangelist.Settings do
           password: system_setting(:db_password) || ""
         },
 
+        ecto_repos: [Erlangelist.Repo],
+
         peer_ip: peer_ip,
         geo_ip: system_setting(:geo_ip_port),
 
