@@ -39,7 +39,7 @@ else
 fi
 
 START_ARGS="
-  --add-host=\"erlangelist.site:127.0.0.1\"
+  --add-host erlangelist.site:127.0.0.1
   -p $SITE_HTTP_PORT:$ERLANGELIST_SITE_HTTP_PORT
   -p $INET_DIST_PORT:$ERLANGELIST_SITE_INET_DIST_PORT
   -p $EPMD_PORT:4369

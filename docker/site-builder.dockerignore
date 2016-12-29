@@ -16,4 +16,9 @@
 !site/lib
 !site/web
 !site/test
+!site/rel
 !web
+
+# more ignores
+
+site/rel/erlangelist

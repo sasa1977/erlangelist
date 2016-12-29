@@ -1,14 +1,7 @@
-FROM alpine:3.3
+FROM debian:jessie
 
-RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
-    && echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
-    && apk update \
-    && apk upgrade \
-    && apk --update add ncurses-libs=6.0-r7 bash && rm -rf /var/cache/apk/*
-
-ENV SHELL=/bin/bash TERM=xterm
-
-RUN adduser -h /erlangelist -s /bin/bash -D erlangelist
+RUN apt-get update && apt-get install -y openssl
+RUN useradd -d /erlangelist -s /bin/bash erlangelist
 COPY tmp /erlangelist/
 RUN chown -R erlangelist:erlangelist /erlangelist
 
