@@ -1,4 +1,10 @@
 [
+  spawn_or_not: [
+    short_title: "To spawn, or not to spawn?",
+    long_title: "To spawn, or not to spawn?",
+    posted_at: "2017-04-04"
+  ],
+
   reducing_maximum_latency: [
     short_title: "Reducing the maximum latency",
     long_title: "Reducing the maximum latency of a bound buffer",
