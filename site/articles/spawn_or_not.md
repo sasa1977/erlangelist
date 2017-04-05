@@ -287,7 +287,7 @@ Another nice consequence of this design is that testing of the server is fairly 
 
 ### Sending notifications
 
-When functions from the `Round` module return the instruction list to the server process, it will [walks through them, and interprets them](https://github.com/sasa1977/erlangelist/blob/dc7cd1d2c77e52fa0a3a90f269c0f4ca8cca908b/examples/blackjack/lib/blackjack/round_server.ex#L69-L70).
+When functions from the `Round` module return the instruction list to the server process, it will [walk through them, and interpret them](https://github.com/sasa1977/erlangelist/blob/dc7cd1d2c77e52fa0a3a90f269c0f4ca8cca908b/examples/blackjack/lib/blackjack/round_server.ex#L69-L70).
 
 The notifications themselves are sent from separate processes. This is an example where we can profit from extra concurrency. Sending notifications is a task which is separate from the task of managing the state of the round. The notifications logic might be burdened by issues such as slow or disconnected clients, so it's worth doing this outside of the round process. Moreover, notifications to different players have nothing in common, so they can be sent from separate processes. However, we need to preserve the order of notifications for each player, so we need a dedicated notification process per each player.
 
