@@ -274,10 +274,12 @@ We can easily handle all these players in the same round. The server doesn't car
 The functions which must be implement in the callback module are listed [here](https://github.com/sasa1977/erlangelist/blob/dc7cd1d2c77e52fa0a3a90f269c0f4ca8cca908b/examples/blackjack/lib/blackjack/notifier.ex#L6-L10):
 
 ```elixir
-@callback deal_card(RoundServer.callback_arg, Round.player_id, Blackjack.Deck.card) :: any
+@callback deal_card(RoundServer.callback_arg, Round.player_id,
+  Blackjack.Deck.card) :: any
 @callback move(RoundServer.callback_arg, Round.player_id) :: any
 @callback busted(RoundServer.callback_arg, Round.player_id) :: any
-@callback winners(RoundServer.callback_arg, Round.player_id, [Round.player_id]) :: any
+@callback winners(RoundServer.callback_arg, Round.player_id, [Round.player_id])
+  :: any
 @callback unauthorized_move(RoundServer.callback_arg, Round.player_id) :: any
 ```
 
