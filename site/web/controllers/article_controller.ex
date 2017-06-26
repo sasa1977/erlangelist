@@ -45,7 +45,7 @@ defmodule Erlangelist.ArticleController do
   end
 
 
-  def not_found(conn) do
+  def not_found(conn, _opts \\ nil) do
     render(put_status(conn, 404), Erlangelist.ErrorView, "404.html")
   end
 end
