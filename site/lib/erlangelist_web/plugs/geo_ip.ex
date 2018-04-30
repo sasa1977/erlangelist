@@ -11,7 +11,7 @@ defmodule ErlangelistWeb.GeoIP do
 
   defp geo_ip_data(conn) do
     with ip_string when not is_nil(ip_string) <- ip_string(conn.remote_ip),
-         {:ok, geoip_data} <- GeoIP.lookup(ip_string),
+         geoip_data = Erlangelist.GeoIP.data(ip_string),
          country when not is_nil(country) <- geoip_data.country_name do
       Map.take(geoip_data, [:country_code, :country_name])
     else

@@ -32,7 +32,9 @@ defmodule Erlangelist.Mixfile do
       {:cowboy, "~> 1.0"},
       {:timex, "~> 3.0"},
       {:earmark, "~> 1.0"},
-      {:geoip, "~> 0.1"},
+      {:geolix, "~> 0.16"},
+      {:parent, github: "sasa1977/parent"},
+      {:httpoison, "~> 1.0"},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]
   end

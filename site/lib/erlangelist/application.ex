@@ -4,6 +4,7 @@ defmodule Erlangelist.Application do
   def start(_type, _args) do
     Supervisor.start_link(
       [
+        Erlangelist.GeoIP,
         Erlangelist.UsageStats,
         ErlangelistWeb.Endpoint
       ],
