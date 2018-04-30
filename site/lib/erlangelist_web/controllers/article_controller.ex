@@ -29,6 +29,8 @@ defmodule ErlangelistWeb.ArticleController do
 
   defp render_article(conn, article) do
     Erlangelist.UsageStats.report(:article, article.id)
+    Erlangelist.UsageStats.report(:country, ErlangelistWeb.GeoIP.data(conn).country_name || "unknown")
+
     render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
   end
 

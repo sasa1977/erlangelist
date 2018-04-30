@@ -24,7 +24,7 @@ defmodule Erlangelist.UsageStats do
 
   def handle_info(other, state), do: super(other, state)
 
-  defp enqueue_flush(), do: Process.send_after(self(), :flush, :timer.seconds(10))
+  defp enqueue_flush(), do: Process.send_after(self(), :flush, :timer.minutes(1))
 
   defp store_report(state, date, key, value) do
     state
