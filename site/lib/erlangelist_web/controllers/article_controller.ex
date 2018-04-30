@@ -28,6 +28,7 @@ defmodule ErlangelistWeb.ArticleController do
   end
 
   defp render_article(conn, article) do
+    Erlangelist.UsageStats.report(:article, article.id)
     render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
   end
 
