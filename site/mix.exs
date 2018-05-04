@@ -9,7 +9,9 @@ defmodule Erlangelist.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      preferred_cli_env: [release: :prod],
+      aliases: [release: ["erlangelist.compile_assets", "phx.digest", "release"]]
     ]
   end
 
@@ -35,6 +37,7 @@ defmodule Erlangelist.Mixfile do
       {:geolix, "~> 0.16"},
       {:parent, github: "sasa1977/parent"},
       {:httpoison, "~> 1.0"},
+      {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]
   end
