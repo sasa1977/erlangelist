@@ -32,7 +32,6 @@ defmodule Erlangelist.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:timex, "~> 3.0"},
       {:earmark, "~> 1.0"},
       {:geolix, "~> 0.16"},
       {:parent, github: "sasa1977/parent"},
