@@ -12,22 +12,7 @@ if [ "$machine" == "" ] || [ "$external_network_interface" == "" ]; then
   exit 1
 fi
 
-# generate some files based on the ports defined in ports.exs
-MIX_ENV=prod elixir \
-  -e 'Application.start(:mix)' \
-  -r ../site/config/settings.exs \
-  -e 'File.write!("remote_files/erlangelist-settings.sh", Erlangelist.Settings.env_vars)'
-
-echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" >> remote_files/erlangelist-settings.sh
-
-MIX_ENV=prod elixir \
-  -e 'Application.start(:mix)' \
-  -r ../site/config/settings.exs \
-  -e '
-    File.write!("remote_files/collectd.conf",
-      File.read!("remote_files/collectd.conf.eex")
-      |> EEx.eval_string
-    )
-  '
+echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" > remote_files/erlangelist-settings.sh
+echo "export ERLANGELIST_SITE_HTTP_PORT=4000" >> remote_files/erlangelist-settings.sh
 
 ansible-playbook -v -i "$machine," playbook.yml
