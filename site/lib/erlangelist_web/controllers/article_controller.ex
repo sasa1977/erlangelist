@@ -32,17 +32,7 @@ defmodule ErlangelistWeb.ArticleController do
     Erlangelist.UsageStats.report(:country, ErlangelistWeb.GeoIP.data(conn).country_name || "unknown")
     Enum.each(Plug.Conn.get_req_header(conn, "referer"), &Erlangelist.UsageStats.report(:referer, &1))
 
-    render(conn, "article.html", %{article: article, cookies: conn.cookies["cookies"]})
-  end
-
-  def comments(conn, %{"article_id" => article_id}) do
-    conn
-    |> put_layout(false)
-    |> render(
-      "_comments.html",
-      article: Article.article(Article.id_from_string(article_id)),
-      cookies: true
-    )
+    render(conn, "article.html", %{article: article})
   end
 
   def not_found(conn, _opts \\ nil) do

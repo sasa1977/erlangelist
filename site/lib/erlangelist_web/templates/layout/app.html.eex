@@ -24,22 +24,6 @@
   </head>
 
   <body>
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-
-      <%= if @conn.cookies["cookies"] == nil do %>
-        <div class="privacy-policy" id="privacy_note">
-          <div class="message">
-            <span>This site uses 3rd party cookies. See <a href="/privacy_policy.html">here</a> for more information.</span>
-            <span class="actions">
-              <a data-action="allow_cookies">Allow</a>
-              <a data-action="reject_cookies">Reject</a>
-              <a data-action="close_cookie_popup">Decide later</a>
-            </span>
-          </div>
-        </div>
-      <% end %>
-
       <div class="container-fluid">
         <div class="col-md-9 left-bar">
           <div>

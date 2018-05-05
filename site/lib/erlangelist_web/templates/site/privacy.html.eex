@@ -1,4 +1,4 @@
-<div class="cookies-info <%= if @cookies, do: "allowed", else: "rejected" %>">
+<div class="cookies-info">
   <p><b>By using this site you agree to the Privacy Policy.</b></p>
   <h3>Cookies</h3>
   <p>
