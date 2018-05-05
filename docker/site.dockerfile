@@ -1,7 +1,8 @@
-FROM debian:jessie
+FROM alpine:3.7
 
-RUN apt-get update && apt-get install -y openssl
-RUN useradd -d /erlangelist -s /bin/bash erlangelist
+RUN apk --no-cache upgrade && apk add --no-cache openssl bash
+
+RUN adduser -h /erlangelist -s /bin/bash -D erlangelist
 COPY tmp /erlangelist/
 RUN chown -R erlangelist:erlangelist /erlangelist
 
@@ -11,5 +12,4 @@ RUN \
   && printf "$password\n$password\n" | passwd root
 
 USER erlangelist
-
 ENTRYPOINT ["/erlangelist/bin/erlangelist"]

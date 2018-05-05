@@ -71,28 +71,11 @@ function build_versioned_image {
   done
 }
 
-function run_tests {
-  test_db_container=$(docker run -d --name="test_db" erlangelist/database)
-  db_ip=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' $test_db_container)
-  docker run --rm erlangelist/site-builder:latest '/bin/sh' '-c' \
-    "cd /tmp/erlangelist/site &&
-      ERLANGELIST_DB_SERVER=$db_ip ERLANGELIST_DB=erlangelist MIX_ENV=test mix do ecto.migrate, test
-    " \
-    ||  {
-          docker stop $test_db_container > /dev/null || true
-          docker rm $test_db_container > /dev/null || true
-          exit 1
-        }
-
-  docker stop $test_db_container > /dev/null || true
-  docker rm $test_db_container > /dev/null || true
-}
-
 function copy_release {
   mkdir -p tmp
   rm -rf tmp/* || true
   id=$(docker create "erlangelist/site-builder:latest" /bin/sh)
-  docker cp $id:/tmp/erlangelist/site/_build/prod/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz ./tmp/erlangelist.tar.gz
+  docker cp $id:/opt/app/_build/prod/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz ./tmp/erlangelist.tar.gz
   docker stop $id > /dev/null
   docker rm -v $id > /dev/null
 
@@ -102,12 +85,6 @@ function copy_release {
 
 cd $(dirname ${BASH_SOURCE[0]})/..
 
-build_versioned_image erlangelist/database database.dockerfile
-build_versioned_image erlangelist/graphite graphite.dockerfile
-build_versioned_image erlangelist/geoip geoip.dockerfile
 build_versioned_image erlangelist/site-builder site-builder.dockerfile
-
-run_tests
 copy_release
-
 build_versioned_image erlangelist/site site.dockerfile
