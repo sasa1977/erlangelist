@@ -9,3 +9,4 @@ site/_build
 site/deps
 site/assets/node_modules
 site/test
+site/priv/db/

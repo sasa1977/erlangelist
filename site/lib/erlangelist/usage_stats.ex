@@ -8,6 +8,7 @@ defmodule Erlangelist.UsageStats do
   @impl GenServer
   def init(_) do
     File.mkdir_p(db_path())
+    enqueue_cleanup()
     enqueue_flush()
     {:ok, initialize_state(Date.utc_today())}
   end
@@ -17,25 +18,42 @@ defmodule Erlangelist.UsageStats do
 
   @impl GenServer
   def handle_info(:flush, state) do
-    write_data(state)
+    state = write_data(state)
     enqueue_flush()
+    {:noreply, state}
+  end
+
+  def handle_info(:cleanup, state) do
+    with {:ok, files} <- File.ls(db_path()) do
+      files
+      |> Enum.sort()
+      |> Enum.reverse()
+      |> Enum.drop(setting!(:retention))
+      |> Stream.map(&Path.join(db_path(), &1))
+      |> Enum.each(&File.rm/1)
+    end
+
+    enqueue_cleanup()
+
     {:noreply, state}
   end
 
   def handle_info(other, state), do: super(other, state)
 
-  defp enqueue_flush(), do: Process.send_after(self(), :flush, :timer.minutes(1))
+  defp enqueue_flush(), do: Process.send_after(self(), :flush, setting!(:flush_interval))
+  defp enqueue_cleanup(), do: Process.send_after(self(), :cleanup, setting!(:cleanup_interval))
 
   defp store_report(state, date, key, value) do
     state
     |> ensure_proper_data(date)
-    |> update_in([:data], fn data ->
-      data
-      |> Map.put_new(date, %{})
-      |> update_in([date], &Map.put_new(&1, key, %{}))
-      |> update_in([date, key], &Map.put_new(&1, value, 0))
-      |> update_in([date, key, value], &(&1 + 1))
-    end)
+    |> update_in([:data], &add_histogram(&1, key, value, 1))
+  end
+
+  defp add_histogram(data, key, value, count) do
+    data
+    |> Map.put_new(key, %{})
+    |> update_in([key], &Map.put_new(&1, value, 0))
+    |> update_in([key, value], &(&1 + count))
   end
 
   defp ensure_proper_data(%{date: date} = state, date), do: state
@@ -45,9 +63,9 @@ defmodule Erlangelist.UsageStats do
     initialize_state(date)
   end
 
-  defp initialize_state(date), do: %{date: date, data: read_data(date)}
+  defp initialize_state(date), do: %{date: date, data: %{}}
 
-  defp read_data(date) do
+  defp stored_data(date) do
     try do
       date
       |> date_file()
@@ -58,9 +76,32 @@ defmodule Erlangelist.UsageStats do
     end
   end
 
-  defp write_data(state), do: File.write(date_file(state.date), :erlang.term_to_binary(state.data))
+  defp write_data(state) do
+    case append_points(state.data) do
+      [] ->
+        state
 
-  defp db_path(), do: Path.join(Application.app_dir(:erlangelist, "priv"), "db")
+      append_points ->
+        data_to_store =
+          Enum.reduce(append_points, stored_data(state.date), fn {key, value, count}, data ->
+            add_histogram(data, key, value, count)
+          end)
+
+        File.write(date_file(state.date), :erlang.term_to_binary(data_to_store))
+
+        %{state | data: %{}}
+    end
+  end
+
+  defp append_points(data) do
+    for {key, histogram_data} <- data,
+        {value, count} <- histogram_data,
+        do: {key, value, count}
+  end
+
+  defp db_path(), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db", "usage_stats"])
 
   defp date_file(date), do: Path.join(db_path(), Date.to_iso8601(date, :basic))
+
+  defp setting!(name), do: Application.fetch_env!(:erlangelist, :usage_stats) |> Keyword.fetch!(name)
 end

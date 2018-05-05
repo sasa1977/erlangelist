@@ -11,4 +11,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+config :erlangelist, :usage_stats,
+  cleanup_interval: :timer.minutes(1),
+  flush_interval: :timer.minutes(1),
+  retention: 7
+
 import_config "#{Mix.env()}.exs"

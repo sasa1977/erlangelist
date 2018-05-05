@@ -47,7 +47,8 @@ defmodule Erlangelist.GeoIP do
     def init_server(), do: :ok
   end
 
-  defp start_loader_job(), do: Parent.GenServer.start_child(%{id: :fetch_job, start: {Task, :start_link, [&job/0]}})
+  defp start_loader_job(),
+    do: Parent.GenServer.start_child(%{id: :fetch_job, start: {Task, :start_link, [&job/0]}})
 
   defp enqueue_loader_job(), do: Process.send_after(self(), :start_loader_job, :timer.hours(1))
 
@@ -81,7 +82,7 @@ defmodule Erlangelist.GeoIP do
     |> hd()
   end
 
-  defp db_path(), do: Path.join(Application.app_dir(:erlangelist, "priv"), "geo_db")
+  defp db_path(), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db", "geo_ip"])
 
   defp db_file(name), do: Path.join(db_path(), name)
 end
