@@ -33,7 +33,6 @@ defmodule Erlangelist.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:earmark, "~> 1.0"},
-      {:geolix, "~> 0.16"},
       {:parent, github: "sasa1977/parent"},
       {:httpoison, "~> 1.0"},
       {:distillery, "~> 1.5", runtime: false},
