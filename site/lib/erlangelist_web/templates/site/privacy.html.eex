@@ -1,34 +1,18 @@
+<h2>Privacy policy</h2>
+
 <div class="cookies-info">
-  <p><b>By using this site you agree to the Privacy Policy.</b></p>
-  <h3>Cookies</h3>
   <p>
-    This site uses Disqus for site comments and Google Analytics to collect some usage information. Both of these services store cookies.
-
-    <span class="cookies-allowed">
-      Your current settings allow storing of these cookies. <a data-action="reject_cookies">Click here</a> if you want to disable cookies on this site.
-    </span>
-    <span class="cookies-rejected">
-      Your current settings disable storing of these cookies <a data-action="allow_cookies">Click here</a> if you want to allow cookies on this site.
-    </span>
-  </p>
-  <p>
-    Notes:
-    <ul>
-      <li>You can read the articles on this site, regardless of the cookie settings. However, comments will not be accessible if cookies are disabled.</li>
-      <li>Even if cookies are disabled, we'll store one piece of information indicating that you don't want us to store other cookies.</li>
-    </ul>
+    For the purpose of statistics, an aggregated read count of each article is stored in the database.
+    Since the count is aggregated over all visitors, it can't be traced back to you.
   </p>
 
-  <h3>Logs</h3>
-  <div>
-    <p>
-      Regardless of cookies settings, some data, such as your IP address, geolocation, accessed page, user agent, is stored in server logs. This data by itself doesn't reveal your identity. The collected data is used for analytical purposes only and is not disclosed to third parties.
-    </p>
-  </div>
+  <p>
+    No other piece of data is stored, and no personal data is logged. This site doesn't use cookies, and no
+    3rd party service (such as analytics) is embedded on our pages.
+  </p>
+
+  <p>
+    Therefore, your site usage is an anonymous experience. We can't find out any personal information
+    such as your reading habits, referal sources, IP address, or geolocation.
+  </p>
 </div>
-
-<script>
-  $(function() {
-    $("#privacy_note").hide();
-  })
-</script>
