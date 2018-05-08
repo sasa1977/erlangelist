@@ -29,7 +29,6 @@ defmodule Erlangelist.Article do
       short_title: article_spec[:short_title] || article_spec[:long_title],
       link: article_spec[:redirect] || "/article/#{article_id}",
       redirect: article_spec[:redirect],
-      legacy_url: article_spec[:legacy_url] || nil,
       source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md"
     })
   end

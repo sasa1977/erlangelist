@@ -8,9 +8,5 @@ defmodule Erlangelist.ArticleControllerTest do
 
   for article <- Article.all(), article.has_content? do
     test_get("/article/#{article.id}", 200, "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>")
-
-    if article.legacy_url do
-      test_get(article.legacy_url, 302, "<a href=\"/article/#{article.id}\">")
-    end
   end
 end

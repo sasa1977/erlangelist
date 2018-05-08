@@ -9,11 +9,7 @@
   <div>
     <i>Copyright <%= @article.copyright_year %>, Saša Jurić. This article is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.</i>
     <br/>
-    <%= if @article.legacy_url do %>
-      <i>The article was first published on the <a href="http://theerlangelist.blogspot.com<%=@article.legacy_url%>">old version of the Erlangelist site</a>.</i>
-    <% else %>
-      <i>The article was first published on <a href="http://theerlangelist.com<%= @article.link %>">The Erlangelist site</a></i>
-    <% end %>
+    <i>The article was first published on <a href="http://theerlangelist.com<%= @article.link %>">The Erlangelist site</a>.</i>
     <br/>
     <i>The source of the article can be found <a href="<%= @article.source_link %>">here</a>.</i>
 

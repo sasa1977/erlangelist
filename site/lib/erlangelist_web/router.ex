@@ -24,18 +24,6 @@ defmodule ErlangelistWeb.Router do
     get("/rss", RssController, :index)
     get("/feeds/posts/*any", RssController, :index)
 
-    for article <- Erlangelist.Article.all() do
-      # old-style urls
-      if article.legacy_url do
-        get(article.legacy_url, ArticleController, :article_from_old_path, private: %{article: article})
-      end
-
-      # redirect to blogspot for non-migrated articles
-      if article.redirect do
-        get(article.link, OldPostController, :render, private: %{article: article})
-      end
-    end
-
     get("/*rest", ArticleController, :not_found)
   end
 end
