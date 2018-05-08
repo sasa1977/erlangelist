@@ -3,11 +3,8 @@ defmodule ErlangelistWeb.Endpoint do
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
-  # Serve at "/" the static files from "priv/static" directory.
-  #
-  # You should set gzip to true if you are running phoenix.digest
-  # when deploying your static files in production.
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
+  plug(LetsEncrypt.AcmeChallenge, __MODULE__)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -31,18 +28,20 @@ defmodule ErlangelistWeb.Endpoint do
 
   plug(ErlangelistWeb.Router)
 
-  @doc """
-  Callback invoked for dynamically configuring the endpoint.
-
-  It receives the endpoint configuration and checks if
-  configuration should be loaded from the system environment.
-  """
   def init(_key, config) do
-    if config[:load_from_system_env] do
-      port = System.get_env("PORT") || raise "expected the PORT environment variable to be set"
-      {:ok, Keyword.put(config, :http, [:inet6, port: port])}
-    else
-      {:ok, config}
+    case LetsEncrypt.Certifier.https_keys(certbot_config()) do
+      {:ok, keys} -> {:ok, Keyword.merge(config, https: [port: 20443] ++ keys)}
+      :error -> {:ok, config}
     end
+  end
+
+  def certbot_config() do
+    %{
+      ca_url: "http://localhost:4000/directory",
+      domain: "theerlangelist.com",
+      email: "mail@foo.bar",
+      base_folder: Path.join(Application.app_dir(:erlangelist, "priv"), "certbot"),
+      renew_interval: :timer.hours(6)
+    }
   end
 end

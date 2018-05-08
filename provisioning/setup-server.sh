@@ -13,6 +13,6 @@ if [ "$machine" == "" ] || [ "$external_network_interface" == "" ]; then
 fi
 
 echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" > remote_files/erlangelist-settings.sh
-echo "export ERLANGELIST_SITE_HTTP_PORT=4000" >> remote_files/erlangelist-settings.sh
+echo "export ERLANGELIST_SITE_HTTP_PORT=20080" >> remote_files/erlangelist-settings.sh
 
 ansible-playbook -v -i "$machine," playbook.yml

@@ -33,8 +33,8 @@ defmodule Erlangelist.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:earmark, "~> 1.0"},
-      {:parent, github: "sasa1977/parent"},
       {:httpoison, "~> 1.0"},
+      {:lets_encrypt, path: "../lets_encrypt"},
       {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]

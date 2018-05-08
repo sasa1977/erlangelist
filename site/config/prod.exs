@@ -7,7 +7,7 @@ config :phoenix, serve_endpoints: true
 config :erlangelist, ErlangelistWeb.Endpoint,
   url: [host: "theerlangelist.com", port: 80],
   http: [
-    port: 4000,
+    port: 20080,
     max_connections: 1000,
     compress: true
   ],

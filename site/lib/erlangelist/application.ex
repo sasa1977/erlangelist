@@ -5,7 +5,7 @@ defmodule Erlangelist.Application do
     Supervisor.start_link(
       [
         Erlangelist.UsageStats,
-        ErlangelistWeb.Endpoint
+        {LetsEncrypt.Site, ErlangelistWeb.Endpoint}
       ],
       name: Erlangelist.Supervisor,
       strategy: :one_for_one
