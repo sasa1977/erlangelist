@@ -2,11 +2,12 @@ FROM bitwalker/alpine-elixir-phoenix:latest
 
 ENV MIX_ENV=prod
 
-ADD site/mix.exs site/mix.lock ./
-RUN mix do deps.get, deps.compile
+ADD site/mix.exs site/mix.lock ./site/
+ADD lets_encrypt ./lets_encrypt
+RUN cd site && mix do deps.get, deps.compile
 
-ADD site/assets/package.json assets/
-RUN cd assets && (npm install || (sleep 1 && npm install) || (sleep 1 && npm install))
+ADD site/assets/package.json site/assets/
+RUN cd site/assets && (npm install || (sleep 1 && npm install) || (sleep 1 && npm install))
 
-ADD site .
-RUN mix release
+ADD site ./site
+RUN cd site && mix release

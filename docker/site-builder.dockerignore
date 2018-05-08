@@ -3,10 +3,16 @@
 
 # whitelist only needed stuff, to reduce docker context
 !site
+!lets_encrypt
 
 # blacklist things in site
 site/_build
 site/deps
 site/assets/node_modules
 site/test
-site/priv/db/
+site/priv/certbot/
+
+# blacklist things in lets_encrypt
+lets_encrypt/_build
+lets_encrypt/deps
+lets_encrypt/test

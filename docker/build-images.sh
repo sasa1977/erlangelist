@@ -75,7 +75,7 @@ function copy_release {
   mkdir -p tmp
   rm -rf tmp/* || true
   id=$(docker create "erlangelist/site-builder:latest" /bin/sh)
-  docker cp $id:/opt/app/_build/prod/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz ./tmp/erlangelist.tar.gz
+  docker cp $id:/opt/app/site/_build/prod/rel/erlangelist/releases/0.0.1/erlangelist.tar.gz ./tmp/erlangelist.tar.gz
   docker stop $id > /dev/null
   docker rm -v $id > /dev/null
 
