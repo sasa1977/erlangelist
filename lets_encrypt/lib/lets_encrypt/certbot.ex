@@ -1,9 +1,13 @@
 defmodule LetsEncrypt.Certbot do
   def init(config) do
-    Enum.each([config_folder(config), work_folder(config), webroot_folder(config)], &File.mkdir_p!/1)
+    Enum.each(
+      [config_folder(config), work_folder(config), webroot_folder(config)],
+      &File.mkdir_p!/1
+    )
   end
 
-  def keys_available?(config), do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
+  def keys_available?(config),
+    do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
 
   def keyfile(config), do: Path.join(keys_folder(config), "privkey.pem")
   def certfile(config), do: Path.join(keys_folder(config), "cert.pem")
@@ -15,12 +19,8 @@ defmodule LetsEncrypt.Certbot do
   def certonly(config) do
     certbot_cmd(
       config,
-      ~w(certonly
-        -d #{config.domain}
-        -m #{config.email}
-        --webroot --webroot-path #{webroot_folder(config)}
-        --agree-tos
-      )
+      ~w(certonly -m #{config.email} --webroot --webroot-path #{webroot_folder(config)} --agree-tos) ++
+        domain_params(config)
     )
   end
 
@@ -38,6 +38,10 @@ defmodule LetsEncrypt.Certbot do
       --no-self-upgrade
       --non-interactive
     )
+  end
+
+  defp domain_params(config) do
+    Enum.map([config.domain | config.extra_domains], &"-d #{&1}")
   end
 
   defp keys_folder(config), do: Path.join(~w(#{config_folder(config)} live #{config.domain}))

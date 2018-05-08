@@ -39,6 +39,7 @@ defmodule ErlangelistWeb.Endpoint do
     %{
       ca_url: "http://localhost:4000/directory",
       domain: "theerlangelist.com",
+      extra_domains: ["www.theerlangelist.com"],
       email: "mail@foo.bar",
       base_folder: Path.join(Application.app_dir(:erlangelist, "priv"), "certbot"),
       renew_interval: :timer.hours(6)
