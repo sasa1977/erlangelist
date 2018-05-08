@@ -38,6 +38,6 @@ START_ARGS="
   --add-host erlangelist.site:127.0.0.1
   -p $SITE_HTTP_PORT:$ERLANGELIST_SITE_HTTP_PORT
   -v /opt/erlangelist/db:/erlangelist/lib/erlangelist-0.0.1/priv/db
-  -v /opt/erlangelist/certbot:/erlangelist/lib/erlangelist-0.0.1/priv/db
+  -v /opt/erlangelist/certbot:/erlangelist/lib/erlangelist-0.0.1/priv/certbot
   erlangelist/site:latest $ARG
 " container_ctl $CONTAINER_NAME "$@"
