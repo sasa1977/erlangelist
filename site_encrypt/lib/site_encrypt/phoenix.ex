@@ -1,6 +1,6 @@
-defmodule LetsEncrypt.Site do
-  def child_spec(opts) do
-    %{id: __MODULE__, type: :supervisor, start: {__MODULE__, :start_link, [opts]}}
+defmodule SiteEncrypt.Phoenix do
+  def child_spec(endpoint) do
+    %{id: __MODULE__, type: :supervisor, start: {__MODULE__, :start_link, [endpoint]}}
   end
 
   def start_link(endpoint) do
@@ -9,7 +9,7 @@ defmodule LetsEncrypt.Site do
     Supervisor.start_link(
       [
         Supervisor.child_spec(endpoint, id: :endpoint),
-        {LetsEncrypt.Certifier, certbot_config}
+        {SiteEncrypt.Certifier, certbot_config}
       ],
       name: name(certbot_config),
       strategy: :rest_for_one
@@ -22,5 +22,5 @@ defmodule LetsEncrypt.Site do
   end
 
   defp name(certbot_config),
-    do: LetsEncrypt.Registry.via_tuple({__MODULE__, certbot_config.domain})
+    do: SiteEncrypt.Registry.via_tuple({__MODULE__, certbot_config.domain})
 end

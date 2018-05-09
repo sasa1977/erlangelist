@@ -1,9 +1,9 @@
-defmodule LetsEncrypt.MixProject do
+defmodule SiteEncrypt.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :lets_encrypt,
+      app: :site_encrypt,
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
@@ -14,7 +14,7 @@ defmodule LetsEncrypt.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {LetsEncrypt.Application, []}
+      mod: {SiteEncrypt.Application, []}
     ]
   end
 

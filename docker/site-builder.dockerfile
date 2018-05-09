@@ -3,7 +3,7 @@ FROM bitwalker/alpine-elixir-phoenix:latest
 ENV MIX_ENV=prod
 
 ADD site/mix.exs site/mix.lock ./site/
-ADD lets_encrypt ./lets_encrypt
+ADD site_encrypt ./site_encrypt
 RUN cd site && mix do deps.get, deps.compile
 
 ADD site/assets/package.json site/assets/

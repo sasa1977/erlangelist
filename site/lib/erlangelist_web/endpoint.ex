@@ -4,7 +4,7 @@ defmodule ErlangelistWeb.Endpoint do
   socket("/socket", ErlangelistWeb.UserSocket)
 
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
-  plug(LetsEncrypt.AcmeChallenge, __MODULE__)
+  plug(SiteEncrypt.AcmeChallenge, __MODULE__)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -29,7 +29,7 @@ defmodule ErlangelistWeb.Endpoint do
   plug(ErlangelistWeb.Router)
 
   def init(_key, config) do
-    case LetsEncrypt.Certifier.https_keys(certbot_config()) do
+    case SiteEncrypt.Certbot.https_keys(certbot_config()) do
       {:ok, keys} -> {:ok, Keyword.merge(config, https: [port: 20443] ++ keys)}
       :error -> {:ok, config}
     end

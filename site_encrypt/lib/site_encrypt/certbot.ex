@@ -1,4 +1,4 @@
-defmodule LetsEncrypt.Certbot do
+defmodule SiteEncrypt.Certbot do
   def init(config) do
     Enum.each(
       [config_folder(config), work_folder(config), webroot_folder(config)],
@@ -6,17 +6,38 @@ defmodule LetsEncrypt.Certbot do
     )
   end
 
-  def keys_available?(config),
-    do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
+  def https_keys(config) do
+    if keys_available?(config) do
+      {:ok,
+       [
+         keyfile: keyfile(config),
+         certfile: certfile(config),
+         cacertfile: cacertfile(config)
+       ]}
+    else
+      :error
+    end
+  end
 
-  def keyfile(config), do: Path.join(keys_folder(config), "privkey.pem")
-  def certfile(config), do: Path.join(keys_folder(config), "cert.pem")
-  def cacertfile(config), do: Path.join(keys_folder(config), "chain.pem")
+  def ensure_cert(config) do
+    original_keys_sha = keys_sha(config)
+    result = if keys_available?(config), do: renew(config), else: certonly(config)
+
+    case result do
+      {output, 0} ->
+        if keys_sha(config) != original_keys_sha,
+          do: {:new_cert, output},
+          else: :no_change
+
+      {output, _error} ->
+        {:error, output}
+    end
+  end
 
   def challenge_file(config, challenge),
     do: Path.join([webroot_folder(config), ".well-known", "acme-challenge", challenge])
 
-  def certonly(config) do
+  defp certonly(config) do
     certbot_cmd(
       config,
       ~w(certonly -m #{config.email} --webroot --webroot-path #{webroot_folder(config)} --agree-tos) ++
@@ -24,7 +45,7 @@ defmodule LetsEncrypt.Certbot do
     )
   end
 
-  def renew(config), do: certbot_cmd(config, ~w(renew --cert-name #{config.domain}))
+  defp renew(config), do: certbot_cmd(config, ~w(renew --cert-name #{config.domain}))
 
   defp certbot_cmd(config, options),
     do: System.cmd("certbot", options ++ common_options(config), stderr_to_stdout: true)
@@ -49,4 +70,24 @@ defmodule LetsEncrypt.Certbot do
   defp log_folder(config), do: Path.join(config.base_folder, "log")
   defp work_folder(config), do: Path.join(config.base_folder, "work")
   defp webroot_folder(config), do: Path.join(config.base_folder, "webroot")
+
+  defp keyfile(config), do: Path.join(keys_folder(config), "privkey.pem")
+  defp certfile(config), do: Path.join(keys_folder(config), "cert.pem")
+  defp cacertfile(config), do: Path.join(keys_folder(config), "chain.pem")
+
+  defp keys_available?(config),
+    do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
+
+  defp keys_sha(config) do
+    case https_keys(config) do
+      :error ->
+        nil
+
+      {:ok, keys} ->
+        :crypto.hash(
+          :md5,
+          keys |> Keyword.values() |> Enum.join()
+        )
+    end
+  end
 end

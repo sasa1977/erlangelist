@@ -1,4 +1,4 @@
-defmodule LetsEncrypt.AcmeChallenge do
+defmodule SiteEncrypt.AcmeChallenge do
   @behaviour Plug
 
   @impl Plug
@@ -9,7 +9,7 @@ defmodule LetsEncrypt.AcmeChallenge do
     conn
     |> Plug.Conn.send_file(
       200,
-      LetsEncrypt.Certbot.challenge_file(endpoint.certbot_config(), challenge)
+      SiteEncrypt.Certbot.challenge_file(endpoint.certbot_config(), challenge)
     )
     |> Plug.Conn.halt()
   end

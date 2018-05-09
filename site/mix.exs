@@ -34,7 +34,7 @@ defmodule Erlangelist.Mixfile do
       {:cowboy, "~> 1.0"},
       {:earmark, "~> 1.0"},
       {:httpoison, "~> 1.0"},
-      {:lets_encrypt, path: "../lets_encrypt"},
+      {:site_encrypt, path: "../site_encrypt"},
       {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]

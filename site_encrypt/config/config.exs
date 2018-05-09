@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :lets_encrypt, key: :value
+#     config :site_encrypt, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:lets_encrypt, :key)
+#     Application.get_env(:site_encrypt, :key)
 #
 # You can also configure a 3rd-party app:
 #

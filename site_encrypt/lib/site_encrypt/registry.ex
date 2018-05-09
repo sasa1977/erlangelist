@@ -1,4 +1,4 @@
-defmodule LetsEncrypt.Registry do
+defmodule SiteEncrypt.Registry do
   def start_link(), do: Registry.start_link(keys: :unique, name: __MODULE__)
 
   def child_spec(_) do
