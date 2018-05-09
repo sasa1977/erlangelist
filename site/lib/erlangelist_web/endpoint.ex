@@ -3,8 +3,9 @@ defmodule ErlangelistWeb.Endpoint do
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
-  plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
   plug(SiteEncrypt.AcmeChallenge, __MODULE__)
+  plug(ErlangelistWeb.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com")
+  plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
