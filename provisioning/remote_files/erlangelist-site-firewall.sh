@@ -14,25 +14,35 @@ function container_ip {
   echo "$ip"
 }
 
-function site_url {
+function http_url {
   echo "$(container_ip $1):$ERLANGELIST_SITE_HTTP_PORT"
+}
+
+function https_url {
+  echo "$(container_ip $1):$ERLANGELIST_SITE_HTTPS_PORT"
 }
 
 case "$1" in
   start)
-    destination=$(site_url $2)
+    destination=$(http_url $2)
     echo "Redirecting port 80 to $destination"
     iptables -t nat -I PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 80 -j DNAT --to-destination "$destination"
+
+    destination=$(https_url $2)
+    echo "Redirecting port 443 to $destination"
+    iptables -t nat -I PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 443 -j DNAT --to-destination "$destination"
     ;;
 
   stop)
-    destination=$(site_url $2)
+    destination=$(http_url $2)
     echo "Removing redirection from port 80 to $destination"
     iptables -t nat -D PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 80 -j DNAT --to-destination "$destination" || true
+
+    destination=$(https_url $2)
+    echo "Removing redirection from port 443 to $destination"
+    iptables -t nat -D PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport 443 -j DNAT --to-destination "$destination" || true
     ;;
 
   *)
     echo "${BASH_SOURCE[0]} start | stop"
 esac
-
-
