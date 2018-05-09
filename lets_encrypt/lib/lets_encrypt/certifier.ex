@@ -16,21 +16,16 @@ defmodule LetsEncrypt.Certifier do
     end
   end
 
-  def start_link({endpoint, certbot_config}) do
-    Parent.GenServer.start_link(
-      __MODULE__,
-      {endpoint, certbot_config},
-      name: name(certbot_config.domain)
-    )
-  end
+  def start_link(certbot_config),
+    do: Parent.GenServer.start_link(__MODULE__, certbot_config, name: name(certbot_config.domain))
 
   defp name(domain), do: LetsEncrypt.Registry.via_tuple({__MODULE__, domain})
 
   @impl GenServer
-  def init({endpoint, certbot_config}) do
+  def init(certbot_config) do
     Certbot.init(certbot_config)
-    if endpoint.config(:lets_encrypt) == true, do: start_fetch(certbot_config)
-    {:ok, %{endpoint: endpoint, certbot_config: certbot_config}}
+    if certbot_config.run_client? == true, do: start_fetch(certbot_config)
+    {:ok, %{certbot_config: certbot_config}}
   end
 
   @impl GenServer

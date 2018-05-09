@@ -4,8 +4,7 @@ use Mix.Config
 # you can enable the server option below.
 config :erlangelist, ErlangelistWeb.Endpoint,
   http: [port: 4001],
-  server: false,
-  lets_encrypt: false
+  server: false
 
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -37,6 +37,7 @@ defmodule ErlangelistWeb.Endpoint do
 
   def certbot_config() do
     %{
+      run_client?: unquote(Mix.env() != :test),
       ca_url: "http://localhost:4000/directory",
       domain: "theerlangelist.com",
       extra_domains: ["www.theerlangelist.com"],

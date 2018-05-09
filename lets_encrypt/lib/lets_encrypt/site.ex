@@ -9,7 +9,7 @@ defmodule LetsEncrypt.Site do
     Supervisor.start_link(
       [
         Supervisor.child_spec(endpoint, id: :endpoint),
-        {LetsEncrypt.Certifier, {endpoint, certbot_config}}
+        {LetsEncrypt.Certifier, certbot_config}
       ],
       name: name(certbot_config),
       strategy: :rest_for_one
