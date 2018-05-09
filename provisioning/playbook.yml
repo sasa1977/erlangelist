@@ -63,8 +63,9 @@
       register: erlangelist_repo
     - file: path=/home/git/erlangelist.git state=directory owner=git group=git mode=0700
       when: erlangelist_repo.stat.exists == false
-    - become_user: git
-      shell: cd /home/git/erlangelist.git && git init . --bare
+    - shell: cd /home/git/erlangelist.git && git init . --bare
+      when: erlangelist_repo.stat.exists == false
+    - shell: chown -R git:git /home/git/erlangelist.git
       when: erlangelist_repo.stat.exists == false
     - copy: src=remote_files/post-receive dest=/home/git/erlangelist.git/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
