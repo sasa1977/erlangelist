@@ -30,10 +30,17 @@ defmodule ErlangelistWeb.Endpoint do
   plug(ErlangelistWeb.Router)
 
   def init(_key, config) do
-    case SiteEncrypt.Certbot.https_keys(certbot_config()) do
-      {:ok, keys} -> {:ok, Keyword.merge(config, https: [port: 20443] ++ keys)}
-      :error -> {:ok, config}
-    end
+    keys =
+      case SiteEncrypt.Certbot.https_keys(certbot_config()) do
+        {:ok, keys} ->
+          keys
+
+        :error ->
+          selfsigned_folder = Application.app_dir(:erlangelist, "priv") |> Path.join("selfsigned")
+          [keyfile: Path.join(selfsigned_folder, "key"), certfile: Path.join(selfsigned_folder, "cert")]
+      end
+
+    {:ok, Keyword.merge(config, https: [port: 20443] ++ keys)}
   end
 
   def certbot_config() do
