@@ -15,7 +15,7 @@ defmodule ErlangelistWeb.Endpoint do
     plug(Phoenix.CodeReloader)
   end
 
-  plug(Plug.Logger)
+  plug(Plug.Logger, log: :debug)
 
   plug(
     Plug.Parsers,
