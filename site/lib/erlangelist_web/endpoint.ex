@@ -46,12 +46,20 @@ defmodule ErlangelistWeb.Endpoint do
   def certbot_config() do
     %{
       run_client?: unquote(Mix.env() != :test),
-      ca_url: "http://localhost:4000/directory",
-      domain: "theerlangelist.com",
-      extra_domains: ["www.theerlangelist.com"],
-      email: "mail@foo.bar",
+      ca_url: os_setting("CA_URL", "http://localhost:4000/directory"),
+      domain: os_setting("DOMAIN", "localhost"),
+      extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
+      email: os_setting("EMAIL", "mail@foo.bar"),
       base_folder: Path.join(Application.app_dir(:erlangelist, "priv"), "certbot"),
       renew_interval: :timer.hours(6)
     }
+  end
+
+  defp os_setting(name, default) do
+    case System.get_env(name) do
+      nil -> default
+      "" -> default
+      value -> value
+    end
   end
 end
