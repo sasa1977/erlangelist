@@ -10,7 +10,7 @@ site/_build
 site/deps
 site/assets/node_modules
 site/test
-site/priv/certbot/
+site/priv/db/
 
 # blacklist things in site_encrypt
 site_encrypt/_build

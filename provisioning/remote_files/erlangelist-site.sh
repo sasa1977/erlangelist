@@ -41,7 +41,6 @@ START_ARGS="
   -p $SITE_HTTP_PORT:$ERLANGELIST_SITE_HTTP_PORT
   -p $SITE_HTTPS_PORT:$ERLANGELIST_SITE_HTTPS_PORT
   -v /opt/erlangelist/db:/erlangelist/lib/erlangelist-0.0.1/priv/db
-  -v /opt/erlangelist/certbot:/erlangelist/lib/erlangelist-0.0.1/priv/certbot
   -e CA_URL="$CA_URL"
   -e DOMAIN="$DOMAIN"
   -e EXTRA_DOMAINS="$EXTRA_DOMAINS"

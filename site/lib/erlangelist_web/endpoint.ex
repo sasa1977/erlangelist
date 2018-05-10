@@ -50,7 +50,7 @@ defmodule ErlangelistWeb.Endpoint do
       domain: os_setting("DOMAIN", "local.host"),
       extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
       email: os_setting("EMAIL", "mail@foo.bar"),
-      base_folder: Path.join(Application.app_dir(:erlangelist, "priv"), "certbot"),
+      base_folder: Erlangelist.db_path("certbot"),
       renew_interval: :timer.hours(6)
     }
   end
