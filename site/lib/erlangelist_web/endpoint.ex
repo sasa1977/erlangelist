@@ -50,10 +50,17 @@ defmodule ErlangelistWeb.Endpoint do
       domain: os_setting("DOMAIN", "local.host"),
       extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
       email: os_setting("EMAIL", "mail@foo.bar"),
-      base_folder: Erlangelist.db_path("certbot"),
+      base_folder: cert_folder(),
       renew_interval: :timer.hours(6)
     }
   end
+
+  def handle_new_cert(certbot_config) do
+    SiteEncrypt.Phoenix.restart_endpoint(certbot_config)
+    Erlangelist.Backup.backup(certbot_config.base_folder)
+  end
+
+  def cert_folder(), do: Erlangelist.db_path("certbot")
 
   defp os_setting(name, default) do
     case System.get_env(name) do

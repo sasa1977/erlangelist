@@ -1,13 +1,15 @@
 defmodule Erlangelist.UsageStats do
   use GenServer
 
+  def folder(), do: Erlangelist.db_path("usage_stats")
+
   def start_link(_), do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
   def report(key, value), do: GenServer.cast(__MODULE__, {:report, Date.utc_today(), key, value})
 
   @impl GenServer
   def init(_) do
-    File.mkdir_p(db_path())
+    File.mkdir_p(folder())
     enqueue_cleanup()
     enqueue_flush()
     {:ok, initialize_state(Date.utc_today())}
@@ -24,12 +26,12 @@ defmodule Erlangelist.UsageStats do
   end
 
   def handle_info(:cleanup, state) do
-    with {:ok, files} <- File.ls(db_path()) do
+    with {:ok, files} <- File.ls(folder()) do
       files
       |> Enum.sort()
       |> Enum.reverse()
       |> Enum.drop(setting!(:retention))
-      |> Stream.map(&Path.join(db_path(), &1))
+      |> Stream.map(&Path.join(folder(), &1))
       |> Enum.each(&File.rm/1)
     end
 
@@ -88,6 +90,7 @@ defmodule Erlangelist.UsageStats do
           end)
 
         File.write(date_file(state.date), :erlang.term_to_binary(data_to_store))
+        Erlangelist.Backup.backup(folder())
 
         %{state | data: %{}}
     end
@@ -99,9 +102,7 @@ defmodule Erlangelist.UsageStats do
         do: {key, value, count}
   end
 
-  defp db_path(), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db", "usage_stats"])
-
-  defp date_file(date), do: Path.join(db_path(), Date.to_iso8601(date, :basic))
+  defp date_file(date), do: Path.join(folder(), Date.to_iso8601(date, :basic))
 
   defp setting!(name), do: Application.fetch_env!(:erlangelist, :usage_stats) |> Keyword.fetch!(name)
 end

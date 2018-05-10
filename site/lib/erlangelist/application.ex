@@ -2,6 +2,8 @@ defmodule Erlangelist.Application do
   use Application
 
   def start(_type, _args) do
+    Erlangelist.Backup.resync()
+
     Supervisor.start_link(
       [
         Erlangelist.UsageStats,
