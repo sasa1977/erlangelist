@@ -1,12 +1,19 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
-#
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
 use Mix.Config
 
-Code.require_file("config/settings.exs")
+# Configures the endpoint
+config :erlangelist, ErlangelistWeb.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "7I7612VkWxb01jyTBpmfY0rXImTfx+tPinUXT3i3Irm8KjANbfVtnYHGYfPJADQw",
+  render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2]
 
-for {app, settings} <- Erlangelist.Settings.all do
-  config(app, settings)
-end
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:user_id]
+
+config :erlangelist, :usage_stats,
+  cleanup_interval: :timer.minutes(1),
+  flush_interval: :timer.minutes(1),
+  retention: 7
+
+import_config "#{Mix.env()}.exs"

@@ -1,0 +1,13 @@
+<div class="articles">
+  <h4>Posts</h4>
+  <ul>
+    <%= for article <- @articles do %>
+      <%= if article.has_content? do %>
+        <li>
+          <a href="<%= article.link %>"><%= article.short_title %></a>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+
+</div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>
+      The Erlangelist
+      <%= if @conn.assigns[:title_suffix], do: "- #{@conn.assigns[:title_suffix]}" %>
+    </title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="alternate" type="application/rss+xml" title="The Erlangelist" href="/rss">
+  </head>
+
+  <body>
+      <div class="container-fluid">
+        <div class="col-md-9 left-bar">
+          <div>
+            <div class="title">
+              <h2><a href="/"><b>The Erlangelist</b></a></h2>
+              <i>(not only) Erlang related musings</i>
+            </div>
+
+            <i>Hi, I'm Saša Jurić, a software developer with 10+ years of professional experience in programming of web and desktop applications using various languages, such as Elixir, Erlang, Ruby, JavaScript, C# and C++. I'm also the author of the <a href="https://www.manning.com/books/elixir-in-action-second-edition?a_aid=sjuric">Elixir in Action</a> book. In this blog you can read about Elixir, Erlang, and other programming related topics. You can subscribe to the <a href="/rss">feed</a>, follow me on <a href="https://twitter.com/sasajuric">Twitter</a> or fork me on <a href="https://github.com/sasa1977">GitHub</a>.</i>
+
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+      </div>
+
+      <div class="col-md-3 right-bar">
+        <div class="eia-image-link">
+          <a href="https://www.manning.com/books/elixir-in-action-second-edition?a_aid=sjuric" title="Elixir in Action"><img src="<%= static_path(@conn, "/images/EIA_150.jpg") %>"></a>
+        </div>
+        <%= ErlangelistWeb.ArticleView.articles_links_html %>
+        <a href="/privacy_policy.html">Privacy policy</a>
+      </div>
+    </div>
+
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

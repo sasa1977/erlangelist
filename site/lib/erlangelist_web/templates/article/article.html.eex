@@ -1,0 +1,6 @@
+<div class="blog-post">
+  <%= render "_article_content.html", article: @article %>
+</div>
+<script>
+  window.article_id = "<%= @article.id %>"
+</script>

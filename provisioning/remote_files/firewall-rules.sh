@@ -16,6 +16,7 @@ iptables -N LOG_AND_REJECT || true
 # to $ERLANGELIST_SITE_HTTP_PORT. Thus, we'll mark this connection (since it's
 # direct access to $ERLANGELIST_SITE_HTTP_PORT), and reject it explicitly.
 iptables -t mangle -A PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport $ERLANGELIST_SITE_HTTP_PORT -j MARK --set-mark 1
+iptables -t mangle -A PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport $ERLANGELIST_SITE_HTTPS_PORT -j MARK --set-mark 1
 
 
 # nat
@@ -34,6 +35,7 @@ iptables -A INPUT -p icmp -j ACCEPT
 
 # reject marked connection (direct access to $ERLANGELIST_SITE_HTTP_PORT)
 iptables -A INPUT -i $ERLANGELIST_NETWORK_IF -m mark --mark 1 -p tcp --dport $ERLANGELIST_SITE_HTTP_PORT -j LOG_AND_REJECT
+iptables -A INPUT -i $ERLANGELIST_NETWORK_IF -m mark --mark 1 -p tcp --dport $ERLANGELIST_SITE_HTTPS_PORT -j LOG_AND_REJECT
 
 # Allow ssh
 iptables -A INPUT -i $ERLANGELIST_NETWORK_IF -p tcp --dport 22 -j ACCEPT

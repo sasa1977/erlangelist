@@ -1,1 +1,0 @@
-FROM fiorix/freegeoip

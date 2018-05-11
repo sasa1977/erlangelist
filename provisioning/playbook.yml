@@ -1,12 +1,13 @@
 ---
 - hosts: all
-  sudo: true
+  become: yes
+  become_user: root
   tasks:
     # some supporting tools
     - apt: name=curl update_cache=yes
     - apt: name=htop
 
-    # required files
+    # # required files
     - file: path=/opt/erlangelist state=directory mode=0755
     - copy: src=remote_files/erlangelist-settings.sh dest=/opt/erlangelist/ mode=0755
     - copy: src=remote_files/docker-helper.sh dest=/opt/erlangelist/ mode=0755
@@ -31,16 +32,20 @@
     # install docker
     - apt: name=wget
     - apt: name=apt-transport-https
+    - apt: name=ca-certificates
+    - apt: name=curl
+    - apt: name=gnupg2
+    - apt: name=software-properties-common
     - stat: path=/usr/bin/docker
       register: docker
-    - command: apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    - shell: "curl -sSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -"
       when: docker.stat.exists == false
-    - lineinfile: "dest=/etc/apt/sources.list.d/docker.list create=yes line='deb https://apt.dockerproject.org/repo debian-jessie main'"
+    - command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian jessie stable"
       when: docker.stat.exists == false
-    - apt: name=docker-engine=1.8.3-0~jessie update_cache=yes
+    - apt: name=docker-ce update_cache=yes
       when: docker.stat.exists == false
-    - copy: src=remote_files/docker.service dest=/etc/systemd/system/docker.service owner=root group=root mode=0755
-    - command: systemctl daemon-reload
+    - copy: src=remote_files/docker_daemon.json dest=/etc/docker/daemon.json owner=root group=root
+      when: docker.stat.exists == false
     - service: name=docker state=restarted
       when: docker.stat.exists == false
 
@@ -52,31 +57,37 @@
     - user: name=git group=git groups=docker,sudo shell=/bin/bash
     - file: path=/home/git/.ssh state=directory owner=git group=git mode=0700
     - assemble: remote_src=false src=git_keys dest=/home/git/.ssh/authorized_keys owner=git group=git mode=0600
-    - copy: src=../site/config/prod_settings.exs dest=/home/git/ owner=git group=git mode=0755
 
     # create git repo with post-receive hook
     - stat: path=/home/git/erlangelist.git
       register: erlangelist_repo
     - file: path=/home/git/erlangelist.git state=directory owner=git group=git mode=0700
       when: erlangelist_repo.stat.exists == false
-    - sudo_user: git
-      shell: cd /home/git/erlangelist.git && git init . --bare
+    - shell: cd /home/git/erlangelist.git && git init . --bare
+      when: erlangelist_repo.stat.exists == false
+    - shell: chown -R git:git /home/git/erlangelist.git
       when: erlangelist_repo.stat.exists == false
     - copy: src=remote_files/post-receive dest=/home/git/erlangelist.git/hooks/ owner=git group=git mode=0755
     - file: path=/var/log/deploy.log state=touch owner=git group=git
     - lineinfile: "dest=/etc/sudoers.d/post_receive_hook create=yes line='git ALL=(ALL) NOPASSWD: /bin/systemctl' validate='visudo -cf %s'"
 
-    # collectd
-    - apt: name=collectd
-    - apt: name=collectd-utils
-    - copy: src=remote_files/collectd.conf dest=/etc/collectd/ owner=root group=root mode=0644
-    - service: name=collectd state=restarted
-
     # Erlangelist systemd services
-    - include: tasks/erlangelist_service.yml name=erlangelist-database
-    - include: tasks/erlangelist_service.yml name=erlangelist-geoip
-    - include: tasks/erlangelist_service.yml name=erlangelist-graphite
     - include: tasks/erlangelist_service.yml name=erlangelist-site
     - include: tasks/erlangelist_service.yml name=erlangelist-site-firewall
     - include: tasks/erlangelist_service.yml name=erlangelist-backup-site
     - service: name=erlangelist-backup-site enabled=no
+
+    # journald log configuration
+    - ini_file:
+        dest: "/etc/systemd/journald.conf"
+        section: Journal
+        option: MaxRetentionSec
+        value: "1 week"
+        no_extra_spaces: yes
+    - ini_file:
+        dest: "/etc/systemd/journald.conf"
+        section: Journal
+        option: SystemMaxUse
+        value: "100M"
+        no_extra_spaces: yes
+    - command: systemctl force-reload systemd-journald

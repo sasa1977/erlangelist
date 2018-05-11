@@ -2,18 +2,17 @@
 *
 
 # whitelist only needed stuff, to reduce docker context
+!site
+!site_encrypt
 
-!site/articles
-!site/brunch-config.js
-!site/package.json
-!site/package.json
-!site/priv/articles
-!site/priv/repo
-!site/rel/vm.args
-!site/mix.exs
-!site/mix.lock
-!site/config
-!site/lib
-!site/web
-!site/test
-!web
+# blacklist things in site
+site/_build
+site/deps
+site/assets/node_modules
+site/test
+site/priv/db/
+
+# blacklist things in site_encrypt
+site_encrypt/_build
+site_encrypt/deps
+site_encrypt/test

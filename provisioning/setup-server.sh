@@ -6,28 +6,16 @@ cd $(dirname ${BASH_SOURCE[0]})
 
 machine="$1"
 external_network_interface="$2"
+server_config_file="$3"
 
-if [ "$machine" == "" ] || [ "$external_network_interface" == "" ]; then
-  printf "\nSyntax:\n\n  ${BASH_SOURCE[0]} target_machine external_network_interface\n\n"
+if [ "$machine" == "" ] || [ "$external_network_interface" == "" ] || [ "$server_config_file" == "" ]; then
+  printf "\nSyntax:\n\n  ${BASH_SOURCE[0]} target_machine external_network_interface server_config_file\n\n"
   exit 1
 fi
 
-# generate some files based on the ports defined in ports.exs
-MIX_ENV=prod elixir \
-  -e 'Application.start(:mix)' \
-  -r ../site/config/settings.exs \
-  -e 'File.write!("remote_files/erlangelist-settings.sh", Erlangelist.Settings.env_vars)'
-
-echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" >> remote_files/erlangelist-settings.sh
-
-MIX_ENV=prod elixir \
-  -e 'Application.start(:mix)' \
-  -r ../site/config/settings.exs \
-  -e '
-    File.write!("remote_files/collectd.conf",
-      File.read!("remote_files/collectd.conf.eex")
-      |> EEx.eval_string
-    )
-  '
+echo "export ERLANGELIST_NETWORK_IF=$external_network_interface" > remote_files/erlangelist-settings.sh
+echo "export ERLANGELIST_SITE_HTTP_PORT=20080" >> remote_files/erlangelist-settings.sh
+echo "export ERLANGELIST_SITE_HTTPS_PORT=20443" >> remote_files/erlangelist-settings.sh
+cat $server_config_file >> remote_files/erlangelist-settings.sh
 
 ansible-playbook -v -i "$machine," playbook.yml

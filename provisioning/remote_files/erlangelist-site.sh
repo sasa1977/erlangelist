@@ -21,14 +21,12 @@ function stop_container {
 
 if [ $1 == "backup" ]; then
   SITE_HTTP_PORT=$(($ERLANGELIST_SITE_HTTP_PORT + 500))
-  INET_DIST_PORT=$(($ERLANGELIST_SITE_INET_DIST_PORT + 500))
-  EPMD_PORT=4370
+  SITE_HTTPS_PORT=$(($ERLANGELIST_SITE_HTTPS_PORT + 500))
   CONTAINER_NAME="erlangelist-backup-site"
   shift 1
 else
   SITE_HTTP_PORT=$ERLANGELIST_SITE_HTTP_PORT
-  INET_DIST_PORT=$ERLANGELIST_SITE_INET_DIST_PORT
-  EPMD_PORT=4369
+  SITE_HTTPS_PORT=$ERLANGELIST_SITE_HTTPS_PORT
   CONTAINER_NAME="erlangelist-site"
 fi
 
@@ -39,9 +37,14 @@ else
 fi
 
 START_ARGS="
-  --add-host=\"erlangelist.site:127.0.0.1\"
+  --add-host erlangelist.site:127.0.0.1
   -p $SITE_HTTP_PORT:$ERLANGELIST_SITE_HTTP_PORT
-  -p $INET_DIST_PORT:$ERLANGELIST_SITE_INET_DIST_PORT
-  -p $EPMD_PORT:4369
+  -p $SITE_HTTPS_PORT:$ERLANGELIST_SITE_HTTPS_PORT
+  -v /opt/erlangelist/db:/erlangelist/lib/erlangelist-0.0.1/priv/db
+  -v /opt/erlangelist/backup:/erlangelist/lib/erlangelist-0.0.1/priv/backup
+  -e CA_URL="$CA_URL"
+  -e DOMAIN="$DOMAIN"
+  -e EXTRA_DOMAINS="$EXTRA_DOMAINS"
+  -e EMAIL="$EMAIL"
   erlangelist/site:latest $ARG
 " container_ctl $CONTAINER_NAME "$@"
