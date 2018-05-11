@@ -45,7 +45,7 @@ defmodule ErlangelistWeb.Endpoint do
   def certbot_config() do
     %{
       run_client?: unquote(Mix.env() != :test),
-      ca_url: os_setting("CA_URL", "http://localhost:4000/directory"),
+      ca_url: os_setting("CA_URL", "http://localhost:4001/directory"),
       domain: os_setting("DOMAIN", "local.host"),
       extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
       email: os_setting("EMAIL", "mail@foo.bar"),
