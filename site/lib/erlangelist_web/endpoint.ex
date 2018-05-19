@@ -1,5 +1,6 @@
 defmodule ErlangelistWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
+  import EnvHelper
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
@@ -59,7 +60,7 @@ defmodule ErlangelistWeb.Endpoint do
 
   def certbot_config() do
     %{
-      run_client?: unquote(Mix.env() != :test),
+      run_client?: env_based(test: false, else: true),
       ca_url: get_os_env("CA_URL", Erlangelist.AcmeServer.directory_url()),
       domain: domain(),
       extra_domains: extra_domains(),
