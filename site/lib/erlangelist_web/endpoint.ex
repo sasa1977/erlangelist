@@ -65,7 +65,8 @@ defmodule ErlangelistWeb.Endpoint do
       extra_domains: extra_domains(),
       email: os_setting("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
-      renew_interval: :timer.hours(6)
+      renew_interval: :timer.hours(6),
+      log_level: :info
     }
   end
 

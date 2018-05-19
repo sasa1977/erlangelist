@@ -1,7 +1,6 @@
 defmodule SiteEncrypt.Certifier do
   use Parent.GenServer
-  require Logger
-  alias SiteEncrypt.Certbot
+  alias SiteEncrypt.{Certbot, Logger}
 
   def start_link({site, certbot_config}),
     do:
@@ -30,12 +29,15 @@ defmodule SiteEncrypt.Certifier do
 
   @impl Parent.GenServer
   def handle_child_terminated(:fetcher, _pid, _reason, state) do
+    log(state.certbot_config, "certbot finished")
     Process.send_after(self(), :start_fetch, state.certbot_config.renew_interval())
     {:noreply, state}
   end
 
   defp start_fetch(site, certbot_config) do
     unless Parent.GenServer.child?(:fetcher) do
+      log(certbot_config, "starting certbot")
+
       Parent.GenServer.start_child(%{
         id: :fetcher,
         start: {Task, :start_link, [fn -> get_certs(site, certbot_config) end]}
@@ -46,15 +48,19 @@ defmodule SiteEncrypt.Certifier do
   defp get_certs(site, certbot_config) do
     case Certbot.ensure_cert(certbot_config) do
       {:error, output} ->
-        Logger.error("error obtaining certificate:\n#{output}")
+        Logger.log(:error, "error obtaining certificate:\n#{output}")
 
       {:new_cert, output} ->
-        Logger.info(output)
-        Logger.info("obtained new certificate, restarting endpoint")
+        log(certbot_config, output)
+        log(certbot_config, "obtained new certificate, restarting endpoint")
+
         site.handle_new_cert(certbot_config)
 
-      :no_change ->
+      {:no_change, output} ->
+        log(certbot_config, output)
         :ok
     end
   end
+
+  defp log(certbot_config, output), do: Logger.log(certbot_config.log_level, output)
 end

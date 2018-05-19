@@ -27,7 +27,7 @@ defmodule SiteEncrypt.Certbot do
       {output, 0} ->
         if keys_sha(config) != original_keys_sha,
           do: {:new_cert, output},
-          else: :no_change
+          else: {:no_change, output}
 
       {output, _error} ->
         {:error, output}
