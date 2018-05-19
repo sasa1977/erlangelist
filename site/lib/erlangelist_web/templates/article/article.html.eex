@@ -1,4 +1,4 @@
-<div class="blog-post">
+<div id="article_content" class="blog-post">
   <%= render "_article_content.html", article: @article %>
 </div>
 <script>
