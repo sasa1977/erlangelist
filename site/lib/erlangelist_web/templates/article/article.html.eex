@@ -1,5 +1,9 @@
 <div id="article_content" class="blog-post">
   <%= render "_article_content.html", article: @article %>
+  <div id="disqus_thread" class="comments">
+  <h4>Where is the comments section?</h4>
+  Until I figure out the GDPR implications, the comments are disabled. In the meantime, if you have some questions, you can find me at the <a href="https://elixirforum.com/u/sasajuric/summary" target="_blank">Elixir Forum</a>. Either tag me in a public post, or send me a DM, and I'll do my best to respond in a timely manner :-)
+  </div>
 </div>
 <script>
   window.article_id = "<%= @article.id %>"
