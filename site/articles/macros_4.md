@@ -264,8 +264,8 @@ iex(2)> defmodule Test do
         end
 
 iex(3)> Test.my_fun(5,10)
-iex(line 4) Test.my_fun(10,5) = 2.0
-2.0
+iex(line 4) Test.my_fun(5,10) = 0.5
+0.5
 
 iex(4)> Test.my_fun(10, 5)
 iex(line 7) Test.my_fun(10,5) = 2.0
