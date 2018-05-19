@@ -28,25 +28,39 @@ defmodule ErlangelistWeb.Endpoint do
 
   plug(ErlangelistWeb.Router)
 
-  def init(_key, config) do
-    config =
-      case SiteEncrypt.Certbot.https_keys(certbot_config()) do
-        {:ok, keys} ->
-          Keyword.merge(config, https: [port: 20443] ++ Application.get_env(:erlangelist, :https_options, []) ++ keys)
+  def http_port(), do: 20080
+  def https_port(), do: 20443
+  def domains(), do: [domain() | extra_domains()]
 
-        :error ->
-          config
-      end
+  def init(_key, app_env_config), do: {:ok, endpoint_config(app_env_config)}
 
-    {:ok, config}
+  defp endpoint_config(app_env_config) do
+    common_config()
+    |> DeepMerge.deep_merge(app_env_config)
+    |> configure_https()
+  end
+
+  defp common_config() do
+    [
+      http: [compress: true, port: http_port()],
+      render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
+      pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2]
+    ]
+  end
+
+  defp configure_https(config) do
+    case SiteEncrypt.Certbot.https_keys(certbot_config()) do
+      {:ok, keys} -> DeepMerge.deep_merge(config, https: [compress: true, port: https_port()] ++ keys)
+      :error -> Keyword.delete(config, :https)
+    end
   end
 
   def certbot_config() do
     %{
       run_client?: unquote(Mix.env() != :test),
       ca_url: os_setting("CA_URL", Erlangelist.AcmeServer.directory_url()),
-      domain: os_setting("DOMAIN", "localhost"),
-      extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
+      domain: domain(),
+      extra_domains: extra_domains(),
       email: os_setting("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
       renew_interval: :timer.hours(6)
@@ -59,6 +73,9 @@ defmodule ErlangelistWeb.Endpoint do
   end
 
   def cert_folder(), do: Erlangelist.db_path("certbot")
+
+  defp domain(), do: os_setting("DOMAIN", "localhost")
+  defp extra_domains(), do: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == ""))
 
   defp os_setting(name, default) do
     case System.get_env(name) do

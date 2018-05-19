@@ -35,6 +35,7 @@ defmodule Erlangelist.Mixfile do
       {:earmark, "~> 1.0"},
       {:httpoison, "~> 1.0"},
       {:site_encrypt, path: "../site_encrypt"},
+      {:deep_merge, "~> 0.1"},
       {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]
