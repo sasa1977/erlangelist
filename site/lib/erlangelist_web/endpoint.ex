@@ -26,6 +26,8 @@ defmodule ErlangelistWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
 
+  plug(ErlangelistWeb.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com")
+
   plug(ErlangelistWeb.Router)
 
   def http_port(), do: 20080

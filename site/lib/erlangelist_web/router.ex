@@ -2,13 +2,11 @@ defmodule ErlangelistWeb.Router do
   use ErlangelistWeb, :router
 
   pipeline :browser do
-    plug(ErlangelistWeb.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com")
     plug(:accepts, ["html"])
     plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug(ErlangelistWeb.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com")
     plug(:accepts, ["json"])
   end
 
