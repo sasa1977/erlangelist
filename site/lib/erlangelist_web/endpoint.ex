@@ -60,10 +60,10 @@ defmodule ErlangelistWeb.Endpoint do
   def certbot_config() do
     %{
       run_client?: unquote(Mix.env() != :test),
-      ca_url: os_setting("CA_URL", Erlangelist.AcmeServer.directory_url()),
+      ca_url: get_os_env("CA_URL", Erlangelist.AcmeServer.directory_url()),
       domain: domain(),
       extra_domains: extra_domains(),
-      email: os_setting("EMAIL", "mail@foo.bar"),
+      email: get_os_env("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
       renew_interval: :timer.hours(6),
       log_level: :info
@@ -77,10 +77,10 @@ defmodule ErlangelistWeb.Endpoint do
 
   def cert_folder(), do: Erlangelist.db_path("certbot")
 
-  defp domain(), do: os_setting("DOMAIN", "localhost")
-  defp extra_domains(), do: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == ""))
+  defp domain(), do: get_os_env("DOMAIN", "localhost")
+  defp extra_domains(), do: get_os_env("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == ""))
 
-  defp os_setting(name, default) do
+  defp get_os_env(name, default) do
     case System.get_env(name) do
       nil -> default
       "" -> default
