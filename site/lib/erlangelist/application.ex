@@ -6,6 +6,7 @@ defmodule Erlangelist.Application do
 
     Supervisor.start_link(
       [
+        Erlangelist.AcmeServer,
         Erlangelist.UsageStats,
         {SiteEncrypt.Phoenix, ErlangelistWeb.Endpoint}
       ],

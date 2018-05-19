@@ -2,7 +2,7 @@ defmodule AcmeServer do
   alias AcmeServer.Account
 
   def resource_path(request_path, config) do
-    path = config.site_uri.path
+    path = config.site_uri.path || ""
     size = byte_size(path)
 
     case request_path do

@@ -7,11 +7,13 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :erlangelist, ErlangelistWeb.Endpoint,
-  http: [port: 20080],
+  http: [port: 20080, acceptors: 5],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
   watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin", cd: Path.expand("../assets", __DIR__)]]
+
+config :erlangelist, https_options: [acceptors: 5]
 
 # ## SSL Support
 #
