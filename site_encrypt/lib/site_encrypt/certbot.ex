@@ -86,7 +86,7 @@ defmodule SiteEncrypt.Certbot do
       {:ok, keys} ->
         :crypto.hash(
           :md5,
-          keys |> Keyword.values() |> Enum.join()
+          keys |> Keyword.values() |> Stream.map(&File.read!/1) |> Enum.join()
         )
     end
   end
