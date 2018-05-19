@@ -3,6 +3,12 @@ defmodule ErlangelistWeb.Endpoint do
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
+  plug(
+    AcmeServer.Plug,
+    site: "http://localhost:20080/acme_server",
+    dns: %{"localhost" => "localhost:20080", "lh2" => "localhost:20080", "lh3" => "localhost:20080"}
+  )
+
   plug(SiteEncrypt.AcmeChallenge, __MODULE__)
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
@@ -29,25 +35,24 @@ defmodule ErlangelistWeb.Endpoint do
   plug(ErlangelistWeb.Router)
 
   def init(_key, config) do
-    keys =
+    config =
       case SiteEncrypt.Certbot.https_keys(certbot_config()) do
         {:ok, keys} ->
-          keys
+          Keyword.merge(config, https: [port: 20443] ++ keys)
 
         :error ->
-          selfsigned_folder = Application.app_dir(:erlangelist, "priv") |> Path.join("selfsigned")
-          [keyfile: Path.join(selfsigned_folder, "key"), certfile: Path.join(selfsigned_folder, "cert")]
+          config
       end
 
-    {:ok, Keyword.merge(config, https: [port: 20443] ++ keys)}
+    {:ok, config}
   end
 
   def certbot_config() do
     %{
       run_client?: unquote(Mix.env() != :test),
-      ca_url: os_setting("CA_URL", "http://localhost:4001/directory"),
-      domain: os_setting("DOMAIN", "local.host"),
-      extra_domains: os_setting("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == "")),
+      ca_url: os_setting("CA_URL", "http://localhost:20080/acme_server/directory"),
+      domain: os_setting("DOMAIN", "localhost"),
+      extra_domains: os_setting("EXTRA_DOMAINS", "lh2,lh3") |> String.split(",") |> Enum.reject(&(&1 == "")),
       email: os_setting("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
       renew_interval: :timer.hours(6)
