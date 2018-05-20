@@ -12,7 +12,7 @@ defmodule Erlangelist.AcmeServer do
   defp port(), do: 20081
 
   defp dns() do
-    ErlangelistWeb.Endpoint.domains()
+    ErlangelistWeb.Certbot.domains()
     |> Enum.map(&{&1, "localhost:#{ErlangelistWeb.Endpoint.http_port()}"})
     |> Enum.into(%{})
   end

@@ -9,7 +9,7 @@ defmodule Erlangelist.Application do
       [
         env_based(prod: nil, else: Erlangelist.AcmeServer),
         Erlangelist.UsageStats,
-        {SiteEncrypt.Phoenix, ErlangelistWeb.Endpoint}
+        {SiteEncrypt.Phoenix, {ErlangelistWeb.Endpoint, ErlangelistWeb.Certbot}}
       ]
       |> Enum.reject(&is_nil/1),
       name: Erlangelist.Supervisor,

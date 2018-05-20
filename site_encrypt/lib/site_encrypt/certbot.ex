@@ -6,6 +6,8 @@ defmodule SiteEncrypt.Certbot do
     )
   end
 
+  def https_keys(callback_mod) when is_atom(callback_mod), do: https_keys(callback_mod.config())
+
   def https_keys(config) do
     if keys_available?(config) do
       {:ok,
@@ -75,8 +77,7 @@ defmodule SiteEncrypt.Certbot do
   defp certfile(config), do: Path.join(keys_folder(config), "cert.pem")
   defp cacertfile(config), do: Path.join(keys_folder(config), "chain.pem")
 
-  defp keys_available?(config),
-    do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
+  defp keys_available?(config), do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
 
   defp keys_sha(config) do
     case https_keys(config) do
