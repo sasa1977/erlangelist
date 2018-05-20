@@ -29,7 +29,7 @@ defmodule SiteEncrypt.Phoenix do
 
   defp acme_spec(%{ca_url: {:local_acme_server, acme_server_config}} = config, endpoint) do
     %{port: port, adapter: adapter} = acme_server_config
-    SiteEncrypt.Logger.log(config.log_level, "Running local acme server at port #{port}")
+    SiteEncrypt.Logger.log(config.log_level, "Running local ACME server at port #{port}")
 
     AcmeServer.Standalone.child_spec(
       adapter: acme_server_adapter_spec(adapter, port),

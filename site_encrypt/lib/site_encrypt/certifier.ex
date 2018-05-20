@@ -29,7 +29,7 @@ defmodule SiteEncrypt.Certifier do
   @impl Parent.GenServer
   def handle_child_terminated(:fetcher, _pid, _reason, state) do
     config = state.config_provider.config()
-    log(config, "certbot finished")
+    log(config, "Certbot finished")
     Process.send_after(self(), :start_fetch, config.renew_interval())
     {:noreply, state}
   end
@@ -38,7 +38,7 @@ defmodule SiteEncrypt.Certifier do
     config = config_provider.config()
 
     if config.run_client? and not Parent.GenServer.child?(:fetcher) do
-      log(config, "starting certbot")
+      log(config, "Starting certbot")
 
       Parent.GenServer.start_child(%{
         id: :fetcher,
@@ -50,11 +50,11 @@ defmodule SiteEncrypt.Certifier do
   defp get_certs(config) do
     case Certbot.ensure_cert(config) do
       {:error, output} ->
-        Logger.log(:error, "error obtaining certificate:\n#{output}")
+        Logger.log(:error, "Error obtaining certificate:\n#{output}")
 
       {:new_cert, output} ->
         log(config, output)
-        log(config, "obtained new certificate, restarting endpoint")
+        log(config, "Obtained new certificate, restarting endpoint")
 
         config.handle_new_cert.(config)
 
