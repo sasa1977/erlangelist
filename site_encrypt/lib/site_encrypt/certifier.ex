@@ -42,12 +42,12 @@ defmodule SiteEncrypt.Certifier do
 
       Parent.GenServer.start_child(%{
         id: :fetcher,
-        start: {Task, :start_link, [fn -> get_certs(config) end]}
+        start: {Task, :start_link, [fn -> get_certs(config_provider, config) end]}
       })
     end
   end
 
-  defp get_certs(config) do
+  defp get_certs(config_provider, config) do
     case Certbot.ensure_cert(config) do
       {:error, output} ->
         Logger.log(:error, "Error obtaining certificate:\n#{output}")
@@ -56,7 +56,7 @@ defmodule SiteEncrypt.Certifier do
         log(config, output)
         log(config, "Obtained new certificate, restarting endpoint")
 
-        config.handle_new_cert.(config)
+        config_provider.handle_new_cert(config)
 
       {:no_change, output} ->
         log(config, output)

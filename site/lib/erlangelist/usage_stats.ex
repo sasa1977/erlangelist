@@ -113,8 +113,8 @@ defmodule Erlangelist.UsageStats do
 
   defp config() do
     [
-      flush_interval: env_based(prod: :timer.minutes(1), else: :timer.seconds(1)),
-      cleanup_interval: env_based(prod: :timer.hours(1), else: :timer.minutes(1)),
+      flush_interval: env_specific(prod: :timer.minutes(1), else: :timer.seconds(1)),
+      cleanup_interval: env_specific(prod: :timer.hours(1), else: :timer.minutes(1)),
       retention: 7
     ]
   end

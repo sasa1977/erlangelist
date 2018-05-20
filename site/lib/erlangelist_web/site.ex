@@ -10,19 +10,18 @@ defmodule ErlangelistWeb.Site do
 
   def config() do
     %{
-      run_client?: env_based(test: false, else: true),
+      run_client?: env_specific(test: false, else: true),
       ca_url: get_os_env("CA_URL", local_acme_server()),
       domain: domain(),
       extra_domains: extra_domains(),
       email: get_os_env("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
       renew_interval: :timer.hours(6),
-      log_level: :info,
-      handle_new_cert: &handle_new_cert/1
+      log_level: :info
     }
   end
 
-  defp handle_new_cert(certbot_config) do
+  def handle_new_cert(certbot_config) do
     SiteEncrypt.Phoenix.restart_endpoint(certbot_config)
     Erlangelist.Backup.backup(certbot_config.base_folder)
   end
