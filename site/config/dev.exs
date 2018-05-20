@@ -20,8 +20,3 @@ config :erlangelist, ErlangelistWeb.Endpoint,
       ~r{lib/erlangelist_web/templates/.*(eex)$}
     ]
   ]
-
-config :erlangelist, :usage_stats,
-  cleanup_interval: :timer.seconds(1),
-  flush_interval: :timer.seconds(1),
-  retention: 7

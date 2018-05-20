@@ -1,9 +1,13 @@
 defmodule Erlangelist.UsageStats do
   use GenServer
+  import EnvHelper
 
   def folder(), do: Erlangelist.db_path("usage_stats")
 
-  def start_link(_), do: GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(_) do
+    init_config()
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  end
 
   def report(key, value), do: GenServer.cast(__MODULE__, {:report, Date.utc_today(), key, value})
 
@@ -104,5 +108,14 @@ defmodule Erlangelist.UsageStats do
 
   defp date_file(date), do: Path.join(folder(), Date.to_iso8601(date, :basic))
 
-  defp setting!(name), do: Application.fetch_env!(:erlangelist, :usage_stats) |> Keyword.fetch!(name)
+  defp setting!(name), do: Application.fetch_env!(:erlangelist, __MODULE__) |> Keyword.fetch!(name)
+  defp init_config(), do: Application.put_env(:erlangelist, __MODULE__, config())
+
+  defp config() do
+    [
+      flush_interval: env_based(prod: :timer.minutes(1), else: :timer.seconds(1)),
+      cleanup_interval: env_based(prod: :timer.hours(1), else: :timer.minutes(1)),
+      retention: 7
+    ]
+  end
 end
