@@ -3,7 +3,7 @@ defmodule ErlangelistWeb.Endpoint do
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
-  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Certbot)
+  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site.cert_folder())
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
   # Code reloading can be explicitly enabled under the
@@ -50,7 +50,7 @@ defmodule ErlangelistWeb.Endpoint do
   end
 
   defp configure_https(config) do
-    case SiteEncrypt.Certbot.https_keys(ErlangelistWeb.Certbot) do
+    case ErlangelistWeb.Site.ssl_keys() do
       {:ok, keys} -> DeepMerge.deep_merge(config, https: [compress: true, port: https_port()] ++ keys)
       :error -> Keyword.delete(config, :https)
     end

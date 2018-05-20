@@ -3,14 +3,14 @@ defmodule SiteEncrypt.Phoenix do
     %{id: __MODULE__, type: :supervisor, start: {__MODULE__, :start_link, [opts]}}
   end
 
-  def start_link({endpoint, callback_mod}) do
-    config = callback_mod.config()
+  def start_link({config_provider, endpoint}) do
+    config = config_provider.config()
 
     Supervisor.start_link(
       [
         acme_spec(config, endpoint),
         Supervisor.child_spec(endpoint, id: :endpoint),
-        {SiteEncrypt.Certifier, {callback_mod, config}}
+        {SiteEncrypt.Certifier, config_provider}
       ]
       |> Enum.reject(&is_nil/1),
       name: name(config),

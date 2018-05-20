@@ -1,13 +1,4 @@
 defmodule SiteEncrypt.Certbot do
-  def init(config) do
-    Enum.each(
-      [config_folder(config), work_folder(config), webroot_folder(config)],
-      &File.mkdir_p!/1
-    )
-  end
-
-  def https_keys(callback_mod) when is_atom(callback_mod), do: https_keys(callback_mod.config())
-
   def https_keys(config) do
     if keys_available?(config) do
       {:ok,
@@ -22,6 +13,7 @@ defmodule SiteEncrypt.Certbot do
   end
 
   def ensure_cert(config) do
+    ensure_folders(config)
     original_keys_sha = keys_sha(config)
     result = if keys_available?(config), do: renew(config), else: certonly(config)
 
@@ -36,8 +28,21 @@ defmodule SiteEncrypt.Certbot do
     end
   end
 
-  def challenge_file(config, challenge),
-    do: Path.join([webroot_folder(config), ".well-known", "acme-challenge", challenge])
+  def challenge_file(base_folder, challenge) do
+    Path.join([
+      webroot_folder(%{base_folder: base_folder}),
+      ".well-known",
+      "acme-challenge",
+      challenge
+    ])
+  end
+
+  defp ensure_folders(config) do
+    Enum.each(
+      [config_folder(config), work_folder(config), webroot_folder(config)],
+      &File.mkdir_p!/1
+    )
+  end
 
   defp certonly(config) do
     certbot_cmd(

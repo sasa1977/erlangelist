@@ -1,5 +1,12 @@
-defmodule ErlangelistWeb.Certbot do
+defmodule ErlangelistWeb.Site do
   import EnvHelper
+
+  @doc false
+  def child_spec(_), do: SiteEncrypt.Phoenix.child_spec({__MODULE__, ErlangelistWeb.Endpoint})
+
+  def ssl_keys(), do: SiteEncrypt.Certbot.https_keys(config())
+
+  def cert_folder(), do: Erlangelist.db_path("certbot")
 
   def config() do
     %{
@@ -10,16 +17,15 @@ defmodule ErlangelistWeb.Certbot do
       email: get_os_env("EMAIL", "mail@foo.bar"),
       base_folder: cert_folder(),
       renew_interval: :timer.hours(6),
-      log_level: :info
+      log_level: :info,
+      handle_new_cert: &handle_new_cert/1
     }
   end
 
-  def handle_new_cert(certbot_config) do
+  defp handle_new_cert(certbot_config) do
     SiteEncrypt.Phoenix.restart_endpoint(certbot_config)
     Erlangelist.Backup.backup(certbot_config.base_folder)
   end
-
-  def cert_folder(), do: Erlangelist.db_path("certbot")
 
   defp local_acme_server(), do: {:local_acme_server, %{adapter: Plug.Adapters.Cowboy, port: 20081}}
 

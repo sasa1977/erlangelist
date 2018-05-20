@@ -1,15 +1,13 @@
 defmodule Erlangelist.Application do
   use Application
-  import EnvHelper
 
   def start(_type, _args) do
     Erlangelist.Backup.resync()
 
     Supervisor.start_link(
       [
-        env_based(prod: nil, else: Erlangelist.AcmeServer),
         Erlangelist.UsageStats,
-        {SiteEncrypt.Phoenix, {ErlangelistWeb.Endpoint, ErlangelistWeb.Certbot}}
+        ErlangelistWeb.Site
       ]
       |> Enum.reject(&is_nil/1),
       name: Erlangelist.Supervisor,
