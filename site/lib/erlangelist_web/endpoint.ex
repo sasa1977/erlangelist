@@ -3,7 +3,6 @@ defmodule ErlangelistWeb.Endpoint do
 
   socket("/socket", ErlangelistWeb.UserSocket)
 
-  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site.cert_folder())
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
   # Code reloading can be explicitly enabled under the
@@ -15,6 +14,8 @@ defmodule ErlangelistWeb.Endpoint do
   end
 
   plug(Plug.Logger, log: :debug)
+
+  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site.cert_folder())
 
   plug(
     Plug.Parsers,
