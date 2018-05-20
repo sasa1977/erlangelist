@@ -61,7 +61,12 @@ defmodule AcmeServer.Jobs.HttpVerifier do
     end)
   end
 
-  defp http_server(domain, dns), do: Map.get(dns, domain, domain)
+  defp http_server(domain, dns) do
+    case Map.fetch(dns, domain) do
+      {:ok, resolver} -> resolver.()
+      :error -> domain
+    end
+  end
 
   defp verify_domain(url, token, key_thumbprint) do
     with {:ok, {{_, 200, _}, _headers, response}} <- http_request(url, token),

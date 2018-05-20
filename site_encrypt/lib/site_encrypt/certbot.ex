@@ -54,7 +54,7 @@ defmodule SiteEncrypt.Certbot do
 
   defp common_options(config) do
     ~w(
-      --server #{config.ca_url}
+      --server #{ca_url(config.ca_url)}
       --work-dir #{work_folder(config)}
       --config-dir #{config_folder(config)}
       --logs-dir #{log_folder(config)}
@@ -62,6 +62,9 @@ defmodule SiteEncrypt.Certbot do
       --non-interactive
     )
   end
+
+  defp ca_url({:local_acme_server, %{port: port}}), do: "http://localhost:#{port}/directory"
+  defp ca_url(ca_url), do: ca_url
 
   defp domain_params(config) do
     Enum.map([config.domain | config.extra_domains], &"-d #{&1}")
@@ -77,7 +80,8 @@ defmodule SiteEncrypt.Certbot do
   defp certfile(config), do: Path.join(keys_folder(config), "cert.pem")
   defp cacertfile(config), do: Path.join(keys_folder(config), "chain.pem")
 
-  defp keys_available?(config), do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
+  defp keys_available?(config),
+    do: Enum.all?([keyfile(config), certfile(config), cacertfile(config)], &File.exists?/1)
 
   defp keys_sha(config) do
     case https_keys(config) do

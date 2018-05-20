@@ -1,12 +1,10 @@
 defmodule ErlangelistWeb.Certbot do
   import EnvHelper
 
-  def domains(), do: [domain() | extra_domains()]
-
   def config() do
     %{
       run_client?: env_based(test: false, else: true),
-      ca_url: get_os_env("CA_URL", Erlangelist.AcmeServer.directory_url()),
+      ca_url: get_os_env("CA_URL", local_acme_server()),
       domain: domain(),
       extra_domains: extra_domains(),
       email: get_os_env("EMAIL", "mail@foo.bar"),
@@ -22,6 +20,8 @@ defmodule ErlangelistWeb.Certbot do
   end
 
   def cert_folder(), do: Erlangelist.db_path("certbot")
+
+  defp local_acme_server(), do: {:local_acme_server, %{adapter: Plug.Adapters.Cowboy, port: 20081}}
 
   defp domain(), do: get_os_env("DOMAIN", "localhost")
   defp extra_domains(), do: get_os_env("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == ""))
