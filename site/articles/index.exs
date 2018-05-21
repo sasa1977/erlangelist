@@ -1,4 +1,9 @@
 [
+  rethinking_app_env: [
+    short_title: "Rethinking app env",
+    long_title: "Rethinking app env",
+    posted_at: "2018-05-21"
+  ],
   spawn_or_not: [
     short_title: "To spawn, or not to spawn?",
     long_title: "To spawn, or not to spawn?",
