@@ -1,4 +1,5 @@
 defmodule ErlangelistWeb.Site do
+  @behaviour SiteEncrypt
   import EnvHelper
 
   @doc false
@@ -8,6 +9,7 @@ defmodule ErlangelistWeb.Site do
 
   def cert_folder(), do: Erlangelist.db_path("certbot")
 
+  @impl SiteEncrypt
   def config() do
     %{
       run_client?: env_specific(test: false, else: true),
@@ -21,6 +23,7 @@ defmodule ErlangelistWeb.Site do
     }
   end
 
+  @impl SiteEncrypt
   def handle_new_cert(certbot_config) do
     SiteEncrypt.Phoenix.restart_endpoint(certbot_config)
     Erlangelist.Backup.backup(certbot_config.base_folder)

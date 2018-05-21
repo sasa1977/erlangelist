@@ -1,14 +1,4 @@
 defmodule SiteEncrypt.Certbot do
-  @type config :: %{
-          run_client?: boolean,
-          ca_url: String.t() | {:local_acme_server, %{port: pos_integer}},
-          domain: String.t(),
-          extra_domains: [String.t()],
-          email: String.t(),
-          base_folder: String.t(),
-          renew_interval: pos_integer()
-        }
-
   def https_keys(config) do
     if keys_available?(config) do
       {:ok,
