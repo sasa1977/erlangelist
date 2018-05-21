@@ -1,6 +1,9 @@
 defmodule Mix.Tasks.Erlangelist.CompileAssets do
   use Mix.Task
 
+  # Mix.Task behaviour is not in PLT since Mix is not a runtime dep, so we disable the warning
+  @dialyzer :no_undefined_callbacks
+
   @impl Mix.Task
   def run(_args) do
     {:ok, cwd} = File.cwd()

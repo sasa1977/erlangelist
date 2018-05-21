@@ -23,7 +23,7 @@ defmodule ErlangelistWeb.ArticleController do
 
   def article_from_old_path(%{private: %{article: article}} = conn, _params) do
     conn
-    |> put_layout(:none)
+    |> put_layout(false)
     |> redirect(external: "/article/#{article.id}")
   end
 
@@ -33,6 +33,9 @@ defmodule ErlangelistWeb.ArticleController do
   end
 
   def not_found(conn, _opts \\ nil) do
-    render(put_status(conn, 404), ErlangelistWeb.ErrorView, "404.html")
+    conn
+    |> put_view(ErlangelistWeb.ErrorView)
+    |> put_status(404)
+    |> render("404.html")
   end
 end

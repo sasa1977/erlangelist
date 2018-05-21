@@ -12,7 +12,7 @@ defmodule Erlangelist.Mixfile do
       deps: deps(),
       preferred_cli_env: [release: :prod],
       aliases: [release: ["erlangelist.compile_assets", "phx.digest", "release"]],
-      dialyzer: [plt_add_deps: :transitive]
+      dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]]
     ]
   end
 
