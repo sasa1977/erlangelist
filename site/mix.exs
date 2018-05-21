@@ -11,7 +11,8 @@ defmodule Erlangelist.Mixfile do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       preferred_cli_env: [release: :prod],
-      aliases: [release: ["erlangelist.compile_assets", "phx.digest", "release"]]
+      aliases: [release: ["erlangelist.compile_assets", "phx.digest", "release"]],
+      dialyzer: [plt_add_deps: :transitive]
     ]
   end
 
@@ -36,7 +37,8 @@ defmodule Erlangelist.Mixfile do
       {:site_encrypt, path: "../site_encrypt"},
       {:deep_merge, "~> 0.1"},
       {:distillery, "~> 1.5", runtime: false},
-      {:phoenix_live_reload, "~> 1.0", only: :dev}
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:dialyxir, "~> 0.5.0", runtime: false, only: [:dev, :test]}
     ]
   end
 end
