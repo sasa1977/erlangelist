@@ -47,12 +47,12 @@ a:hover {
 /* desktop layout */
 @media (min-width: 992px) {
   body {
-    overflow: hidden;
+    overflow: inherit;
     height: 100%;
   }
 
   .container-fluid {
-    height: 100%;
+    height: auto;
     max-width: 70em;
     padding-left: 15px;
     padding-right: 0px;
@@ -67,11 +67,13 @@ a:hover {
   }
 
   .container-fluid .right-bar {
+    position: fixed;
     height: 100%;
     width: 270px;
     overflow: auto;
     padding-top: 20px;
     padding-bottom: 20px;
+    right: calc(50% - 500px);
   }
 
   .container-fluid .right-bar .eia-image-link {
