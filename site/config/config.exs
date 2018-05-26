@@ -6,4 +6,16 @@ config :logger, :console,
 
 config :erlangelist, ErlangelistWeb.Endpoint, []
 
-import_config "#{Mix.env()}.exs"
+if Mix.env() == :dev do
+  config :logger, level: :debug, console: [format: "[$level] $message\n"]
+  config :phoenix, :stacktrace_depth, 20
+end
+
+if Mix.env() == :prod do
+  config :logger, level: :info
+  config :phoenix, serve_endpoints: true
+end
+
+if Mix.env() == :test do
+  config :logger, level: :warn
+end
