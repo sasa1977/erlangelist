@@ -15,21 +15,20 @@ If you want to contribute a minor correction to some article (e.g. language and 
 
 Prerequisites:
 
-- Erlang 18
-- Elixir 1.2
-- PostgreSQL (preferably 9.4)
+- Erlang 20
+- Elixir 1.6
 
-1. Start the database server on the port 5432.
-1. Create the database user `erlangelist` with blank password.
-1. Create the database `erlangelist` and grant all privileges to the `erlangelist` user.
+Optional dependencies are openssl and certbot. It they're missing, you might see some errors, but the site will be working.
+
+Starting
+
 1. Go to the `site` folder and fetch `mix` dependencies
 1. From the `site` folder start the site with `iex -S mix phoenix.server`
 
-If all went well, the server will listen on the port 20000.
+If all went well, the server will listen on the port 20080.
 
-### Running tests
+If you have openssl and certbot, the server will self-certify, and also accept https traffic on port 20443.
 
-If you want to run tests, you need to create the `erlangelist_test` database, granting all privileges to the `erlangelist` user. Make sure to migrate the database (`MIX_ENV=test mix ecto.migrate`) and then you can start the test.
 
 ## Deploying to the production server
 
@@ -49,18 +48,7 @@ If you started a local Vagrant box, as explained above, you can run `cd provisio
 
 ### Filling in the blanks
 
-You need to create the file `site/config/prod_settings.exs` which will contain your secrets (database password and `secret_key_base`). The file should look like:
-
-```elixir
-[
-  db_password: "super_secret_password",
-  secret_key_base: "..."
-]
-```
-
-You can run `mix phoenix.gen.secret` in the `site` folder to generate the secret key base.
-
-In addition, you need to create `provisioning/git_keys` folder that must contain public keys of all allowed deployers.
+You need to create `provisioning/git_keys` folder that must contain public keys of all allowed deployers.
 
 ### Initial setup
 
@@ -71,15 +59,6 @@ For example, to set up a local VM with an IP address 192.168.54.54, you can run 
 ### Setting up the git remote
 
 The deploy is performed by pushing to the git repository on the remote server. During the setup, the `git` user is created on the server. You can login as a `git` with any of the keys supplied in `provisioning/git_keys` folder, as explained above.
-
-On your own machine, you need to add something like the following to your ~/.ssh/config:
-
-```
-Host 192.168.54.54
-  User git
-  PreferredAuthentications publickey
-  IdentityFile private_key_path
-```
 
 In your local git repository, you need to add another remote which will be the deploy target. For example:
 
