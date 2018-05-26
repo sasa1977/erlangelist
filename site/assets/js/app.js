@@ -1,4 +1,5 @@
 import "phoenix_html"
+import privacyController from "./privacy_controller"
 
 hljs.initHighlightingOnLoad();
 

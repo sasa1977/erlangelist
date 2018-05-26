@@ -3,16 +3,17 @@
 <div class="cookies-info">
   <p>
     For the purpose of statistics, an aggregated read count of each article is stored in the database.
-    Since the count is aggregated over all visitors, it can't be traced back to you.
+    Since the count is aggregated over all visitors, it can't be traced back to you. No other piece of data is stored,
+    and no personal data is logged. This site doesn't use cookies, nor 3rd analytics services.
+    Therefore, we can't find out any personal information such as your reading habits, referal sources, IP address, or
+    geolocation.
   </p>
 
   <p>
-    No other piece of data is stored, and no personal data is logged. This site doesn't use cookies, and no
-    3rd party service (such as analytics) is embedded on our pages.
+    However, if you enable comments, some data about you might be collected by
+    <a href="https://disqus.com/" target="_blank">Disqus</a>, which is the provider and the controller of your
+    private data related to comments.
   </p>
 
-  <p>
-    Therefore, your site usage is an anonymous experience. We can't find out any personal information
-    such as your reading habits, referal sources, IP address, or geolocation.
-  </p>
+  <div id="privacy_info"></div>
 </div>
