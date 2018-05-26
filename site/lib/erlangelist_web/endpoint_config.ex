@@ -33,7 +33,6 @@ defmodule ErlangelistWeb.EndpointConfig do
           http: [acceptors: 5],
           https: [acceptors: 5],
           debug_errors: true,
-          code_reloader: true,
           check_origin: false,
           watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin", cd: @assets_path]],
           live_reload: [
