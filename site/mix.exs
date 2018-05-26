@@ -38,7 +38,9 @@ defmodule Erlangelist.Mixfile do
       {:deep_merge, "~> 0.1"},
       {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:dialyxir, "~> 0.5.0", runtime: false, only: [:dev, :test]}
+      {:dialyxir, "~> 0.5.0", runtime: false, only: [:dev, :test]},
+      {:sshex, "~> 2.0", runtime: false},
+      {:table_rex, "~> 2.0", runtime: false}
     ]
   end
 end
