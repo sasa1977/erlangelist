@@ -5,7 +5,7 @@
   var disqus_url = 'http://www.theerlangelist.com/article/<%= @article.id %>';
 </script>
 
-<div id="article_content" class="blog-post">
+<div id="article_content" class="blog-post main-content">
   <%= render "_article_content.html", article: @article %>
 
   <div class="comments">

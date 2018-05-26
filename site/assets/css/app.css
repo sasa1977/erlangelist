@@ -32,15 +32,6 @@ a:hover {
   margin-left: 20px;
 }
 
-.cookies-info {
-  margin-top:20px;
-}
-
-.cookies-info.allowed .cookies-allowed {display: default;}
-.cookies-info.allowed .cookies-rejected {display: none;}
-.cookies-info.rejected .cookies-allowed {display: none;}
-.cookies-info.rejected .cookies-rejected {display: default;}
-
 /* Phoenix flash messages */
 .alert:empty { display: none; }
 
@@ -159,6 +150,11 @@ a:hover {
   margin-top:0px;
 }
 
+.main-content p, .main-content ul {
+  font-size: 18px;
+  font-weight: 300;
+}
+
 .blog-post a code {
   color: #337ab7;
 }
@@ -174,11 +170,6 @@ a:hover {
 
 .blog-post .article-body {
   margin-top: 30px;
-}
-
-.blog-post p, .blog-post ul {
-  font-size: 18px;
-  font-weight: 300;
 }
 
 .blog-post code {
