@@ -1,6 +1,6 @@
 About a month ago, on [Elixir Quiz](http://elixirquiz.github.io/index.html) site there was a [Conway's Game of Life challenge](http://elixirquiz.github.io/2014-11-01-game-of-life.html). While I didn't find the time to participate in the challenge, I played with the problem recently, and found it very interesting.
 
-So in this post, I'm going to break down [my solution to the problem](https://gist.github.com/sasa1977/6877c52c3c35c2c03c82). If you're not familiar with Game of Life rules, you can take a quick look [here](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules).
+So in this post, I'm going to break down [my solution to the problem](https://gist.github.com/sasa1977/6877c52c3c35c2c03c82). If you're not familiar with Game of Life rules, you can take a quick look [here](https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Rules).
 
 My solution is simplified in that I deal only with square grids. It's not very hard to extend it to work for any rectangle, but I wanted to keep things simple.
 
