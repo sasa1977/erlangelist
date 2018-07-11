@@ -15,7 +15,7 @@ defmodule ErlangelistWeb.Endpoint do
 
   plug(Plug.Logger, log: :debug)
 
-  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site.cert_folder())
+  plug(SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site)
 
   plug(
     Plug.Parsers,
