@@ -18,16 +18,20 @@ Prerequisites:
 - Erlang 20
 - Elixir 1.6
 
-Optional dependencies are openssl and certbot. It they're missing, you might see some errors, but the site will be working.
+Optional dependency is certbot. It it's missing, you might see some errors, but the site will be working.
 
-Starting
+Starting:
 
-1. Go to the `site` folder and fetch `mix` dependencies
-1. From the `site` folder start the site with `iex -S mix phoenix.server`
+```
+cd site
+mix deps.get
+pushd assets && npm install && popd
+iex -S mix phx.server
+```
 
 If all went well, the server will listen on the port 20080.
 
-If you have openssl and certbot, the server will self-certify, and also accept https traffic on port 20443.
+If you have certbot, the server will self-certify, and also accept https traffic on port 20443.
 
 
 ## Deploying to the production server
