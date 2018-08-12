@@ -4,12 +4,11 @@ defmodule Erlangelist.UsageStats do
 
   def folder(), do: Erlangelist.db_path("usage_stats")
 
-  def setting!(name), do: Application.fetch_env!(:erlangelist, __MODULE__) |> Keyword.fetch!(name)
+  def setting!(name), do: Keyword.fetch!(config(), name)
 
   defdelegate report(key, value), to: UsageStats.Server
 
   def start_link() do
-    init_config()
     File.mkdir_p(folder())
 
     Supervisor.start_link(
@@ -30,8 +29,6 @@ defmodule Erlangelist.UsageStats do
       start: {__MODULE__, :start_link, []}
     }
   end
-
-  defp init_config(), do: Application.put_env(:erlangelist, __MODULE__, config())
 
   defp config() do
     [
