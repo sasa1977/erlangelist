@@ -1,10 +1,7 @@
 defmodule Erlangelist.UsageStats do
-  import EnvHelper
   alias Erlangelist.UsageStats
 
   def folder(), do: Erlangelist.db_path("usage_stats")
-
-  def setting!(name), do: Keyword.fetch!(config(), name)
 
   defdelegate report(key, value), to: UsageStats.Server
 
@@ -28,12 +25,5 @@ defmodule Erlangelist.UsageStats do
       type: :supervisor,
       start: {__MODULE__, :start_link, []}
     }
-  end
-
-  defp config() do
-    [
-      cleanup_interval: env_specific(prod: :timer.hours(1), else: :timer.minutes(1)),
-      retention: 7
-    ]
   end
 end
