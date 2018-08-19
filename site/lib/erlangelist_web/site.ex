@@ -9,6 +9,8 @@ defmodule ErlangelistWeb.Site do
 
   def certbot_folder(), do: Erlangelist.db_path("certbot")
 
+  def cert_folder(), do: Erlangelist.priv_path("cert")
+
   @impl SiteEncrypt
   def config() do
     %{
@@ -18,7 +20,7 @@ defmodule ErlangelistWeb.Site do
       extra_domains: extra_domains(),
       email: get_os_env("EMAIL", "mail@foo.bar"),
       base_folder: certbot_folder(),
-      cert_folder: Erlangelist.priv_path("cert"),
+      cert_folder: cert_folder(),
       renew_interval: :timer.hours(6),
       log_level: :info
     }

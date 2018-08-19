@@ -1,13 +1,15 @@
 defmodule Erlangelist.Backup do
+  def folder(), do: Erlangelist.priv_path("backup")
+
   def resync() do
-    File.mkdir_p!(backup_folder())
+    File.mkdir_p!(folder())
     backup_existing()
     restore_missing()
   end
 
   def backup(source_folder) do
     tmp_backup_path = create_tmp_backup(source_folder)
-    backup_target = Path.join(backup_folder(), Path.basename(tmp_backup_path))
+    backup_target = Path.join(folder(), Path.basename(tmp_backup_path))
 
     File.cp!(tmp_backup_path, backup_target)
     File.rm!(tmp_backup_path)
@@ -20,14 +22,14 @@ defmodule Erlangelist.Backup do
   end
 
   defp restore_missing() do
-    backup_folder()
+    folder()
     |> File.ls!()
     |> Stream.filter(&(Path.extname(&1) == ".tgz"))
     |> Stream.reject(&(&1 |> Path.basename(".tgz") |> Erlangelist.db_path() |> File.exists?()))
     |> Enum.each(&restore/1)
   end
 
-  defp restore(backup), do: :erl_tar.extract(to_charlist(Path.join(backup_folder(), backup)), [:compressed])
+  defp restore(backup), do: :erl_tar.extract(to_charlist(Path.join(folder(), backup)), [:compressed])
 
   defp create_tmp_backup(source_folder) do
     File.mkdir_p!(tmp_folder())
@@ -40,5 +42,4 @@ defmodule Erlangelist.Backup do
   end
 
   defp tmp_folder(), do: Erlangelist.priv_path("tmp")
-  defp backup_folder(), do: Erlangelist.priv_path("backup")
 end
