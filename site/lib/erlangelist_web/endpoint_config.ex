@@ -3,22 +3,15 @@ defmodule ErlangelistWeb.EndpointConfig do
     phoenix_defaults
     |> DeepMerge.deep_merge(common_config())
     |> DeepMerge.deep_merge(env_specific_config())
-    |> configure_https()
   end
 
   defp common_config() do
     [
       http: [compress: true, port: 20080],
+      https: [compress: true, port: 20443] ++ ErlangelistWeb.Site.https_keys(),
       render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
       pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2]
     ]
-  end
-
-  defp configure_https(config) do
-    case ErlangelistWeb.Site.ssl_keys() do
-      {:ok, keys} -> DeepMerge.deep_merge(config, https: [compress: true, port: 20443] ++ keys)
-      :error -> Keyword.put(config, :https, false)
-    end
   end
 
   case Mix.env() do

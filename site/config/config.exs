@@ -1,13 +1,13 @@
 use Mix.Config
 
 config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:user_id]
+  format: "$time $metadata[$level] $metadata $message\n",
+  metadata: [:user_id, :periodic_job]
 
 config :erlangelist, ErlangelistWeb.Endpoint, []
 
 if Mix.env() == :dev do
-  config :logger, level: :debug, console: [format: "[$level] $message\n"]
+  config :logger, level: :debug, console: [format: "[$level] $metadata $message\n"]
   config :phoenix, :stacktrace_depth, 20
 
   # code_reloader works only if provided in app env, not in `init/2`

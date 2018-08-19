@@ -14,7 +14,7 @@ defmodule Erlangelist.Backup do
   end
 
   defp backup_existing() do
-    [ErlangelistWeb.Site.cert_folder(), Erlangelist.UsageStats.folder()]
+    [ErlangelistWeb.Site.certbot_folder(), Erlangelist.UsageStats.folder()]
     |> Stream.filter(&File.exists?/1)
     |> Enum.each(&backup/1)
   end

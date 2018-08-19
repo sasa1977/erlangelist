@@ -5,9 +5,9 @@ defmodule ErlangelistWeb.Site do
   @doc false
   def child_spec(_), do: SiteEncrypt.Phoenix.child_spec({__MODULE__, ErlangelistWeb.Endpoint})
 
-  def ssl_keys(), do: SiteEncrypt.Certbot.https_keys(config())
+  def https_keys(), do: SiteEncrypt.https_keys(config())
 
-  def cert_folder(), do: Erlangelist.db_path("certbot")
+  def certbot_folder(), do: Erlangelist.db_path("certbot")
 
   @impl SiteEncrypt
   def config() do
@@ -17,17 +17,15 @@ defmodule ErlangelistWeb.Site do
       domain: domain(),
       extra_domains: extra_domains(),
       email: get_os_env("EMAIL", "mail@foo.bar"),
-      base_folder: cert_folder(),
+      base_folder: certbot_folder(),
+      cert_folder: Erlangelist.priv_path("cert"),
       renew_interval: :timer.hours(6),
       log_level: :info
     }
   end
 
   @impl SiteEncrypt
-  def handle_new_cert(certbot_config) do
-    SiteEncrypt.Phoenix.restart_endpoint(certbot_config)
-    Erlangelist.Backup.backup(certbot_config.base_folder)
-  end
+  def handle_new_cert(), do: Erlangelist.Backup.backup(certbot_folder())
 
   defp local_acme_server(), do: {:local_acme_server, %{adapter: Plug.Adapters.Cowboy, port: 20081}}
 
