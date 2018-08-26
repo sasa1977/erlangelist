@@ -15,10 +15,9 @@ If you want to contribute a minor correction to some article (e.g. language and 
 
 Prerequisites:
 
-- Erlang 20
-- Elixir 1.6
+Erlang, Elixir, and node.js. See [./.tool-versions] for exact versions. You can also use [asdf version manager](https://github.com/asdf-vm/asdf) to install these prerequisites.
 
-Optional dependency is certbot. It it's missing, you might see some errors, but the site will be working.
+Optional dependency is certbot. It it's missing, you will see some errors, but the site will be working.
 
 Starting:
 
@@ -29,10 +28,7 @@ pushd assets && npm install && popd
 iex -S mix phx.server
 ```
 
-If all went well, the server will listen on the port 20080.
-
-If you have certbot, the server will self-certify, and also accept https traffic on port 20443.
-
+If all went well, the server will listen on ports 20080 (http) and 20443 (https).
 
 ## Deploying to the production server
 
