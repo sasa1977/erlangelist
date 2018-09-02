@@ -34,15 +34,10 @@ defmodule Erlangelist.UsageStats.Server do
   end
 
   defp clear_old_stats(stats) do
-    dates_to_clear =
-      Map.keys(stats.data)
-      |> Enum.sort()
-      |> Enum.reverse()
-      |> Enum.drop(1)
-      |> MapSet.new()
-      |> MapSet.difference(stats.changes)
-
-    update_in(stats.data, &Map.drop(&1, dates_to_clear))
+    in_memory_dates = MapSet.new(Map.keys(stats.data))
+    dates_to_keep = MapSet.put(stats.changes, Date.utc_today())
+    dates_to_remove = MapSet.difference(in_memory_dates, dates_to_keep)
+    update_in(stats.data, &Map.drop(&1, dates_to_remove))
   end
 
   defp inc(stats, category, subcategory) do
