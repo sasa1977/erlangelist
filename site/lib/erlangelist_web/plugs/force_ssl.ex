@@ -7,7 +7,7 @@ defmodule ErlangelistWeb.ForceSSL do
 
   @impl Plug
   def call(%{scheme: :https} = conn, _opts), do: conn
-  def call(conn, _opts), do: Plug.SSL.call(conn, Plug.SSL.init(host: https_host()))
+  def call(conn, _opts), do: Plug.SSL.call(conn, Plug.SSL.init(host: https_host(), log: :debug))
 
   defp https_host() do
     to_string([
