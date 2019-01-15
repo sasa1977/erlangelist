@@ -31,7 +31,7 @@ Erlang and Elixir are completely identical in first two roles - they target the 
 
 ## Ingredients
 
-Much has been said about Elixir on the Internet, but I especially like two articles from Devin Torres which you can find [here](http://devintorr.es/blog/2013/01/22/the-excitement-of-elixir/) and [here](http://devintorr.es/blog/2013/06/11/elixir-its-not-about-syntax/). Devin is an experienced Erlang developer, who among other things wrote a popular [poolboy](https://github.com/devinus/poolboy) library, so it's worth reading what he thinks about Elixir.
+Much has been said about Elixir on the Internet, but I especially like two articles from Devin Torres which you can find [here](https://devinus.io/the-excitement-of-elixir/) and [here](https://devinus.io/elixir-its-not-about-syntax/). Devin is an experienced Erlang developer, who among other things wrote a popular [poolboy](https://github.com/devinus/poolboy) library, so it's worth reading what he thinks about Elixir.
 
 I'll try not to repeat much, and avoid going into many mechanical details. Instead, let's do a brief tour of main tools that can be used for better code organization.
 
