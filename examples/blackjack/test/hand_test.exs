@@ -18,6 +18,11 @@ defmodule Blackjack.HandTest do
     assert hand.score == 21
   end
 
+  test "hard not busted (two aces)" do
+    assert {:ok, hand} = hand([:ace, :ace])
+    assert hand.score == 12
+  end
+
   test "hard busted", do:
     assert {:busted, _} = hand([10, 10, :ace, 2])
 
