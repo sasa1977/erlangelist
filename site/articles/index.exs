@@ -1,4 +1,9 @@
 [
+  periodic: [
+    short_title: "Periodic jobs",
+    long_title: "Periodic jobs in Elixir with Periodic",
+    posted_at: "2020-01-27"
+  ],
   rethinking_app_env: [
     short_title: "Rethinking app env",
     long_title: "Rethinking app env",
