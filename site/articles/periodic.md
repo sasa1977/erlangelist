@@ -92,12 +92,12 @@ Our fixed scheduling code, while fairly short, might become a bit noisy and tedi
 
 ```elixir
 defmodule NaiveDaily do
-  def start_link(hour, minute, run) do
+  def start_link(hour, minute, run_job) do
     Periodic.start_link(
       every: :timer.minutes(1),
       run: fn ->
         with %Time{hour: ^hour, minute: ^minute} <- Time.utc_now(),
-          do: run_job()
+          do: run_job.()
       end
     )
   end
