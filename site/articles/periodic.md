@@ -36,7 +36,7 @@ Periodic accepts a couple of options which allow you to control its behaviour, s
 
 The interface of Periodic is small. The bulk of functionality is provided in the single module which exposes two functions: `start_link` for starting the process dynamically, and `child_spec` for building supervisor specs. Two additional modules are provided - one to assist with logging, and another to help with deterministic testing.
 
-Controversially enough, Periodic doesn't offer any special support for fixed schedules (e.g. run every Wednesday at 5pm). This might seem like a big deficiency, while it's in fact a deliberate design choice. I personally regard fixed scheduling as a nuanced challenge for which there is no one-size-fits-all solution, so it's best to make the trade-offs explicit and leave the choices to the client. Of course it's perfectly possible to power fixed scheduled jobs with Periodic, and I'll present some approaches later on in this article.
+Controversially enough, Periodic doesn't provide out-of-the-box support for fixed schedules (e.g. run every Wednesday at 5pm). This might seem like a big deficiency, while it's in fact a deliberate design choice. I personally regard fixed scheduling as a nuanced challenge for which there is no one-size-fits-all solution, so it's best to make the trade-offs explicit and leave the choices to the client. Of course it's perfectly possible to power fixed scheduled jobs with Periodic, and I'll present some approaches later on in this article.
 
 
 ## Flexibility
@@ -68,23 +68,21 @@ Speaking of Parent, it's worth noting that this is the abstraction that handles 
 
 ## Fixed scheduling
 
-Periodic doesn't offer special support for fixed schedules (e.g. run once a day at midnight). However, such behaviour can be easily implemented on top of the existing functionality. Here's a naive take:
+Periodic doesn't offer ready-made abstraction for fixed scheduling (e.g. run once a day at midnight). However, such behaviour can be easily implemented on top of the existing functionality using the `:when` filter. Here's a basic sketch:
 
 ```elixir
 Periodic.start_link(
   every: :timer.minutes(1),
-  run: fn ->
-    with %Time{hour: 0, minute: 0} <- Time.utc_now(),
-      do: run_job()
-  end
+  when: fn -> match?(%Time{hour: 0, minute: 0}, Time.utc_now()) end,
+  run: &run_job/0
 )
 ```
 
-Every minute we check if the time has come to run the job. In this particular example, we'll run it every day at 00:00AM.
+The idea is to tick regularly in short intervals, and use the provided `:when` filter to decide if the job should be started.
 
 Careful readers will spot some possible issues in this implementation. If the system (or the scheduler process) is down at the scheduled time, the job won't be executed. Furthermore, it's worth mentioning that Periodic doesn't guarantee 100% interval precision. Though not very likely, it can (and occasionally will!) happen that in some interval a job is executed twice, while in another interval it's not executed at all. Such situations will cause our daily job to be either skipped, or executed twice in the same minute. It's worth noting that similar issues can be (and often are) present in other periodic scheduling systems, but at least in Periodic they are more explicit and clear, since they are present in our code, not in the internals of the abstraction.
 
-If you don't care about occasional missed or extra beat, the basic take presented above will serve you just fine. In fact, if I wanted to do some daily nice-to-have cleanup, this is the version I'd start with. Perhaps the code is not as short as `0 0 * * *`, but on the upside it's more explicit about its intention and possible consequences.
+If you don't care about occasional missed or extra beat, the basic take presented above will serve you just fine. In fact, if I wanted to do some daily nice-to-have cleanup, this is the version I'd start with. Perhaps the code is not as short as `0 0 * * *`, but on the upside it's more explicit about its intention and possible consequences, and it is quite flexible. Implementing more elaborate schedules such as "run every 10 minutes during working hours, but once per hour otherwise" is a matter of adapting the `:when` function.
 
 ## Abstracting
 
@@ -95,10 +93,8 @@ defmodule NaiveDaily do
   def start_link(hour, minute, run_job) do
     Periodic.start_link(
       every: :timer.minutes(1),
-      run: fn ->
-        with %Time{hour: ^hour, minute: ^minute} <- Time.utc_now(),
-          do: run_job.()
-      end
+      when: fn -> match?(%Time{hour: ^hour, minute: &minute}, Time.utc_now()) end,
+      run: run_job
     )
   end
 end
@@ -117,20 +113,15 @@ Taking this idea further, implementing a generic translator of cron syntax to Pe
 
 Our basic naive implementation of the fixed scheduler gives us "maybe once" guarantees - a job will usually be executed once a day, occasionally it won't be executed at all, while in some special circumstances it might be executed more than once in the same minute.
 
-If we want to improve the guarantees, we need to expand the code. Luckily, since our approach is powered by a Turing-complete language, we can tweak the implementation to our needs. The general idea is to execute `if should_run?(), do: run()` every minute, tweaking the decision logic in `should_run?/0` to obtain the desired behaviour.
-
-It's easy to see how this approach is flexible. For example, implementing more elaborate schedules such as "run every 10 minutes during working hours, but once per hour otherwise" is possible with a properly crafted conditional.
-
-When it comes to improving the execution guarantees, we need to extend the code a bit more. Here's a basic sketch:
+If we want to improve the guarantees, we need to expand the code. Luckily, since our approach is powered by a Turing-complete language, we can tweak the implementation to our needs. Here's a basic sketch:
 
 ```elixir
 Periodic.start_link(
   every: :timer.minutes(1),
+  when: fn -> not job_executed_today?() end,
   run: fn ->
-    unless job_executed_today?() do
-      run_job()
-      mark_job_as_executed_today()
-    end
+    run_job()
+    mark_job_as_executed_today()
   end
 )
 ```
@@ -146,15 +137,14 @@ Here's a bit more involved scenario, which I actually had to solve in real-life.
 
 ```elixir
 Periodic.start_link(
-  every: :timer.minutes(1),
   on_overlap: :ignore,
+  every: :timer.minutes(1),
+  when: fn -> Time.utc_now().hour in 0..4 and not job_executed_today?() end,
   run: fn ->
-    if Time.utc_now().hour in 0..4 and not job_executed_today?() do
-      with_exclusive_lock(fn ->
-        run_job()
-        mark_job_as_executed_today()
-      end)
-    end
+    with_exclusive_lock(fn ->
+      run_job()
+      mark_job_as_executed_today()
+    end)
   end
 )
 ```
@@ -169,20 +159,18 @@ The locking mechanism could also be used to ensure that the job is executed only
 
 ```elixir
 Periodic.start_link(
-  every: :timer.minutes(1),
   on_overlap: :ignore,
+  every: :timer.minutes(1),
+  when: &should_run?/0,
   run: fn ->
-    # eager check to avoid excessive locking
-    if should_run?() do
-      with_exclusive_lock(fn ->
-        # The repeated check makes sure the job hasn't been executed
-        # on some other machine while we were waiting for the lock.
-        if should_run?() do
-          run_job()
-          mark_job_as_executed()
-        end
-      end)
-    end
+    with_exclusive_lock(fn ->
+      # The repeated check makes sure the job hasn't been executed
+      # on some other machine while we were waiting for the lock.
+      if should_run?() do
+        run_job()
+        mark_job_as_executed()
+      end
+    end)
   end
 )
 ```
@@ -196,6 +184,6 @@ As an author, I'm admittedly very partial to Periodic. After all, I made it pret
 
 With a small and intention-revealing interface, simple process structure, and OTP compliance, I believe that Periodic is a compelling choice for running periodical jobs directly in BEAM. Assuming nothing about the preferences of different clients, sticking to plain functions, and using a simple process structure make Periodic very flexible, and allow clients to use it however they want to. Building specialized abstractions on top of Periodic, such as the sketched `NaiveDaily` is possible and straightforward.
 
-The lack of dedicated support for fixed-time scheduling admittedly requires a bit more coding on the client part, but it also motivates the clients to consider the consequences and trade-offs. A naive solution, which should be roughly on par with what other similar libs are providing, is short and straightforward to implement. More demanding scenarios will require comparative effort in the code, but that's something that can't be avoided. On the plus side, all the approaches will share a similar pattern of `if should_run?(), do: run()`, typically executed once a minute. Since the decision logic is implemented Elixir, the client code has full freedom in the decision making process.
+The lack of dedicated support for fixed-time scheduling admittedly requires a bit more coding on the client part, but it also motivates the clients to consider the consequences and trade-offs. A naive solution, which should be roughly on par with what other similar libs are providing, is short and straightforward to implement. More demanding scenarios will require comparative effort in the code, but that's something that can't be avoided. On the plus side, all the approaches will share a similar pattern of `when: &should_run?/0, run: &run/0`, typically executed once a minute. Since the decision logic is implemented in Elixir, the client code has full freedom in the decision making process.
 
 In summary, I hope that this article will motivate you to give Periodic a try. If you spot some problems or have some feature proposals, feel free to open up an issue on the [project repo](https://github.com/sasa1977/parent).
