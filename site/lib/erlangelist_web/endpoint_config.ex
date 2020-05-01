@@ -23,8 +23,8 @@ defmodule ErlangelistWeb.EndpointConfig do
       defp env_specific_config() do
         [
           url: [host: "localhost"],
-          http: [acceptors: 5],
-          https: [acceptors: 5],
+          http: [transport_options: [num_acceptors: 5]],
+          http: [transport_options: [num_acceptors: 5]],
           debug_errors: true,
           check_origin: false,
           watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin", cd: @assets_path]],

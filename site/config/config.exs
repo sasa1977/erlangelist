@@ -4,6 +4,8 @@ config :logger, :console,
   format: "$time $metadata[$level] $metadata $message\n",
   metadata: [:user_id, :periodic_job]
 
+config :phoenix, :json_library, Jason
+
 config :erlangelist, ErlangelistWeb.Endpoint, []
 
 if Mix.env() == :dev do

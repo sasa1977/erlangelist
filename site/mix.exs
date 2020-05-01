@@ -28,11 +28,11 @@ defmodule Erlangelist.Mixfile do
 
   defp deps do
     [
-      {:phoenix, "~> 1.3.2"},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "~> 1.4.0"},
       {:phoenix_html, "~> 2.10"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 2.0"},
+      {:plug, "~> 1.7"},
       {:earmark, "~> 1.0"},
       {:parent, "~> 0.4"},
       {:site_encrypt, github: "sasa1977/site_encrypt"},
@@ -41,7 +41,8 @@ defmodule Erlangelist.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:dialyxir, "~> 0.5.0", runtime: false, only: [:dev, :test]},
       {:sshex, "~> 2.0", runtime: false},
-      {:table_rex, "~> 2.0", runtime: false}
+      {:table_rex, "~> 2.0", runtime: false},
+      {:jason, "~> 1.0"}
     ]
   end
 end

@@ -1,12 +1,10 @@
 defmodule ErlangelistWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
-  socket("/socket", ErlangelistWeb.UserSocket)
+  socket "/socket", ErlangelistWeb.UserSocket, websocket: true
 
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
-  # Code reloading can be explicitly enabled under the
-  # :code_reloader configuration of your endpoint.
   if code_reloading? do
     socket("/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket)
     plug(Phoenix.LiveReloader)
@@ -22,7 +20,7 @@ defmodule ErlangelistWeb.Endpoint do
     Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Poison
+    json_decoder: Jason
   )
 
   plug(Plug.MethodOverride)
