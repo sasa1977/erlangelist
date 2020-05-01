@@ -27,7 +27,15 @@ defmodule ErlangelistWeb.EndpointConfig do
           http: [transport_options: [num_acceptors: 5]],
           debug_errors: true,
           check_origin: false,
-          watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin", cd: @assets_path]],
+          watchers: [
+            node: [
+              "node_modules/webpack/bin/webpack.js",
+              "--mode",
+              "development",
+              "--watch-stdin",
+              cd: @assets_path
+            ]
+          ],
           live_reload: [
             patterns: [
               ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
