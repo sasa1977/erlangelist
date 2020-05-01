@@ -36,7 +36,7 @@ defmodule Erlangelist.UsageStats.Server do
   defp clear_old_stats(stats) do
     in_memory_dates = MapSet.new(Map.keys(stats.data))
     dates_to_keep = MapSet.put(stats.changes, Date.utc_today())
-    dates_to_remove = MapSet.difference(in_memory_dates, dates_to_keep)
+    dates_to_remove = MapSet.to_list(MapSet.difference(in_memory_dates, dates_to_keep))
     update_in(stats.data, &Map.drop(&1, dates_to_remove))
   end
 
