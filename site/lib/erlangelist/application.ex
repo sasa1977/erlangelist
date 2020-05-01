@@ -7,7 +7,8 @@ defmodule Erlangelist.Application do
     Supervisor.start_link(
       [
         Erlangelist.UsageStats,
-        ErlangelistWeb.Site
+        ErlangelistWeb.Site,
+        {Phoenix.PubSub, name: Erlangelist.PubSub}
       ]
       |> Enum.reject(&is_nil/1),
       name: Erlangelist.Supervisor,

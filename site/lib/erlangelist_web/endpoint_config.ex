@@ -10,7 +10,7 @@ defmodule ErlangelistWeb.EndpointConfig do
       http: [compress: true, port: 20080],
       https: [compress: true, port: 20443] ++ ErlangelistWeb.Site.https_keys(),
       render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
-      pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2]
+      pubsub_server: Erlangelist.PubSub
     ]
   end
 

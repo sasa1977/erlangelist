@@ -28,10 +28,11 @@ defmodule Erlangelist.Mixfile do
 
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
-      {:phoenix_html, "~> 2.10"},
+      {:phoenix, "~> 1.5.0"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix_html, "~> 2.14"},
       {:gettext, "~> 0.11"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
       {:earmark, "~> 1.0"},
       {:parent, "~> 0.4"},
