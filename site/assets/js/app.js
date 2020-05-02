@@ -2,8 +2,6 @@ import "phoenix_html"
 import privacyController from "./privacy_controller"
 import css from '../css/app.css';
 
-hljs.initHighlightingOnLoad();
-
 let articleContentEl = document.querySelector("#article_content");
 if (articleContentEl != null) {
   articleContentEl.

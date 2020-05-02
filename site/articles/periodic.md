@@ -93,7 +93,8 @@ defmodule NaiveDaily do
   def start_link(hour, minute, run_job) do
     Periodic.start_link(
       every: :timer.minutes(1),
-      when: fn -> match?(%Time{hour: ^hour, minute: &minute}, Time.utc_now()) end,
+      when:
+        fn -> match?(%Time{hour: ^hour, minute: &minute}, Time.utc_now()) end,
       run: run_job
     )
   end

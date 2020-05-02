@@ -1,4 +1,5 @@
 defmodule Erlangelist.Article do
+  require Erlangelist.Highlighter
   @external_resource "articles/index.exs"
 
   months = ~w(January February March April May June July August September October November December)
@@ -51,6 +52,7 @@ defmodule Erlangelist.Article do
             "articles/#{article.id}.md"
             |> File.read!()
             |> Earmark.as_html!()
+            |> Erlangelist.Highlighter.highlight_code_blocks()
           )
     end
   end
