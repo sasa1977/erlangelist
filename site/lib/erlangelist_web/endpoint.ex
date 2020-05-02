@@ -1,8 +1,6 @@
 defmodule ErlangelistWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
-  socket "/socket", ErlangelistWeb.UserSocket, websocket: true
-
   plug(Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt))
 
   if code_reloading? do
