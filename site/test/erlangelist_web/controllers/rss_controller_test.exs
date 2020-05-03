@@ -1,7 +1,14 @@
 defmodule Erlangelist.RssControllerTest do
-  use ErlangelistWeb.ConnCase
+  use ExUnit.Case, async: true
+  import Phoenix.ConnTest
+  alias Erlangelist.Article
+  alias ErlangelistTest.Client
 
-  test_get("/rss", :xml, 200, "")
-  test_get("/feeds/posts/default", :xml, 200, "")
-  test_get("/feeds/posts/foobar", :xml, 200, "")
+  test "entire feed" do
+    response = response(Client.rss_feed(), 200)
+
+    for article <- Article.all(), article.has_content? do
+      assert response =~ "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
+    end
+  end
 end

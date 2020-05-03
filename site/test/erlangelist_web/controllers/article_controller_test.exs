@@ -1,12 +1,21 @@
 defmodule Erlangelist.ArticleControllerTest do
-  use ErlangelistWeb.ConnCase
+  use ExUnit.Case, async: true
+  import Phoenix.ConnTest
   alias Erlangelist.Article
+  alias ErlangelistTest.Client
 
-  test_get("/", 200, "<h1>#{Plug.HTML.html_escape(Article.most_recent().long_title)}</h1>")
-
-  test_get("/article/unknown", 404, "Page not found")
+  test "root page shows the most recent article" do
+    assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().long_title)}</h1>"
+  end
 
   for article <- Article.all(), article.has_content? do
-    test_get("/article/#{article.id}", 200, "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>")
+    test "shows the #{article.id} article" do
+      assert response(Client.article(unquote(article.id)), 200) =~
+               "<h1>#{Plug.HTML.html_escape(unquote(article.long_title))}</h1>"
+    end
+  end
+
+  test "renders not found for unknown article" do
+    assert response(Client.article("unknown_article"), 404) =~ "Page not found"
   end
 end
