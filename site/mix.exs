@@ -5,14 +5,21 @@ defmodule Erlangelist.Mixfile do
     [
       app: :erlangelist,
       version: "0.0.1",
-      elixir: "~> 1.4",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       preferred_cli_env: [release: :prod],
-      aliases: [release: ["erlangelist.compile_assets", "phx.digest", "release"]],
-      dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]]
+      aliases: [
+        release: ["cmd npm run deploy --prefix ./assets", "phx.digest", "release"]
+      ],
+      dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]],
+      releases: [
+        erlangelist: [
+          include_executables_for: [:unix]
+        ]
+      ]
     ]
   end
 
@@ -40,7 +47,6 @@ defmodule Erlangelist.Mixfile do
       {:parent, "~> 0.9"},
       {:site_encrypt, github: "sasa1977/site_encrypt"},
       {:deep_merge, "~> 1.0"},
-      {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:dialyxir, "~> 1.0", runtime: false},
       {:sshex, "~> 2.0", runtime: false},
