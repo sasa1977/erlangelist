@@ -2,8 +2,17 @@ defmodule ErlangelistWeb.Site do
   @behaviour SiteEncrypt
   import EnvHelper
 
-  @doc false
-  def child_spec(_), do: SiteEncrypt.Phoenix.child_spec({__MODULE__, ErlangelistWeb.Endpoint})
+  def start_link do
+    Supervisor.start_link(
+      [
+        ErlangelistWeb.Telemetry,
+        ErlangelistWeb.DashboardEndpoint,
+        {SiteEncrypt.Phoenix, {__MODULE__, ErlangelistWeb.Endpoint}}
+      ],
+      strategy: :one_for_one,
+      name: __MODULE__
+    )
+  end
 
   def https_keys(), do: SiteEncrypt.https_keys(config())
 
@@ -40,5 +49,14 @@ defmodule ErlangelistWeb.Site do
       "" -> default
       value -> value
     end
+  end
+
+  @doc false
+  def child_spec(_) do
+    %{
+      id: __MODULE__,
+      type: :supervisor,
+      start: {__MODULE__, :start_link, []}
+    }
   end
 end
