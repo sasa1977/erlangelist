@@ -24,7 +24,7 @@ defmodule ErlangelistWeb.EndpointConfig do
         [
           url: [host: "localhost"],
           http: [transport_options: [num_acceptors: 5]],
-          http: [transport_options: [num_acceptors: 5]],
+          https: [transport_options: [num_acceptors: 5]],
           debug_errors: true,
           check_origin: false,
           watchers: [
