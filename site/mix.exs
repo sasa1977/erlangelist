@@ -37,14 +37,14 @@ defmodule Erlangelist.Mixfile do
       {:earmark, "~> 1.4"},
       {:makeup_elixir, "~> 0.14"},
       {:makeup_erlang, "~> 0.1"},
-      {:parent, "~> 0.4"},
+      {:parent, "~> 0.9"},
       {:site_encrypt, github: "sasa1977/site_encrypt"},
-      {:deep_merge, "~> 0.1"},
+      {:deep_merge, "~> 1.0"},
       {:distillery, "~> 1.5", runtime: false},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:dialyxir, "~> 0.5.0", runtime: false, only: [:dev, :test]},
+      {:dialyxir, "~> 1.0", runtime: false},
       {:sshex, "~> 2.0", runtime: false},
-      {:table_rex, "~> 2.0", runtime: false},
+      {:table_rex, "~> 3.0", runtime: false},
       {:jason, "~> 1.0"}
     ]
   end
