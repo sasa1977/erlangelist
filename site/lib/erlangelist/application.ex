@@ -8,6 +8,8 @@ defmodule Erlangelist.Application do
       [
         Erlangelist.UsageStats,
         ErlangelistWeb.Site,
+        ErlangelistWeb.Telemetry,
+        ErlangelistWeb.DashboardEndpoint,
         {Phoenix.PubSub, name: Erlangelist.PubSub}
       ]
       |> Enum.reject(&is_nil/1),

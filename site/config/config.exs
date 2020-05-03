@@ -7,6 +7,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :erlangelist, ErlangelistWeb.Endpoint, []
+config :erlangelist, ErlangelistWeb.DashboardEndpoint, []
 
 if Mix.env() == :dev do
   config :logger, level: :debug, console: [format: "[$level] $metadata $message\n"]

@@ -27,7 +27,7 @@ defmodule Erlangelist.Mixfile do
   def application do
     [
       mod: {Erlangelist.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -53,7 +53,10 @@ defmodule Erlangelist.Mixfile do
       {:sshex, "~> 2.0", runtime: false},
       {:table_rex, "~> 3.0", runtime: false},
       {:jason, "~> 1.0"},
-      {:mox, "~> 0.5", only: :test}
+      {:mox, "~> 0.5", only: :test},
+      {:phoenix_live_dashboard, "~> 0.2"},
+      {:telemetry_poller, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.4"}
     ]
   end
 end
