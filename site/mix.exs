@@ -17,7 +17,8 @@ defmodule Erlangelist.Mixfile do
       dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]],
       releases: [
         erlangelist: [
-          include_executables_for: [:unix]
+          include_executables_for: [:unix],
+          steps: [:assemble, :tar]
         ]
       ]
     ]

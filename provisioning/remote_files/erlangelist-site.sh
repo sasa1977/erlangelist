@@ -31,9 +31,9 @@ else
 fi
 
 if [ "$1" == "console" ]; then
-  ARG="console"
+  ARG="start_iex"
 else
-  ARG="foreground"
+  ARG="start"
 fi
 
 START_ARGS="
