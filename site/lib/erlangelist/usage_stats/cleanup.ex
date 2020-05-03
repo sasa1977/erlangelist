@@ -4,7 +4,6 @@ defmodule Erlangelist.UsageStats.Cleanup do
 
   @max_files 7
   @cleanup_interval env_specific(prod: :timer.hours(1), else: :timer.seconds(30))
-  @cleanup_timeout @cleanup_interval - :timer.seconds(5)
 
   defp cleanup() do
     with {:ok, files} <- File.ls(UsageStats.folder()) do
@@ -24,8 +23,7 @@ defmodule Erlangelist.UsageStats.Cleanup do
       run: &cleanup/0,
       initial_delay: :timer.seconds(5),
       every: @cleanup_interval,
-      timeout: @cleanup_timeout,
-      overlap?: false
+      on_overlap: :stop_previous
     )
   end
 end
