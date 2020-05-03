@@ -6,12 +6,18 @@ defmodule Erlangelist.UsageStats.Server do
 
   def report(category, subcategory), do: GenServer.cast(__MODULE__, {:report, category, subcategory})
 
+  def sync, do: GenServer.call(__MODULE__, :sync, :infinity)
+
   @impl GenServer
   def init(_), do: {:ok, read_stats()}
 
   @impl GenServer
   def handle_cast({:report, category, subcategory}, stats),
     do: {:noreply, stats |> inc(category, subcategory) |> maybe_start_writer()}
+
+  @impl GenServer
+  def handle_call(:sync, from, stats),
+    do: {:noreply, update_in(stats.awaiting_flush, &[from | &1]) |> maybe_start_writer()}
 
   @impl Parent.GenServer
   def handle_child_terminated(UsageStats.Writer, changes, _pid, reason, stats) do
@@ -20,28 +26,39 @@ defmodule Erlangelist.UsageStats.Server do
   end
 
   defp maybe_start_writer(stats) do
-    if not Enum.empty?(stats.changes) and not Parent.GenServer.child?(UsageStats.Writer) do
-      Parent.GenServer.start_child({UsageStats.Writer, changed_data(stats)})
-      %{stats | changes: MapSet.new()}
-    else
-      stats
+    cond do
+      Parent.GenServer.child?(UsageStats.Writer) ->
+        stats
+
+      not Enum.empty?(stats.changes) ->
+        Parent.GenServer.start_child({UsageStats.Writer, changed_data(stats)})
+        %{stats | changes: MapSet.new()}
+
+      true ->
+        Enum.each(stats.awaiting_flush, &GenServer.reply(&1, :ok))
+        %{stats | awaiting_flush: []}
     end
   end
 
   defp read_stats() do
     today = Date.utc_today()
-    %{changes: MapSet.new(), data: %{today => UsageStats.Writer.stored_data(today)}}
+
+    %{
+      changes: MapSet.new(),
+      data: %{today => UsageStats.Writer.stored_data(today)},
+      awaiting_flush: []
+    }
   end
 
   defp clear_old_stats(stats) do
     in_memory_dates = MapSet.new(Map.keys(stats.data))
-    dates_to_keep = MapSet.put(stats.changes, Date.utc_today())
+    dates_to_keep = MapSet.put(stats.changes, Erlangelist.Date.utc_today())
     dates_to_remove = MapSet.to_list(MapSet.difference(in_memory_dates, dates_to_keep))
     update_in(stats.data, &Map.drop(&1, dates_to_remove))
   end
 
   defp inc(stats, category, subcategory) do
-    today = Date.utc_today()
+    today = Erlangelist.Date.utc_today()
     %{stats | data: do_inc(stats.data, [today, category, subcategory]), changes: MapSet.put(stats.changes, today)}
   end
 

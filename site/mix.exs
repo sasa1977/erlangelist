@@ -52,7 +52,8 @@ defmodule Erlangelist.Mixfile do
       {:dialyxir, "~> 1.0", runtime: false},
       {:sshex, "~> 2.0", runtime: false},
       {:table_rex, "~> 3.0", runtime: false},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:mox, "~> 0.5", only: :test}
     ]
   end
 end
