@@ -12,7 +12,7 @@ defmodule ErlangelistWeb.Endpoint do
   plug Plug.Logger, log: :debug
   plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Site
 
-  unless Mix.env() == :test, do: plug(ErlangelistWeb.ForceSSL)
+  plug ErlangelistWeb.ForceSSL
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

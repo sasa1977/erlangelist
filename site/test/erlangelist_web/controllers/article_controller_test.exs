@@ -4,10 +4,12 @@ defmodule Erlangelist.ArticleControllerTest do
   alias Erlangelist.Article
   alias ErlangelistTest.Client
 
+  test "http requests are redirected to https" do
+    assert redirected_to(Client.get("/some/path", scheme: :http), 301) == "https://localhost/some/path"
+  end
+
   test "root page shows the most recent article" do
-    Client.set_today(Date.utc_today())
     assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().long_title)}</h1>"
-    Erlangelist.UsageStats.sync()
   end
 
   for article <- Article.all(), article.has_content? do
