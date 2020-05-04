@@ -50,6 +50,7 @@ defmodule Erlangelist.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix, "~> 1.5.0"},
+      {:provider, github: "verybigthings/provider"},
       {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
       {:site_encrypt, github: "sasa1977/site_encrypt"},

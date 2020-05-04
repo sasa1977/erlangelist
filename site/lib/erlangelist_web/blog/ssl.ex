@@ -8,11 +8,11 @@ defmodule ErlangelistWeb.Blog.SSL do
   @impl SiteEncrypt
   def config() do
     %{
-      run_client?: unquote(not (Mix.env() == :test)),
-      ca_url: get_os_env("CA_URL", local_acme_server()),
-      domain: domain(),
+      run_client?: Erlangelist.Config.certify(),
+      ca_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
+      domain: Erlangelist.Config.domain(),
       extra_domains: extra_domains(),
-      email: get_os_env("EMAIL", "mail@foo.bar"),
+      email: Erlangelist.Config.email(),
       base_folder: certbot_folder(),
       cert_folder: cert_folder(),
       renew_interval: :timer.hours(6),
@@ -25,14 +25,5 @@ defmodule ErlangelistWeb.Blog.SSL do
 
   defp local_acme_server(), do: {:local_acme_server, %{adapter: Plug.Adapters.Cowboy, port: 20081}}
 
-  defp domain(), do: get_os_env("DOMAIN", "localhost")
-  defp extra_domains(), do: get_os_env("EXTRA_DOMAINS", "") |> String.split(",") |> Enum.reject(&(&1 == ""))
-
-  defp get_os_env(name, default) do
-    case System.get_env(name) do
-      nil -> default
-      "" -> default
-      value -> value
-    end
-  end
+  defp extra_domains(), do: Erlangelist.Config.extra_domains() |> String.split(",") |> Enum.reject(&(&1 == ""))
 end
