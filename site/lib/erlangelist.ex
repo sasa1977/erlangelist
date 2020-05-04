@@ -7,6 +7,7 @@ defmodule Erlangelist do
         Erlangelist.UsageStats,
         {Phoenix.PubSub, name: Erlangelist.PubSub}
       ],
+      name: __MODULE__,
       strategy: :one_for_one
     )
   end
