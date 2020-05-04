@@ -1,5 +1,7 @@
 defmodule Erlangelist do
   def start_link do
+    Erlangelist.Backup.resync(Erlangelist.UsageStats.folder())
+
     Supervisor.start_link(
       [
         Erlangelist.UsageStats,
