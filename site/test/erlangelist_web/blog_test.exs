@@ -1,4 +1,4 @@
-defmodule Erlangelist.ArticleControllerTest do
+defmodule ErlangelistWeb.BlogTest do
   use ExUnit.Case, async: true
   import Phoenix.ConnTest
   alias Erlangelist.Article
@@ -21,5 +21,13 @@ defmodule Erlangelist.ArticleControllerTest do
 
   test "renders not found for unknown article" do
     assert response(Client.article("unknown_article"), 404) =~ "Page not found"
+  end
+
+  test "serves rss feed" do
+    response = response(Client.rss_feed(), 200)
+
+    for article <- Article.all(), article.has_content? do
+      assert response =~ "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
+    end
   end
 end

@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.ForceSSL do
+defmodule ErlangelistWeb.Plug.ForceSSL do
   import EnvHelper
   @behaviour Plug
 
@@ -11,7 +11,7 @@ defmodule ErlangelistWeb.ForceSSL do
 
   defp https_host() do
     to_string([
-      Keyword.fetch!(ErlangelistWeb.Endpoint.config(:url), :host),
+      Keyword.fetch!(ErlangelistWeb.Blog.Endpoint.config(:url), :host),
       env_specific(dev: ":20443", else: "")
     ])
   end

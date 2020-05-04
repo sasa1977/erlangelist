@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.MovePermanently do
+defmodule ErlangelistWeb.Plug.MovePermanently do
   @behaviour Plug
 
   @impl Plug

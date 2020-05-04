@@ -1,9 +1,12 @@
-defmodule ErlangelistWeb.ArticleController do
-  use ErlangelistWeb, :controller
-
+defmodule ErlangelistWeb.Blog.Controller do
+  use Phoenix.Controller, namespace: ErlangelistWeb
+  import Plug.Conn
   alias Erlangelist.Article
+  alias ErlangelistWeb.Blog.View
 
-  def most_recent(conn, _params) do
+  plug :put_layout, {View, "layout.html"}
+
+  def most_recent_article(conn, _params) do
     render_article(conn, Article.most_recent())
   end
 
@@ -21,21 +24,24 @@ defmodule ErlangelistWeb.ArticleController do
 
   def article(conn, _params), do: not_found(conn)
 
-  def article_from_old_path(%{private: %{article: article}} = conn, _params) do
+  def privacy_policy(conn, _params), do: render(conn, "privacy.html")
+
+  def rss(conn, _params) do
     conn
     |> put_layout(false)
-    |> redirect(external: "/article/#{article.id}")
+    |> put_resp_content_type("application/xml")
+    |> render("rss.xml")
+  end
+
+  def not_found(conn, _opts \\ nil) do
+    conn
+    |> put_view(View)
+    |> put_status(404)
+    |> render("404.html")
   end
 
   defp render_article(conn, article) do
     Erlangelist.UsageStats.report(:article, article.id)
     render(conn, "article.html", %{article: article})
-  end
-
-  def not_found(conn, _opts \\ nil) do
-    conn
-    |> put_view(ErlangelistWeb.ErrorView)
-    |> put_status(404)
-    |> render("404.html")
   end
 end

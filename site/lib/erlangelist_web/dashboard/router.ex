@@ -1,5 +1,6 @@
 defmodule ErlangelistWeb.Dashboard.Router do
-  use ErlangelistWeb, :router
+  use Phoenix.Router
+  import Phoenix.Controller
   import Phoenix.LiveDashboard.Router
 
   pipeline :browser do

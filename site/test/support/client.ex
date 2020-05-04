@@ -1,6 +1,6 @@
 defmodule ErlangelistTest.Client do
   require Phoenix.ConnTest
-  @endpoint ErlangelistWeb.Endpoint
+  @endpoint ErlangelistWeb.Blog.Endpoint
 
   def get(path, opts \\ []) do
     set_today(Keyword.get(opts, :accessed_at, Date.utc_today()))

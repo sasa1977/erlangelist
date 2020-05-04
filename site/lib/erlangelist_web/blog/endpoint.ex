@@ -1,5 +1,34 @@
-defmodule ErlangelistWeb.EndpointConfig do
-  def config(phoenix_defaults) do
+defmodule ErlangelistWeb.Blog.Endpoint do
+  use Phoenix.Endpoint, otp_app: :erlangelist
+
+  plug Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt)
+
+  if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
+    plug Phoenix.CodeReloader
+  end
+
+  plug Plug.Logger, log: :debug
+  plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Blog.SSL
+
+  plug ErlangelistWeb.Plug.ForceSSL
+
+  plug Plug.Parsers,
+    parsers: [:urlencoded, :multipart, :json],
+    pass: ["*/*"],
+    json_decoder: Jason
+
+  plug Plug.MethodOverride
+  plug Plug.Head
+
+  plug ErlangelistWeb.Plug.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com"
+
+  plug ErlangelistWeb.Blog.Router
+
+  def init(_key, phoenix_defaults), do: {:ok, settings(phoenix_defaults)}
+
+  defp settings(phoenix_defaults) do
     phoenix_defaults
     |> DeepMerge.deep_merge(common_config())
     |> DeepMerge.deep_merge(env_specific_config())
@@ -8,8 +37,8 @@ defmodule ErlangelistWeb.EndpointConfig do
   defp common_config() do
     [
       http: [compress: true, port: 20080],
-      https: [compress: true, port: 20443] ++ ErlangelistWeb.Site.https_keys(),
-      render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
+      https: [compress: true, port: 20443] ++ ErlangelistWeb.Blog.SSL.keys(),
+      render_errors: [view: ErlangelistWeb.Blog.View, accepts: ~w(html json)],
       pubsub_server: Erlangelist.PubSub
     ]
   end
@@ -17,7 +46,7 @@ defmodule ErlangelistWeb.EndpointConfig do
   case Mix.env() do
     :dev ->
       # need to determine assets path at compile time
-      @assets_path Path.expand("../../assets", __DIR__)
+      @assets_path Path.expand("../../../assets", __DIR__)
       unless File.exists?(@assets_path), do: Mix.raise("Assets not found in #{@assets_path}")
 
       defp env_specific_config() do
