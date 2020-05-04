@@ -1,6 +1,5 @@
 defmodule ErlangelistWeb.Blog.SSL do
   @behaviour SiteEncrypt
-  import EnvHelper
 
   def keys(), do: SiteEncrypt.https_keys(config())
   def certbot_folder(), do: Erlangelist.db_path("certbot")
@@ -9,7 +8,7 @@ defmodule ErlangelistWeb.Blog.SSL do
   @impl SiteEncrypt
   def config() do
     %{
-      run_client?: env_specific(test: false, else: true),
+      run_client?: unquote(not (Mix.env() == :test)),
       ca_url: get_os_env("CA_URL", local_acme_server()),
       domain: domain(),
       extra_domains: extra_domains(),
