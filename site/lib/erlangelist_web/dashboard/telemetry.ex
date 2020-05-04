@@ -19,5 +19,10 @@ defmodule ErlangelistWeb.Dashboard.Telemetry do
   end
 
   @doc false
-  def child_spec(_arg), do: :telemetry_poller.child_spec(measurements: [], period: 10_000)
+  def child_spec(_arg) do
+    Supervisor.child_spec(
+      {:telemetry_poller, measurements: [], period: :timer.seconds(10)},
+      id: __MODULE__
+    )
+  end
 end
