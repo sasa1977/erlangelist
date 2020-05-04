@@ -12,7 +12,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   plug Plug.Logger, log: :debug
   plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Blog.SSL
 
-  plug ErlangelistWeb.Plug.ForceSSL
+  plug ErlangelistWeb.Plug.ForceSSL, __MODULE__
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

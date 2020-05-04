@@ -1,18 +1,16 @@
 defmodule ErlangelistWeb.Plug.ForceSSL do
-  import EnvHelper
   @behaviour Plug
 
   @impl Plug
-  def init(opts), do: opts
+  def init(endpoint), do: endpoint
 
   @impl Plug
-  def call(%{scheme: :https} = conn, _opts), do: conn
-  def call(conn, _opts), do: Plug.SSL.call(conn, Plug.SSL.init(host: https_host(), log: :debug, exclude: []))
+  def call(%{scheme: :https} = conn, _endpoint), do: conn
+  def call(conn, endpoint), do: Plug.SSL.call(conn, Plug.SSL.init(host: https_host(endpoint), log: :debug, exclude: []))
 
-  defp https_host() do
-    to_string([
-      Keyword.fetch!(ErlangelistWeb.Blog.Endpoint.config(:url), :host),
-      env_specific(dev: ":20443", else: "")
-    ])
+  defp https_host(endpoint) do
+    host = Keyword.fetch!(endpoint.config(:url), :host)
+    port = Keyword.get(endpoint.config(:https), :port, 443)
+    "#{host}:#{port}"
   end
 end
