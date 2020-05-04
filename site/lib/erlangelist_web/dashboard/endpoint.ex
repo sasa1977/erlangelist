@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.DashboardEndpoint do
+defmodule ErlangelistWeb.Dashboard.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
 
   socket "/live", Phoenix.LiveView.Socket
@@ -7,7 +7,7 @@ defmodule ErlangelistWeb.DashboardEndpoint do
     param_key: "request_logger",
     cookie_key: "request_logger"
 
-  plug ErlangelistWeb.DashboardEndpoint.Router
+  plug ErlangelistWeb.Dashboard.Router
 
   def init(_key, phoenix_defaults) do
     {:ok,

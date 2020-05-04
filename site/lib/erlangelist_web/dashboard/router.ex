@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.DashboardEndpoint.Router do
+defmodule ErlangelistWeb.Dashboard.Router do
   use ErlangelistWeb, :router
   import Phoenix.LiveDashboard.Router
 
@@ -7,5 +7,5 @@ defmodule ErlangelistWeb.DashboardEndpoint.Router do
     plug :put_secure_browser_headers
   end
 
-  live_dashboard "/", metrics: ErlangelistWeb.Telemetry
+  live_dashboard "/", metrics: ErlangelistWeb.Dashboard.Telemetry
 end

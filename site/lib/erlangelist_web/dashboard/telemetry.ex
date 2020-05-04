@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.Telemetry do
+defmodule ErlangelistWeb.Dashboard.Telemetry do
   import Telemetry.Metrics
 
   def metrics do
