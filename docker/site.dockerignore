@@ -2,5 +2,19 @@
 *
 
 # whitelist only needed stuff, to reduce docker context
-!tmp
+!site
+!site_encrypt
+
+# blacklist things in site
+site/_build
+site/deps
+site/assets/node_modules
+site/test
+site/priv/db/
+
+# blacklist things in site_encrypt
+site_encrypt/_build
+site_encrypt/deps
+site_encrypt/test
+
 !docker/site

@@ -7,7 +7,8 @@ function image_id {
 }
 
 function build_versioned_image {
-  image_name="$1"
+  target="$1"
+  image_name="erlangelist/$1"
   docker_file="docker/$2"
   dockerignore_file="docker/${2%.*}.dockerignore"
 
@@ -30,7 +31,7 @@ function build_versioned_image {
 
   if [ -f .dockerignore ]; then rm .dockerignore; fi
   if [ -f $dockerignore_file ]; then cp -rp $dockerignore_file .dockerignore; fi
-  docker build -f="$docker_file" -t "$tmp_repository_name:$tmp_image_version" . \
+  docker build -f="$docker_file" --target $target -t "$tmp_repository_name:$tmp_image_version" . \
    || {
     exit_code="$?"
     if [ -f .dockerignore ]; then rm .dockerignore; fi
@@ -71,20 +72,7 @@ function build_versioned_image {
   done
 }
 
-function copy_release {
-  mkdir -p tmp
-  rm -rf tmp/* || true
-  id=$(docker create "erlangelist/site-builder:latest" /bin/sh)
-  docker cp $id:/opt/app/site/_build/prod/erlangelist-0.0.1.tar.gz ./tmp/erlangelist.tar.gz
-  docker stop $id > /dev/null
-  docker rm -v $id > /dev/null
-
-  cd tmp && tar -xzf erlangelist.tar.gz && cd ..
-  rm tmp/erlangelist.tar.gz
-}
 
 cd $(dirname ${BASH_SOURCE[0]})/..
-
-build_versioned_image erlangelist/site-builder site-builder.dockerfile
-copy_release
-build_versioned_image erlangelist/site site.dockerfile
+build_versioned_image builder site.dockerfile
+build_versioned_image site site.dockerfile

@@ -1,11 +1,25 @@
-FROM alpine:3.11
+FROM bitwalker/alpine-elixir-phoenix:1.10.2 as builder
+
+ENV MIX_ENV=prod
+
+ADD site/mix.exs site/mix.lock ./site/
+RUN cd site && mix do deps.get, deps.compile
+
+ADD site/assets/package.json site/assets/
+RUN cd site/assets && (npm install || (sleep 1 && npm install) || (sleep 1 && npm install))
+
+ADD site ./site
+RUN cd site && mix release
+
+
+FROM alpine:3.11 as site
 
 RUN \
   echo 'http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
   echo 'http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
   apk --no-cache upgrade && apk add --no-cache openssl bash certbot
 
-COPY tmp /erlangelist/
+COPY --from=builder /opt/app/site/_build/prod/rel/erlangelist /erlangelist
 
 VOLUME /erlangelist/lib/erlangelist-0.0.1/priv/db
 VOLUME /erlangelist/lib/erlangelist-0.0.1/priv/backup
