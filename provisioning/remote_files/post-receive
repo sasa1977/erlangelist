@@ -19,15 +19,6 @@ function restart_if_needed {
   fi
 }
 
-
-echo "starting the backup site"
-sudo systemctl start erlangelist-backup-site
-
-wait_for_site $(($ERLANGELIST_SITE_HTTP_PORT + 500))
-
 echo "restarting the main site"
 sudo systemctl restart erlangelist-site
 wait_for_site $(($ERLANGELIST_SITE_HTTP_PORT))
-
-echo "stopping the backup site"
-sudo systemctl stop erlangelist-backup-site
