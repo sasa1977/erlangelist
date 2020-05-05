@@ -8,7 +8,7 @@ BACKUP_HTTP_PORT=$(($ERLANGELIST_SITE_HTTP_PORT + 500))
 BACKUP_HTTPS_PORT=$(($ERLANGELIST_SITE_HTTPS_PORT + 500))
 case "$1" in
   start)
-    $(dirname ${BASH_SOURCE[0]})/erlangelist-site.sh backup start &
+    $(dirname ${BASH_SOURCE[0]})/erlangelist-site.sh backup startf &
     wait_for_site $BACKUP_HTTP_PORT
 
     # Temporary redirect to the backup site

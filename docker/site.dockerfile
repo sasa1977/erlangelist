@@ -9,4 +9,5 @@ COPY tmp /erlangelist/
 
 VOLUME /erlangelist/lib/erlangelist-0.0.1/priv/db
 VOLUME /erlangelist/lib/erlangelist-0.0.1/priv/backup
+WORKDIR /erlangelist
 ENTRYPOINT ["/erlangelist/bin/erlangelist"]

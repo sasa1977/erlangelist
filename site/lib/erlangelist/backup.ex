@@ -24,7 +24,7 @@ defmodule Erlangelist.Backup do
 
     if File.exists?(backup_path) do
       Logger.info("restoring #{backup_path}")
-      :erl_tar.extract(to_charlist(backup_path), [:compressed])
+      :erl_tar.extract(to_charlist(backup_path), [:compressed, cwd: to_char_list(File.cwd!())])
     end
   end
 
