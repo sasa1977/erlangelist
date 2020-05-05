@@ -49,5 +49,6 @@ START_ARGS="
   -e DOMAIN="$DOMAIN"
   -e EXTRA_DOMAINS="$EXTRA_DOMAINS"
   -e EMAIL="$EMAIL"
+  -e CERTIFY="${CERTIFY:-true}"
   erlangelist/site:latest $ARG
 " container_ctl $CONTAINER_NAME "$@"

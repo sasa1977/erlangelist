@@ -18,7 +18,7 @@ case "$1" in
     iptables -t mangle -A PREROUTING -i $ERLANGELIST_NETWORK_IF -p tcp --dport $BACKUP_HTTPS_PORT -j MARK --set-mark 1
     iptables -I INPUT 1 -i $ERLANGELIST_NETWORK_IF -m mark --mark 1 -p tcp --dport $BACKUP_HTTPS_PORT -j LOG_AND_REJECT
 
-    /opt/erlangelist/erlangelist-site-firewall.sh start erlangelist-backup-site
+    /opt/erlangelist/erlangelist-site-firewall.sh startf erlangelist-backup-site
     wait
     ;;
 
