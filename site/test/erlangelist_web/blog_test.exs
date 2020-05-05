@@ -5,7 +5,7 @@ defmodule ErlangelistWeb.BlogTest do
   alias ErlangelistTest.Client
 
   test "http requests are redirected to https" do
-    assert redirected_to(Client.get("/some/path", scheme: :http), 301) == "https://localhost:20443/some/path"
+    assert redirected_to(Client.get("/some/path", scheme: :http), 301) == "https://localhost/some/path"
   end
 
   test "root page shows the most recent article" do

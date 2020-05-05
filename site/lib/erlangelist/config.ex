@@ -7,6 +7,7 @@ defmodule Erlangelist.Config do
       {:ca_url, default: "localhost"},
       {:email, default: "mail@foo.bar"},
       {:domain, default: "localhost"},
-      {:extra_domains, default: "localhost"}
+      {:extra_domains, default: "localhost"},
+      {:blog_ssl_port, type: :integer, default: 443, dev: 20443, test: 443}
     ]
 end

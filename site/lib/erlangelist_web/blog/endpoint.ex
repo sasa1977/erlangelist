@@ -1,4 +1,6 @@
 defmodule ErlangelistWeb.Blog.Endpoint do
+  require Erlangelist.Config
+
   use Phoenix.Endpoint, otp_app: :erlangelist
 
   plug Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt)
@@ -12,7 +14,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   plug Plug.Logger, log: :debug
   plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Blog.SSL
 
-  plug ErlangelistWeb.Plug.ForceSSL, __MODULE__
+  plug ErlangelistWeb.Plug.ForceSSL, endpoint: __MODULE__, port: Erlangelist.Config.blog_ssl_port()
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
