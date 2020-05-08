@@ -14,7 +14,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   plug Plug.Logger, log: :debug
   plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Blog.SSL
 
-  plug ErlangelistWeb.Plug.ForceSSL, endpoint: __MODULE__, port: Erlangelist.Config.blog_ssl_port()
+  plug :force_ssl
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -28,6 +28,16 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
   plug ErlangelistWeb.Blog.Router
 
+  defp force_ssl(conn, _opts) do
+    host =
+      case Erlangelist.Config.blog_ssl_port() do
+        443 -> Erlangelist.Config.blog_host()
+        port -> "#{Erlangelist.Config.blog_host()}:#{port}"
+      end
+
+    Plug.SSL.call(conn, Plug.SSL.init(host: host, log: :debug, exclude: []))
+  end
+
   def init(_key, phoenix_defaults), do: {:ok, settings(phoenix_defaults)}
 
   defp settings(phoenix_defaults) do
@@ -38,8 +48,17 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
   defp common_config() do
     [
+      url: [scheme: "https", host: Erlangelist.Config.blog_host(), port: Erlangelist.Config.blog_ssl_port()],
       http: [compress: true, port: 20080],
-      https: [compress: true, port: 20443] ++ ErlangelistWeb.Blog.SSL.keys(),
+      https:
+        [
+          compress: true,
+          port: 20443,
+          cipher_suite: :strong,
+          secure_renegotiate: true,
+          reuse_sessions: true,
+          log_level: :warning
+        ] ++ ErlangelistWeb.Blog.SSL.keys(),
       render_errors: [view: ErlangelistWeb.Blog.View, accepts: ~w(html json)],
       pubsub_server: Erlangelist.PubSub
     ]
@@ -53,7 +72,6 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
       defp env_specific_config() do
         [
-          url: [host: "localhost"],
           http: [transport_options: [num_acceptors: 5]],
           https: [transport_options: [num_acceptors: 5]],
           debug_errors: true,
@@ -79,12 +97,11 @@ defmodule ErlangelistWeb.Blog.Endpoint do
       end
 
     :test ->
-      defp env_specific_config(), do: [url: [host: "localhost"], server: false]
+      defp env_specific_config(), do: [server: false]
 
     :prod ->
       defp env_specific_config() do
         [
-          url: [host: "www.theerlangelist.com", port: 80],
           http: [transport_options: [max_connections: 1000]],
           https: [transport_options: [max_connections: 1000]],
           cache_static_manifest: "priv/static/cache_manifest.json"

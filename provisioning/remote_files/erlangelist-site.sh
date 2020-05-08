@@ -50,6 +50,7 @@ START_ARGS="
   -e EXTRA_DOMAINS="$EXTRA_DOMAINS"
   -e EMAIL="$EMAIL"
   -e CERTIFY="${CERTIFY:-true}"
+  -e BLOG_HOST="${BLOG_HOST:-www.theerlangelist.com}"
   -e BLOG_SSL_PORT=443
   erlangelist/site:latest $ARG
 " container_ctl $CONTAINER_NAME "$@"
