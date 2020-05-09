@@ -3,7 +3,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
   use Phoenix.Endpoint, otp_app: :erlangelist
 
-  plug Plug.Static, at: "/", from: :erlangelist, gzip: false, only: ~w(css fonts images js favicon.ico robots.txt)
+  plug Plug.Static, at: "/", from: :erlangelist, only: ~w(css fonts images js favicon.ico robots.txt)
 
   if code_reloading? do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
@@ -97,7 +97,13 @@ defmodule ErlangelistWeb.Blog.Endpoint do
       end
 
     :test ->
-      defp env_specific_config(), do: [server: false]
+      defp env_specific_config() do
+        [
+          server: true,
+          http: [port: 21080],
+          https: [port: 21443]
+        ]
+      end
 
     :prod ->
       defp env_specific_config() do

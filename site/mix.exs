@@ -10,9 +10,11 @@ defmodule Erlangelist.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      preferred_cli_env: [release: :prod],
+      preferred_cli_env: [release: :prod, test_all: :test],
       aliases: [
-        release: ["cmd npm run deploy --prefix ./assets", "phx.digest", "release"]
+        release: ["cmd npm run deploy --prefix ./assets", "phx.digest", "release"],
+        test: ["erlangelist.clean", "test"],
+        test_all: ["test --include certification"]
       ],
       dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]],
       releases: [

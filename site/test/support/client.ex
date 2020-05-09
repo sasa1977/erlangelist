@@ -3,8 +3,15 @@ defmodule ErlangelistTest.Client do
   @endpoint ErlangelistWeb.Blog.Endpoint
 
   def get(path, opts \\ []) do
+    uri =
+      path
+      |> URI.parse()
+      |> Map.update!(:host, &(&1 || "localhost"))
+      |> Map.update!(:scheme, &(&1 || "https"))
+      |> URI.to_string()
+
     set_today(Keyword.get(opts, :accessed_at, Date.utc_today()))
-    Phoenix.ConnTest.get(Phoenix.ConnTest.build_conn(), "#{Keyword.get(opts, :scheme, :https)}://localhost#{path}")
+    Phoenix.ConnTest.get(Phoenix.ConnTest.build_conn(), uri)
   end
 
   def article(id, opts \\ []) do

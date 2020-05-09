@@ -11,19 +11,21 @@ defmodule Erlangelist.UsageStatsTest do
     today = Date.utc_today()
     yesterday = Date.add(today, -1)
 
-    desired_stats = %{
-      yesterday => %{article: %{periodic: 1, macros_1: 3}},
-      today => %{article: %{periodic: 2, why_elixir: 1}}
-    }
+    Client.article(:periodic, accessed_at: yesterday)
+    Client.article(:macros_1, accessed_at: yesterday)
+    Client.article(:macros_1, accessed_at: yesterday)
+    Client.article(:macros_1, accessed_at: yesterday)
 
-    for {date, %{article: articles}} <- desired_stats,
-        {article, count} <- articles,
-        _ <- 1..count,
-        do: Client.article(article, accessed_at: date)
+    Client.article(:periodic, accessed_at: today)
+    Client.article(:periodic, accessed_at: today)
+    Client.article(:macros_2, accessed_at: today)
 
     UsageStats.sync()
 
-    assert UsageStats.all() == desired_stats
+    assert UsageStats.all() == %{
+             yesterday => %{article: %{periodic: 1, macros_1: 3}},
+             today => %{article: %{periodic: 2, macros_2: 1}}
+           }
   end
 
   test "periodically cleans up old stats" do
