@@ -1,7 +1,7 @@
 defmodule ErlangelistWeb.Blog.Endpoint do
-  require Erlangelist.Config
-
   use Phoenix.Endpoint, otp_app: :erlangelist
+  @behaviour SiteEncrypt
+  require Erlangelist.Config
 
   plug Plug.Static, at: "/", from: :erlangelist, only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -12,7 +12,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   end
 
   plug Plug.Logger, log: :debug
-  plug SiteEncrypt.AcmeChallenge, ErlangelistWeb.Blog.SSL
+  plug SiteEncrypt.AcmeChallenge, __MODULE__
 
   plug :force_ssl
 
@@ -38,6 +38,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
     Plug.SSL.call(conn, Plug.SSL.init(host: host, log: :debug, exclude: []))
   end
 
+  @impl Phoenix.Endpoint
   def init(_key, phoenix_defaults), do: {:ok, settings(phoenix_defaults)}
 
   defp settings(phoenix_defaults) do
@@ -58,7 +59,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
           secure_renegotiate: true,
           reuse_sessions: true,
           log_level: :warning
-        ] ++ ErlangelistWeb.Blog.SSL.keys(),
+        ] ++ SiteEncrypt.https_keys(__MODULE__),
       render_errors: [view: ErlangelistWeb.Blog.View, accepts: ~w(html json)],
       pubsub_server: Erlangelist.PubSub
     ]
@@ -114,4 +115,29 @@ defmodule ErlangelistWeb.Blog.Endpoint do
         ]
       end
   end
+
+  @impl SiteEncrypt
+  def certification do
+    [
+      ca_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
+      domain: Erlangelist.Config.domain(),
+      extra_domains: extra_domains(),
+      email: Erlangelist.Config.email(),
+      base_folder: certbot_folder(),
+      cert_folder: cert_folder(),
+      mode: if(Erlangelist.Config.certify(), do: :auto, else: :manual),
+      backup: Path.join(Erlangelist.Backup.folder(), "certbot.tgz")
+    ]
+  end
+
+  @impl SiteEncrypt
+  def handle_new_cert(), do: :ok
+
+  defp local_acme_server,
+    do: {:local_acme_server, port: unquote(if Mix.env() != :test, do: 20081, else: 21081)}
+
+  defp extra_domains, do: Erlangelist.Config.extra_domains() |> String.split(",") |> Enum.reject(&(&1 == ""))
+
+  def certbot_folder, do: Erlangelist.db_path("certbot")
+  def cert_folder, do: Erlangelist.priv_path("cert")
 end

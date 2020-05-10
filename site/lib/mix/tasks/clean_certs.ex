@@ -8,8 +8,8 @@ defmodule Mix.Tasks.Erlangelist.Clean do
   def run(_) do
     Enum.each(
       [
-        ErlangelistWeb.Blog.SSL.certbot_folder(),
-        ErlangelistWeb.Blog.SSL.cert_folder(),
+        ErlangelistWeb.Blog.Endpoint.certbot_folder(),
+        ErlangelistWeb.Blog.Endpoint.cert_folder(),
         Erlangelist.UsageStats.folder(),
         Erlangelist.Backup.folder()
       ],

@@ -48,7 +48,7 @@
   "poolboy": {:hex, :poolboy, "1.5.1", "6b46163901cfd0a1b43d692657ed9d7e599853b3b21b95ae5ae0a777cf9b6ca8", [:rebar], [], "hexpm"},
   "provider": {:git, "https://github.com/verybigthings/provider.git", "7cde3261a5633514f465421e3f89e333f35f43b5", []},
   "ranch": {:hex, :ranch, "1.7.1", "6b1fab51b49196860b733a49c07604465a47bdb78aa10c1c16a3d199f7f8c881", [:rebar3], [], "hexpm", "451d8527787df716d99dc36162fca05934915db0b6141bbdac2ea8d3c7afc7d7"},
-  "site_encrypt": {:git, "https://github.com/sasa1977/site_encrypt.git", "6262892b8220985e843aec831e04855809a96538", []},
+  "site_encrypt": {:git, "https://github.com/sasa1977/site_encrypt.git", "7d2a341f18965e32ec19958e5e4075af0b7724e6", []},
   "sshex": {:hex, :sshex, "2.2.1", "e1270b8345ea2a66a11c2bb7aed22c93e3bc7bc813486f4ffd0a980e4a898160", [:mix], [], "hexpm", "45b2caa5011dc850e70a2d77e3b62678a3e8bcb903eab6f3e7afb2ea897b13db"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], [], "hexpm"},
   "stream_data": {:hex, :stream_data, "0.4.2", "fa86b78c88ec4eaa482c0891350fcc23f19a79059a687760ddcf8680aac2799b", [:mix], [], "hexpm"},

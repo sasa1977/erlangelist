@@ -1,7 +1,5 @@
 defmodule ErlangelistWeb do
   def start_link do
-    Erlangelist.Backup.resync(ErlangelistWeb.Blog.SSL.certbot_folder())
-
     Supervisor.start_link(
       [ErlangelistWeb.Blog, ErlangelistWeb.Dashboard],
       strategy: :one_for_one,

@@ -28,16 +28,11 @@ defmodule ErlangelistWeb.BlogTest do
   end
 
   @tag :certification
-  test "certificate is renewed at midnight UTC" do
-    original_cert = get_cert()
-
-    log =
-      capture_log(fn ->
-        assert SiteEncrypt.Certifier.tick_at(ErlangelistWeb.Blog.Certifier, ~U[2020-01-01 00:00:00Z]) == :ok
-      end)
-
-    assert log =~ "Obtained new certificate for localhost"
-    assert get_cert() != original_cert
+  test "certification" do
+    SiteEncrypt.Phoenix.Test.verify_certification(ErlangelistWeb.Blog.Endpoint, [
+      ~U[2020-01-01 00:00:00Z],
+      ~U[2020-02-01 00:00:00Z]
+    ])
   end
 
   test "http requests are redirected to https" do
@@ -46,19 +41,5 @@ defmodule ErlangelistWeb.BlogTest do
 
   test "theerlangelist.com is redirected to www.theerlangelist.com" do
     assert redirected_to(Client.get("https://theerlangelist.com/"), 301) == "https://www.theerlangelist.com/"
-  end
-
-  defp get_cert do
-    {:ok, socket} = :ssl.connect('localhost', 21443, [], :timer.seconds(5))
-    {:ok, der_cert} = :ssl.peercert(socket)
-    :ssl.close(socket)
-    der_cert
-  end
-
-  defp capture_log(fun) do
-    Logger.configure(level: :debug)
-    ExUnit.CaptureLog.capture_log(fun)
-  after
-    Logger.configure(level: :warning)
   end
 end
