@@ -1,6 +1,23 @@
-FROM bitwalker/alpine-elixir-phoenix:1.10.2 as builder
+FROM elixir:1.10.3-alpine as builder
+
+RUN apk add --no-cache \
+      git \
+      make \
+      g++ \
+      wget \
+      curl \
+      inotify-tools \
+      nodejs \
+      nodejs-npm && \
+    mix local.hex --force && \
+    mix local.rebar --force && \
+    npm install npm -g --no-progress && \
+    update-ca-certificates --fresh && \
+    rm -rf /var/cache/apk/*
 
 ENV MIX_ENV=prod
+
+WORKDIR /opt/app
 
 ADD site/mix.exs site/mix.lock ./site/
 RUN cd site && mix do deps.get, deps.compile
