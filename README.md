@@ -1,3 +1,5 @@
+![Build Status](https://github.com/sasa1977/erlangelist/workflows/erlangelist/badge.svg)
+
 # Erlangelist
 
 This repository contains the complete source code of [The Erlangelist](http://theerlangelist.com) site:
