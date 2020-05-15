@@ -1,68 +1,23 @@
 defmodule ErlangelistWeb do
-  @moduledoc """
-  The entrypoint for defining your web interface, such
-  as controllers, views, channels and so on.
-
-  This can be used in your application as:
-
-      use ErlangelistWeb, :controller
-      use ErlangelistWeb, :view
-
-  The definitions below will be executed for every view,
-  controller, etc, so keep them short and clean, focused
-  on imports, uses and aliases.
-
-  Do NOT define functions inside the quoted expressions
-  below. Instead, define any helper function in modules
-  and import those modules here.
-  """
-
-  def controller do
-    quote do
-      use Phoenix.Controller, namespace: ErlangelistWeb
-      import Plug.Conn
-      import ErlangelistWeb.Router.Helpers
-      import ErlangelistWeb.Gettext
-    end
+  def start_link do
+    Supervisor.start_link(
+      [ErlangelistWeb.Blog, ErlangelistWeb.Dashboard],
+      strategy: :one_for_one,
+      name: __MODULE__
+    )
   end
 
-  def view do
-    quote do
-      use Phoenix.View,
-        root: "lib/erlangelist_web/templates",
-        namespace: ErlangelistWeb
-
-      # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 2, view_module: 1, get_csrf_token: 0]
-
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-
-      import ErlangelistWeb.Router.Helpers
-      import ErlangelistWeb.ErrorHelpers
-      import ErlangelistWeb.Gettext
-    end
+  def config_change(changed, removed) do
+    ErlangelistWeb.Blog.Endpoint.config_change(changed, removed)
+    ErlangelistWeb.Dashboard.Endpoint.config_change(changed, removed)
   end
 
-  def router do
-    quote do
-      use Phoenix.Router
-      import Plug.Conn
-      import Phoenix.Controller
-    end
-  end
-
-  def channel do
-    quote do
-      use Phoenix.Channel
-      import ErlangelistWeb.Gettext
-    end
-  end
-
-  @doc """
-  When used, dispatch to the appropriate controller/view/etc.
-  """
-  defmacro __using__(which) when is_atom(which) do
-    apply(__MODULE__, which, [])
+  @doc false
+  def child_spec(_) do
+    %{
+      id: __MODULE__,
+      type: :supervisor,
+      start: {__MODULE__, :start_link, []}
+    }
   end
 end

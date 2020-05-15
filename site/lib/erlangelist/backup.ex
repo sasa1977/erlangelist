@@ -1,10 +1,14 @@
 defmodule Erlangelist.Backup do
+  require Logger
+
   def folder(), do: Erlangelist.priv_path("backup")
 
-  def resync() do
+  def resync(folder) do
     File.mkdir_p!(folder())
-    backup_existing()
-    restore_missing()
+
+    if File.exists?(folder),
+      do: backup(folder),
+      else: restore(folder)
   end
 
   def backup(source_folder) do
@@ -15,21 +19,14 @@ defmodule Erlangelist.Backup do
     File.rm!(tmp_backup_path)
   end
 
-  defp backup_existing() do
-    [ErlangelistWeb.Site.certbot_folder(), Erlangelist.UsageStats.folder()]
-    |> Stream.filter(&File.exists?/1)
-    |> Enum.each(&backup/1)
-  end
+  defp restore(folder) do
+    backup_path = Path.join(folder(), "#{Path.basename(folder)}.tgz")
 
-  defp restore_missing() do
-    folder()
-    |> File.ls!()
-    |> Stream.filter(&(Path.extname(&1) == ".tgz"))
-    |> Stream.reject(&(&1 |> Path.basename(".tgz") |> Erlangelist.db_path() |> File.exists?()))
-    |> Enum.each(&restore/1)
+    if File.exists?(backup_path) do
+      Logger.info("restoring #{backup_path}")
+      :erl_tar.extract(to_charlist(backup_path), [:compressed, cwd: to_char_list(File.cwd!())])
+    end
   end
-
-  defp restore(backup), do: :erl_tar.extract(to_charlist(Path.join(folder(), backup)), [:compressed])
 
   defp create_tmp_backup(source_folder) do
     File.mkdir_p!(tmp_folder())
