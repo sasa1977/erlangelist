@@ -123,8 +123,8 @@ defmodule ErlangelistWeb.Blog.Endpoint do
       directory_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
       domains: [Erlangelist.Config.domain() | extra_domains()],
       emails: [Erlangelist.Config.email()],
-      db_folder: certbot_folder(),
-      backup: Path.join(Erlangelist.Backup.folder(), "certbot.tgz")
+      db_folder: Erlangelist.db_path("site_encrypt"),
+      backup: Path.join(Erlangelist.Backup.folder(), "site_encrypt.tgz")
     )
   end
 
@@ -135,7 +135,4 @@ defmodule ErlangelistWeb.Blog.Endpoint do
     do: {:internal, port: unquote(if Mix.env() != :test, do: 20081, else: 21081)}
 
   defp extra_domains, do: Erlangelist.Config.extra_domains() |> String.split(",") |> Enum.reject(&(&1 == ""))
-
-  def certbot_folder, do: Erlangelist.db_path("certbot")
-  def cert_folder, do: Erlangelist.priv_path("cert")
 end
