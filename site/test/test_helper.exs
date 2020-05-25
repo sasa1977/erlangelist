@@ -1,1 +1,1 @@
-ExUnit.start(exclude: [:certification])
+ExUnit.start()

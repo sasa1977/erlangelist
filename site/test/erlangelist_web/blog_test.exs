@@ -27,14 +27,6 @@ defmodule ErlangelistWeb.BlogTest do
     end
   end
 
-  @tag :certification
-  test "certification" do
-    SiteEncrypt.Phoenix.Test.verify_certification(ErlangelistWeb.Blog.Endpoint, [
-      ~U[2020-01-01 00:00:00Z],
-      ~U[2020-02-01 00:00:00Z]
-    ])
-  end
-
   test "http requests are redirected to https" do
     assert redirected_to(Client.get("http://localhost/"), 301) == "https://localhost/"
   end
@@ -42,4 +34,8 @@ defmodule ErlangelistWeb.BlogTest do
   test "theerlangelist.com is redirected to www.theerlangelist.com" do
     assert redirected_to(Client.get("https://theerlangelist.com/"), 301) == "https://www.theerlangelist.com/"
   end
+end
+
+defmodule CertificationTest do
+  use SiteEncrypt.Phoenix.Test, endpoint: ErlangelistWeb.Blog.Endpoint
 end

@@ -1,6 +1,6 @@
 defmodule ErlangelistWeb.Blog.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
-  @behaviour SiteEncrypt
+  use SiteEncrypt.Phoenix
   require Erlangelist.Config
 
   plug Plug.Static, at: "/", from: :erlangelist, only: ~w(css fonts images js favicon.ico robots.txt)
@@ -45,21 +45,21 @@ defmodule ErlangelistWeb.Blog.Endpoint do
     phoenix_defaults
     |> DeepMerge.deep_merge(common_config())
     |> DeepMerge.deep_merge(env_specific_config())
+    |> SiteEncrypt.Phoenix.configure_https()
   end
 
   defp common_config() do
     [
       url: [scheme: "https", host: Erlangelist.Config.blog_host(), port: Erlangelist.Config.blog_ssl_port()],
       http: [compress: true, port: 20080],
-      https:
-        [
-          compress: true,
-          port: 20443,
-          cipher_suite: :strong,
-          secure_renegotiate: true,
-          reuse_sessions: true,
-          log_level: :warning
-        ] ++ SiteEncrypt.https_keys(__MODULE__),
+      https: [
+        compress: true,
+        port: 20443,
+        cipher_suite: :strong,
+        secure_renegotiate: true,
+        reuse_sessions: true,
+        log_level: :warning
+      ],
       render_errors: [view: ErlangelistWeb.Blog.View, accepts: ~w(html json)],
       pubsub_server: Erlangelist.PubSub
     ]
@@ -118,23 +118,21 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
   @impl SiteEncrypt
   def certification do
-    [
-      ca_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
-      domain: Erlangelist.Config.domain(),
-      extra_domains: extra_domains(),
-      email: Erlangelist.Config.email(),
-      base_folder: certbot_folder(),
-      cert_folder: cert_folder(),
-      mode: if(Erlangelist.Config.certify(), do: :auto, else: :manual),
+    SiteEncrypt.configure(
+      client: :native,
+      directory_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
+      domains: [Erlangelist.Config.domain() | extra_domains()],
+      emails: [Erlangelist.Config.email()],
+      db_folder: certbot_folder(),
       backup: Path.join(Erlangelist.Backup.folder(), "certbot.tgz")
-    ]
+    )
   end
 
   @impl SiteEncrypt
   def handle_new_cert(), do: :ok
 
   defp local_acme_server,
-    do: {:local_acme_server, port: unquote(if Mix.env() != :test, do: 20081, else: 21081)}
+    do: {:internal, port: unquote(if Mix.env() != :test, do: 20081, else: 21081)}
 
   defp extra_domains, do: Erlangelist.Config.extra_domains() |> String.split(",") |> Enum.reject(&(&1 == ""))
 
