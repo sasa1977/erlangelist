@@ -55,7 +55,7 @@ defmodule Erlangelist.Mixfile do
       {:provider, github: "verybigthings/provider"},
       {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
-      {:site_encrypt, github: "sasa1977/site_encrypt"},
+      {:site_encrypt, github: "sasa1977/site_encrypt", branch: "elixir-client"},
       {:sshex, "~> 2.0", runtime: false},
       {:table_rex, "~> 3.0", runtime: false},
       {:telemetry_metrics, "~> 0.4"},
