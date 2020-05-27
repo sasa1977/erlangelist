@@ -19,8 +19,6 @@ Prerequisites:
 
 Erlang, Elixir, and node.js. See [./.tool-versions] for exact versions. You can also use [asdf version manager](https://github.com/asdf-vm/asdf) to install these prerequisites.
 
-Optional dependency is certbot. If it's missing, you will see some errors, but the site will be working.
-
 Starting:
 
 ```

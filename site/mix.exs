@@ -10,11 +10,10 @@ defmodule Erlangelist.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      preferred_cli_env: [release: :prod, test_all: :test],
+      preferred_cli_env: [release: :prod],
       aliases: [
         release: ["cmd npm run deploy --prefix ./assets", "phx.digest", "release"],
-        test: ["erlangelist.clean", "test"],
-        test_all: ["test --include certification"]
+        test: ["erlangelist.clean", "test"]
       ],
       dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]],
       releases: [
@@ -55,7 +54,7 @@ defmodule Erlangelist.Mixfile do
       {:provider, github: "verybigthings/provider"},
       {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
-      {:site_encrypt, github: "sasa1977/site_encrypt"},
+      {:site_encrypt, "~> 0.1"},
       {:sshex, "~> 2.0", runtime: false},
       {:table_rex, "~> 3.0", runtime: false},
       {:telemetry_metrics, "~> 0.4"},
