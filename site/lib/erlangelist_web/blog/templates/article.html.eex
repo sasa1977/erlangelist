@@ -1,7 +1,7 @@
 <script type="text/javascript">
   var disqus_shortname = 'theerlangelist';
   var disqus_identifier = 'article_<%= @article.id %>';
-  var disqus_title = '<%= @article.long_title %>';
+  var disqus_title = '<%= @article.title %>';
   var disqus_url = 'http://www.theerlangelist.com/article/<%= @article.id %>';
 </script>
 

@@ -26,8 +26,8 @@ defmodule Erlangelist.Article do
       copyright_year: date.year,
       posted_at_rfc822: to_rfc822.(date),
       has_content?: article_spec[:redirect] == nil,
-      long_title: article_spec[:long_title] || article_spec[:short_title],
-      short_title: article_spec[:short_title] || article_spec[:long_title],
+      title: Keyword.fetch!(article_spec, :title),
+      sidebar_title: Keyword.get_lazy(article_spec, :sidebar_title, fn -> Keyword.fetch!(article_spec, :title) end),
       link: article_spec[:redirect] || "/article/#{article_id}",
       redirect: article_spec[:redirect],
       source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md"

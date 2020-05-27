@@ -5,13 +5,13 @@ defmodule ErlangelistWeb.BlogTest do
   alias ErlangelistTest.Client
 
   test "root page shows the most recent article" do
-    assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().long_title)}</h1>"
+    assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().title)}</h1>"
   end
 
   for article <- Article.all(), article.has_content? do
     test "shows the #{article.id} article" do
       assert response(Client.article(unquote(article.id)), 200) =~
-               "<h1>#{Plug.HTML.html_escape(unquote(article.long_title))}</h1>"
+               "<h1>#{Plug.HTML.html_escape(unquote(article.title))}</h1>"
     end
   end
 
@@ -23,7 +23,7 @@ defmodule ErlangelistWeb.BlogTest do
     response = response(Client.rss_feed(), 200)
 
     for article <- Article.all(), article.has_content? do
-      assert response =~ "<h1>#{Plug.HTML.html_escape(article.long_title)}</h1>"
+      assert response =~ "<h1>#{Plug.HTML.html_escape(article.title)}</h1>"
     end
   end
 

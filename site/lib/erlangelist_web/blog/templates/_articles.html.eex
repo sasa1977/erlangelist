@@ -4,7 +4,7 @@
     <%= for article <- @articles do %>
       <%= if article.has_content? do %>
         <li>
-          <a href="<%= article.link %>"><%= article.short_title %></a>
+          <a href="<%= article.link %>"><%= article.sidebar_title %></a>
         </li>
       <% end %>
     <% end %>

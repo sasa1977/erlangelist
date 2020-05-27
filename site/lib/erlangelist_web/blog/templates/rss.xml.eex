@@ -6,7 +6,7 @@
     <link>http://theerlangelist.com</link>
     <%= for article <- Erlangelist.Article.all, article.has_content? do %>
       <item>
-        <title><![CDATA[<%= article.long_title %>]]></title>
+        <title><![CDATA[<%= article.title %>]]></title>
         <link><![CDATA[http://theerlangelist.com/<%= article.link %>]]></link>
         <pubdate><%= article.posted_at_rfc822 %></pubdate>
         <description>
