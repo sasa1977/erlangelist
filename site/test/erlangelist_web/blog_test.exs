@@ -36,6 +36,13 @@ defmodule ErlangelistWeb.BlogTest do
   end
 end
 
-defmodule CertificationTest do
-  use SiteEncrypt.Phoenix.Test, endpoint: ErlangelistWeb.Blog.Endpoint
+defmodule ErlangelistWeb.Blog.CertificationTest do
+  use ExUnit.Case, async: false
+  import SiteEncrypt.Phoenix.Test
+
+  test "certification" do
+    clean_restart(ErlangelistWeb.Blog.Endpoint)
+    cert = get_cert(ErlangelistWeb.Blog.Endpoint)
+    assert cert.domains == ~w/theerlangelist.com www.theerlangelist.com/
+  end
 end

@@ -121,7 +121,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
     SiteEncrypt.configure(
       client: :native,
       directory_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
-      domains: [Erlangelist.Config.domain() | extra_domains()],
+      domains: ["theerlangelist.com", "www.theerlangelist.com"],
       emails: [Erlangelist.Config.email()],
       db_folder: Erlangelist.db_path("site_encrypt"),
       backup: Path.join(Erlangelist.Backup.folder(), "site_encrypt.tgz")
@@ -133,6 +133,4 @@ defmodule ErlangelistWeb.Blog.Endpoint do
 
   defp local_acme_server,
     do: {:internal, port: unquote(if Mix.env() != :test, do: 20081, else: 21081)}
-
-  defp extra_domains, do: Erlangelist.Config.extra_domains() |> String.split(",") |> Enum.reject(&(&1 == ""))
 end
