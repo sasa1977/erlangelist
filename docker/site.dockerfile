@@ -31,10 +31,7 @@ RUN cd site && mix release
 
 FROM alpine:3.11 as site
 
-RUN \
-  echo 'http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
-  echo 'http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
-  apk --no-cache upgrade && apk add --no-cache openssl bash
+RUN apk --no-cache upgrade && apk add --no-cache ncurses
 
 COPY --from=builder /opt/app/site/_build/prod/rel/erlangelist /erlangelist
 
