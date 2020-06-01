@@ -19,7 +19,8 @@ defmodule Erlangelist.Mixfile do
       releases: [
         erlangelist: [
           include_executables_for: [:unix],
-          steps: [:assemble, :tar]
+          steps: [:assemble, :tar],
+          strip_beams: false
         ]
       ]
     ]
