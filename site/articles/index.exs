@@ -1,4 +1,9 @@
 [
+  operating_via_development: [
+    title: "Operating systems via development",
+    sidebar_title: "Operating via development",
+    posted_at: "2020-06-24"
+  ],
   periodic: [
     sidebar_title: "Periodic jobs",
     title: "Periodic jobs in Elixir with Periodic",
