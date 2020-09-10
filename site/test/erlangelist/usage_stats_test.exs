@@ -5,6 +5,7 @@ defmodule Erlangelist.UsageStatsTest do
 
   setup do
     UsageStats.clear_all()
+    :ok
   end
 
   test "aggregates daily stats" do

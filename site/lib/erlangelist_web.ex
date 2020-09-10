@@ -1,8 +1,7 @@
 defmodule ErlangelistWeb do
   def start_link do
-    Supervisor.start_link(
+    Parent.Supervisor.start_link(
       [ErlangelistWeb.Blog, ErlangelistWeb.Dashboard],
-      strategy: :one_for_one,
       name: __MODULE__
     )
   end

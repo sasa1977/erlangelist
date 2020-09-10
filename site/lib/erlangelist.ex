@@ -2,13 +2,12 @@ defmodule Erlangelist do
   def start_link do
     Erlangelist.Backup.resync(Erlangelist.UsageStats.folder())
 
-    Supervisor.start_link(
+    Parent.Supervisor.start_link(
       [
         Erlangelist.UsageStats,
         {Phoenix.PubSub, name: Erlangelist.PubSub}
       ],
-      name: __MODULE__,
-      strategy: :one_for_one
+      name: __MODULE__
     )
   end
 

@@ -1,11 +1,10 @@
 defmodule ErlangelistWeb.Dashboard do
   def start_link do
-    Supervisor.start_link(
+    Parent.Supervisor.start_link(
       [
         ErlangelistWeb.Dashboard.Telemetry,
         ErlangelistWeb.Dashboard.Endpoint
       ],
-      strategy: :one_for_one,
       name: __MODULE__
     )
   end

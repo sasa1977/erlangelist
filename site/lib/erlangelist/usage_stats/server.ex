@@ -20,18 +20,18 @@ defmodule Erlangelist.UsageStats.Server do
     do: {:noreply, update_in(stats.awaiting_flush, &[from | &1]) |> maybe_start_writer()}
 
   @impl Parent.GenServer
-  def handle_child_terminated(UsageStats.Writer, changes, _pid, reason, stats) do
-    stats = if reason != :normal, do: update_in(stats.changes, &MapSet.union(&1, changes)), else: stats
+  def handle_stopped_children(%{UsageStats.Writer => info}, stats) do
+    stats = if info.exit_reason != :normal, do: update_in(stats.changes, &MapSet.union(&1, info.meta)), else: stats
     {:noreply, maybe_start_writer(clear_old_stats(stats))}
   end
 
   defp maybe_start_writer(stats) do
     cond do
-      Parent.GenServer.child?(UsageStats.Writer) ->
+      Parent.child?(UsageStats.Writer) ->
         stats
 
       not Enum.empty?(stats.changes) ->
-        Parent.GenServer.start_child({UsageStats.Writer, changed_data(stats)})
+        Parent.start_child(Parent.child_spec({UsageStats.Writer, changed_data(stats)}, restart: :temporary))
         %{stats | changes: MapSet.new()}
 
       true ->

@@ -4,10 +4,10 @@ defmodule Erlangelist.UsageStats do
   def folder, do: Erlangelist.db_path("usage_stats")
 
   def clear_all do
-    Supervisor.terminate_child(__MODULE__, Erlangelist.UsageStats.Server)
+    {:ok, stopped_children} = Parent.Client.shutdown_child(__MODULE__, Erlangelist.UsageStats.Server)
     File.rm_rf(folder())
     File.mkdir_p!(folder())
-    Supervisor.restart_child(__MODULE__, Erlangelist.UsageStats.Server)
+    Parent.Client.return_children(__MODULE__, stopped_children)
     :ok
   end
 
@@ -28,12 +28,11 @@ defmodule Erlangelist.UsageStats do
   def start_link() do
     File.mkdir_p(folder())
 
-    Supervisor.start_link(
+    Parent.Supervisor.start_link(
       [
         UsageStats.Server,
         Erlangelist.UsageStats.Cleanup
       ],
-      strategy: :one_for_one,
       name: __MODULE__
     )
   end
