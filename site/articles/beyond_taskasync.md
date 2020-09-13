@@ -189,7 +189,7 @@ So catching is definitely a simple way of explicitly dealing with errors, but it
 To overcome this, we can either make all processes trap exits, or remove the link between processes. Trapping exits might introduce some subtle issues (see [here](https://www.reddit.com/r/elixir/comments/3dlwhu/is_it_ok_to_trap_exits_in_a_cowboy_handler_process) for some information), so I'll take the second approach.
 
 ### Replacing async
-The whole issue arises because `async` links the caller and the task process, which ensures "all-or-nothing" property. This is a perfectly fine decision, but it's not necessarily suitable for all cases. ~~I wonder whether linking should be made optional, but I don't have a strong opinion at the moment.~~ __Update__: [Task.Supervisor.async_nolink](http://elixir-lang.org/docs/stable/elixir/Task.Supervisor.html#async_nolink/2) has been introduced in Elixir 1.2, which allows you to start a task which is not linked to the caller.
+The whole issue arises because `async` links the caller and the task process, which ensures "all-or-nothing" property. This is a perfectly fine decision, but it's not necessarily suitable for all cases. ~~I wonder whether linking should be made optional, but I don't have a strong opinion at the moment.~~ __Update__: [Task.Supervisor.async_nolink](https://hexdocs.pm/elixir/Task.Supervisor.html#async_nolink/2) has been introduced in Elixir 1.2, which allows you to start a task which is not linked to the caller.
 
 As it is, `Task.async` currently establishes a link, and if we want to avoid this, we need to reimplement async ourselves. Here's what we'll do:
 

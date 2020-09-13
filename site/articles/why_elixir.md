@@ -127,7 +127,7 @@ The pipeline operator works extremely well because the API in Elixir libraries f
 
 Protocols are the Elixir way of providing something roughly similar to OO interfaces. Initially, I wasn't much impressed with them, but as the time progressed, I started seeing many benefits they bring. Protocols allow developers to create a generic logic that can be used with any type of data, assuming that some contract is implemented for the given data.
 
-An excellent example is the [Enum](http://elixir-lang.org/docs/stable/Enum.html) module, that provides many useful functions for manipulating with anything that is enumerable. For example, this is how we iterate an enumerable:
+An excellent example is the [Enum](https://hexdocs.pm/elixir/Enum.html) module, that provides many useful functions for manipulating with anything that is enumerable. For example, this is how we iterate an enumerable:
 
 ```elixir
 Enum.each(enumerable, fn -> ... end)
@@ -135,7 +135,7 @@ Enum.each(enumerable, fn -> ... end)
 
 `Enum.each` works with different types such as lists, or key-value dictionaries, and of course we can add support for our own types by implementing corresponding protocol. This is resemblant of OO interfaces, with an additional twist that it's possible to implement a protocol for a type, even if you don't own its source code.
 
-One of the best example of protocol usefulness is the [Stream](http://elixir-lang.org/docs/stable/Stream.html) module, which implements a lazy, composable, enumerable abstraction. A stream makes it possible to compose various enumerable transformations, and then generate the result only when needed, by feeding the stream to some function from the `Enum` module. For example, here's the code that computes the sum of squares of all positive numbers of a list in a single pass:
+One of the best example of protocol usefulness is the [Stream](https://hexdocs.pm/elixir/Stream.html) module, which implements a lazy, composable, enumerable abstraction. A stream makes it possible to compose various enumerable transformations, and then generate the result only when needed, by feeding the stream to some function from the `Enum` module. For example, here's the code that computes the sum of squares of all positive numbers of a list in a single pass:
 
 ```elixir
 list
