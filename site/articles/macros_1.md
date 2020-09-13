@@ -2,7 +2,7 @@ This is the first article in the miniseries that deals with macros. I originally
 
 Instead, I decided to provide a treatment on macros here. Personally, I find the subject of macros very interesting, and in this miniseries I'll try to explain how they work, providing some basic techniques and advices on how to write them. While I'm convinced that writing macros is not very hard, it certainly requires a higher level of attention compared to plain Elixir code. Thus, I think it's very helpful to understand some inner details of Elixir compiler. Knowing how things tick behind the scene makes it easier to reason about the meta-programming code.
 
-This will be a medium-level difficulty text. If you're familiar with Elixir and Erlang, but are still somewhat confused about macros, then you're in the right place. If you're new to Elixir and Erlang, it's probably better to start with something else, for example the [Getting started guide](http://elixir-lang.org/getting_started/1.html), or one of the available books.
+This will be a medium-level difficulty text. If you're familiar with Elixir and Erlang, but are still somewhat confused about macros, then you're in the right place. If you're new to Elixir and Erlang, it's probably better to start with something else, for example the [Getting started guide](https://elixir-lang.org/getting-started/introduction.html), or one of the available books.
 
 ## Meta-programming
 

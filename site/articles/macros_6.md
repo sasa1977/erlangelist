@@ -481,6 +481,6 @@ This concludes the series on Elixir macros. I hope you found these articles inte
 
 Always remember - macros amount to plain composition of AST fragments during expansion phase. If you understand the caller's context and macro inputs, it shouldn't be very hard to perform the transformations you want either directly, or by deferring when necessary.
 
-This series has by no means covered all possible aspects and nuances. If you want to learn more, a good place to start is the documentation for [quote/2 special form](http://elixir-lang.org/docs/stable/elixir/Kernel.SpecialForms.html#quote/2). You'll also find some useful helpers in the [Macro](http://elixir-lang.org/docs/stable/elixir/Macro.html) and [Code](http://elixir-lang.org/docs/stable/elixir/Code.html) module.
+This series has by no means covered all possible aspects and nuances. If you want to learn more, a good place to start is the documentation for [quote/2 special form](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#quote/2). You'll also find some useful helpers in the [Macro](https://hexdocs.pm/elixir/Macro.html) and [Code](https://hexdocs.pm/elixir/Code.html) module.
 
 Happy meta-programming!

@@ -13,7 +13,7 @@ Some minor changes had to be made to make the code examples work, most notably [
 
 Elixir 1.2 requires Erlang 18.x which brings a couple of big changes. You can see the highlights [here](http://www.erlang.org/download_release/29), but in the context of EiA, the most important improvement deals with maps which now perform well for large datasets. Consequently, `HashDict` and `HashSet` are becoming redundant.
 
-Therefore the Elixir core team decided to deprecate following k-v and set related modules: `Dict`, `Set`, `HashDict`, and `HashSet`. These modules are __soft__ deprecated, meaning that they will in fact still work, but their usage is discouraged as they are marked for subsequent removal. If you're developing for Elixir 1.2+ you're encouraged to use plain maps for k-v structure, and the new type [MapSet](http://elixir-lang.org/docs/stable/elixir/MapSet.html) (internally also powered by maps) for sets.
+Therefore the Elixir core team decided to deprecate following k-v and set related modules: `Dict`, `Set`, `HashDict`, and `HashSet`. These modules are __soft__ deprecated, meaning that they will in fact still work, but their usage is discouraged as they are marked for subsequent removal. If you're developing for Elixir 1.2+ you're encouraged to use plain maps for k-v structure, and the new type [MapSet](https://hexdocs.pm/elixir/MapSet.html) (internally also powered by maps) for sets.
 
 There's one important caveat: if your code must work on Elixir 1.0 and 1.1, then you should in fact still prefer `HashDict` and `HashSet`. The reason is that the older Elixir version can run on Erlang 17, so if your code uses large maps, the performance might suffer.
 
@@ -50,6 +50,6 @@ As José explains, it's sensible to set both options to true for production envi
 
 ## That's all folks :-)
 
-Yep, nothing else of the book content is affected by new changes to Elixir. However, many cool features have been introduced since Elixir 1.0, such as the [with special form](http://elixir-lang.org/docs/stable/elixir/Kernel.SpecialForms.html#with/1), or the [mix profile.fprof](http://elixir-lang.org/docs/stable/mix/Mix.Tasks.Profile.Fprof.html) task. Therefore, I suggest reading through the [changelogs of recent releases](https://github.com/elixir-lang/elixir/releases) :-)
+Yep, nothing else of the book content is affected by new changes to Elixir. However, many cool features have been introduced since Elixir 1.0, such as the [with special form](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1), or the [mix profile.fprof](https://hexdocs.pm/mix/Mix.Tasks.Profile.Fprof.html) task. Therefore, I suggest reading through the [changelogs of recent releases](https://github.com/elixir-lang/elixir/releases) :-)
 
 Happy coding!
