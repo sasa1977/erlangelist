@@ -267,8 +267,7 @@ defmodule Tracer do
 
       {arg_name, full_arg}
     end
-    |> List.unzip
-    |> List.to_tuple
+    |> Enum.unzip
   end
 end
 ```
