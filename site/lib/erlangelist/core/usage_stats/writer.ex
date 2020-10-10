@@ -1,5 +1,5 @@
-defmodule Erlangelist.UsageStats.Writer do
-  alias Erlangelist.UsageStats
+defmodule Erlangelist.Core.UsageStats.Writer do
+  alias Erlangelist.Core.UsageStats
 
   @doc false
   def child_spec(stats) do
@@ -24,7 +24,7 @@ defmodule Erlangelist.UsageStats.Writer do
   defp write!(stats) do
     Enum.each(stats, fn {date, data} -> File.write!(date_file(date), :erlang.term_to_binary(data)) end)
 
-    Erlangelist.Backup.backup(UsageStats.folder())
+    Erlangelist.Core.Backup.backup(UsageStats.folder())
   end
 
   defp date_file(date), do: Path.join(UsageStats.folder(), Date.to_iso8601(date, :basic))

@@ -1,7 +1,7 @@
 defmodule ErlangelistWeb.Blog.Controller do
   use Phoenix.Controller, namespace: ErlangelistWeb
   import Plug.Conn
-  alias Erlangelist.Article
+  alias Erlangelist.Core.Article
   alias ErlangelistWeb.Blog.View
 
   plug :put_layout, {View, "layout.html"}
@@ -41,7 +41,7 @@ defmodule ErlangelistWeb.Blog.Controller do
   end
 
   defp render_article(conn, article) do
-    Erlangelist.UsageStats.report(:article, article.id)
+    Erlangelist.Core.UsageStats.report(:article, article.id)
     render(conn, "article.html", %{article: article})
   end
 end

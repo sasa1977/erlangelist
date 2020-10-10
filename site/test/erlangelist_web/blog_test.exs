@@ -1,7 +1,7 @@
 defmodule ErlangelistWeb.BlogTest do
   use ExUnit.Case, async: true
   import Phoenix.ConnTest
-  alias Erlangelist.Article
+  alias Erlangelist.Core.Article
   alias ErlangelistTest.Client
 
   test "root page shows the most recent article" do

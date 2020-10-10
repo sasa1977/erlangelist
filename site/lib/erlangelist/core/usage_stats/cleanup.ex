@@ -1,5 +1,5 @@
-defmodule Erlangelist.UsageStats.Cleanup do
-  alias Erlangelist.UsageStats
+defmodule Erlangelist.Core.UsageStats.Cleanup do
+  alias Erlangelist.Core.UsageStats
 
   defp cleanup() do
     with {:ok, files} <- File.ls(UsageStats.folder()) do

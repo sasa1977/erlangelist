@@ -1,7 +1,7 @@
-defmodule Erlangelist.Backup do
+defmodule Erlangelist.Core.Backup do
   require Logger
 
-  def folder(), do: Erlangelist.priv_path("backup")
+  def folder(), do: Erlangelist.Core.priv_path("backup")
 
   def resync(folder) do
     File.mkdir_p!(folder())
@@ -38,5 +38,5 @@ defmodule Erlangelist.Backup do
     target
   end
 
-  defp tmp_folder(), do: Erlangelist.priv_path("tmp")
+  defp tmp_folder(), do: Erlangelist.Core.priv_path("tmp")
 end

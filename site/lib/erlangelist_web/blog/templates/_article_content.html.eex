@@ -2,7 +2,7 @@
 <h4 class="right"><%= @article.posted_at %></h4>
 
 <div class="article-body">
-  <%= {:safe, Erlangelist.Article.html(@article)} %>
+  <%= {:safe, Erlangelist.Core.Article.html(@article)} %>
 </div>
 
 <div class="article-footer">

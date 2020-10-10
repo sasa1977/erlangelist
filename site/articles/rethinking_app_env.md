@@ -467,10 +467,10 @@ For fun and experiment, I also added a bit of runtime configurability which allo
 
 When this site is running, I keep some aggregated usage stats, so I can see the read count per each article. This is implemented in a quick & dirty way using `:erlang.term_to_binary` and storing data into a file. I use a separate file for each day, and the system periodically deletes older files.
 
-The relevant code sits in the `Erlangelist.UsageStats` module, which is also responsible for its own configuration. The configuration specifies how often is the in-memory data flushed to disk, how often is the cleanup code invoked, and how many files are preserved during the cleanup. Here are the relevant pieces of the configuration code:
+The relevant code sits in the `Erlangelist.Core.UsageStats` module, which is also responsible for its own configuration. The configuration specifies how often is the in-memory data flushed to disk, how often is the cleanup code invoked, and how many files are preserved during the cleanup. Here are the relevant pieces of the configuration code:
 
 ```elixir
-defmodule Erlangelist.UsageStats do
+defmodule Erlangelist.Core.UsageStats do
 
   def start_link(_arg) do
     init_config()
@@ -527,7 +527,7 @@ And the full app env of the `:erlangelist` app is very small, consisting mostly 
 ```elixir
 iex> Application.get_all_env(:erlangelist)
 [
-  {Erlangelist.UsageStats,
+  {Erlangelist.Core.UsageStats,
    [flush_interval: 1000, cleanup_interval: 60000, retention: 7]},
   {ErlangelistWeb.Endpoint, []},
   {:included_applications, []}

@@ -1,6 +1,6 @@
-defmodule Erlangelist.UsageStats.Server do
+defmodule Erlangelist.Core.UsageStats.Server do
   use Parent.GenServer
-  alias Erlangelist.UsageStats
+  alias Erlangelist.Core.UsageStats
 
   def start_link(_), do: Parent.GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 

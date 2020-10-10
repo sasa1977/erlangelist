@@ -1,19 +1,14 @@
-defmodule Erlangelist do
+defmodule Erlangelist.Core do
   def start_link do
-    Erlangelist.Backup.resync(Erlangelist.UsageStats.folder())
+    Erlangelist.Core.Backup.resync(Erlangelist.Core.UsageStats.folder())
 
     Parent.Supervisor.start_link(
       [
-        Erlangelist.UsageStats,
+        Erlangelist.Core.UsageStats,
         {Phoenix.PubSub, name: Erlangelist.PubSub}
       ],
       name: __MODULE__
     )
-  end
-
-  def app_env!(name) do
-    {:ok, value} = Application.fetch_env(:erlangelist, name)
-    value
   end
 
   def priv_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv") | parts])

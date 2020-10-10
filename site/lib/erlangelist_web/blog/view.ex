@@ -7,7 +7,7 @@ defmodule ErlangelistWeb.Blog.View do
   import ErlangelistWeb.Blog.Router.Helpers
 
   def articles_links_html do
-    render("_articles.html", articles: Erlangelist.Article.all())
+    render("_articles.html", articles: Erlangelist.Core.Article.all())
   end
 
   def render("404.html", _assigns) do

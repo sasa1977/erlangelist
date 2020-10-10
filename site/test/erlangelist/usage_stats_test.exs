@@ -1,6 +1,6 @@
 defmodule Erlangelist.UsageStatsTest do
   use ExUnit.Case, async: false
-  alias Erlangelist.UsageStats
+  alias Erlangelist.Core.UsageStats
   alias ErlangelistTest.Client
 
   setup do
