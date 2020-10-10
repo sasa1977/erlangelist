@@ -1,9 +1,9 @@
-defmodule ErlangelistWeb.Dashboard do
+defmodule Erlangelist.Web.Dashboard do
   def start_link do
     Parent.Supervisor.start_link(
       [
-        ErlangelistWeb.Dashboard.Telemetry,
-        ErlangelistWeb.Dashboard.Endpoint
+        Erlangelist.Web.Dashboard.Telemetry,
+        Erlangelist.Web.Dashboard.Endpoint
       ],
       name: __MODULE__
     )

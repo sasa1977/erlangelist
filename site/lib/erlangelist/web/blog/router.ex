@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.Blog.Router do
+defmodule Erlangelist.Web.Blog.Router do
   use Phoenix.Router
   import Phoenix.Controller
 
@@ -7,13 +7,13 @@ defmodule ErlangelistWeb.Blog.Router do
     plug :put_secure_browser_headers
   end
 
-  scope "/", ErlangelistWeb.Blog do
+  scope "/", Erlangelist.Web.Blog do
     # rss feed
     get "/rss", Controller, :rss
     get "/feeds/posts/*any", Controller, :rss
   end
 
-  scope "/", ErlangelistWeb.Blog do
+  scope "/", Erlangelist.Web.Blog do
     # Use the default browser stack
     pipe_through :browser
 

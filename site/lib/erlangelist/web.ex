@@ -1,14 +1,14 @@
-defmodule ErlangelistWeb do
+defmodule Erlangelist.Web do
   def start_link do
     Parent.Supervisor.start_link(
-      [ErlangelistWeb.Blog, ErlangelistWeb.Dashboard],
+      [Erlangelist.Web.Blog, Erlangelist.Web.Dashboard],
       name: __MODULE__
     )
   end
 
   def config_change(changed, removed) do
-    ErlangelistWeb.Blog.Endpoint.config_change(changed, removed)
-    ErlangelistWeb.Dashboard.Endpoint.config_change(changed, removed)
+    Erlangelist.Web.Blog.Endpoint.config_change(changed, removed)
+    Erlangelist.Web.Dashboard.Endpoint.config_change(changed, removed)
   end
 
   @doc false

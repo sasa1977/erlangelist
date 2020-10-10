@@ -402,7 +402,7 @@ As a real-life example, the system we're building at Aircloak is running on clie
 Let's take a look at a more involved example. This blog is powered by Phoenix, and the endpoint is completely configured at runtime. Therefore, the only endpoint-related config piece is the following:
 
 ```elixir
-config :erlangelist, ErlangelistWeb.Endpoint, []
+config :erlangelist, Erlangelist.Web.Endpoint, []
 ```
 
 The reason why we need an empty config is because Phoenix requires it.
@@ -410,15 +410,15 @@ The reason why we need an empty config is because Phoenix requires it.
 All of the endpoint parameters are provided in `init/2`:
 
 ```elixir
-defmodule ErlangelistWeb.Endpoint do
+defmodule Erlangelist.Web.Endpoint do
   # ...
 
   def init(_key, phoenix_defaults),
-    do: {:ok, ErlangelistWeb.EndpointConfig.config(phoenix_defaults)}
+    do: {:ok, Erlangelist.Web.EndpointConfig.config(phoenix_defaults)}
 end
 ```
 
-Since there are a lot of parameters and significant variations between different mix envs, I've decided to move the code into another module, to separate plug chaining from configuration assembly. The function `ErlangelistWeb.EndpointConfig.config/1` looks like this:
+Since there are a lot of parameters and significant variations between different mix envs, I've decided to move the code into another module, to separate plug chaining from configuration assembly. The function `Erlangelist.Web.EndpointConfig.config/1` looks like this:
 
 ```elixir
 def config(phoenix_defaults) do
@@ -439,7 +439,7 @@ The common config determines the parameters which don't vary between mix envs:
 defp common_config() do
   [
     http: [compress: true, port: 20080],
-    render_errors: [view: ErlangelistWeb.ErrorView, accepts: ~w(html json)],
+    render_errors: [view: Erlangelist.Web.ErrorView, accepts: ~w(html json)],
     pubsub: [name: Erlangelist.PubSub, adapter: Phoenix.PubSub.PG2]
   ]
 end
@@ -510,7 +510,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :erlangelist, ErlangelistWeb.Endpoint, []
+config :erlangelist, Erlangelist.Web.Endpoint, []
 
 
 # dev.exs
@@ -529,7 +529,7 @@ iex> Application.get_all_env(:erlangelist)
 [
   {Erlangelist.Core.UsageStats,
    [flush_interval: 1000, cleanup_interval: 60000, retention: 7]},
-  {ErlangelistWeb.Endpoint, []},
+  {Erlangelist.Web.Endpoint, []},
   {:included_applications, []}
 ]
 ```

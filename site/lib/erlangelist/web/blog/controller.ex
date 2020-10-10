@@ -1,8 +1,8 @@
-defmodule ErlangelistWeb.Blog.Controller do
-  use Phoenix.Controller, namespace: ErlangelistWeb
+defmodule Erlangelist.Web.Blog.Controller do
+  use Phoenix.Controller, namespace: Erlangelist.Web
   import Plug.Conn
   alias Erlangelist.Core.Article
-  alias ErlangelistWeb.Blog.View
+  alias Erlangelist.Web.Blog.View
 
   plug :put_layout, {View, "layout.html"}
 

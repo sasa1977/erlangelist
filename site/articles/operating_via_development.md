@@ -95,8 +95,8 @@ So locally, site_encrypt will start a mock of Let's Encrypt, and it will use tha
 ```text
 $ iex -S mix phx.server
 
-[info]  Running ErlangelistWeb.Blog.Endpoint at 0.0.0.0:20080 (http)
-[info]  Running ErlangelistWeb.Blog.Endpoint at 0.0.0.0:20443 (https)
+[info]  Running Erlangelist.Web.Blog.Endpoint at 0.0.0.0:20080 (http)
+[info]  Running Erlangelist.Web.Blog.Endpoint at 0.0.0.0:20443 (https)
 [info]  Running local ACME server at port 20081
 [info]  Creating new ACME account for domain theerlangelist.com
 [info]  Ordering a new certificate for domain theerlangelist.com
@@ -130,8 +130,8 @@ In addition, site_encrypt ships with a small helper for testing the certificatio
 
 ```elixir
 test "certification" do
-  clean_restart(ErlangelistWeb.Blog.Endpoint)
-  cert = get_cert(ErlangelistWeb.Blog.Endpoint)
+  clean_restart(Erlangelist.Web.Blog.Endpoint)
+  cert = get_cert(Erlangelist.Web.Blog.Endpoint)
   assert cert.domains == ~w/theerlangelist.com www.theerlangelist.com/
 end
 ```

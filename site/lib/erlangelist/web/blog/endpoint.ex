@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.Blog.Endpoint do
+defmodule Erlangelist.Web.Blog.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
   use SiteEncrypt.Phoenix
   require Erlangelist.Config
@@ -24,9 +24,9 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
 
-  plug ErlangelistWeb.Plug.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com"
+  plug Erlangelist.Web.Plug.MovePermanently, from: "theerlangelist.com", to: "www.theerlangelist.com"
 
-  plug ErlangelistWeb.Blog.Router
+  plug Erlangelist.Web.Blog.Router
 
   defp force_ssl(conn, _opts) do
     host =
@@ -60,7 +60,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
         reuse_sessions: true,
         log_level: :warning
       ],
-      render_errors: [view: ErlangelistWeb.Blog.View, accepts: ~w(html json)],
+      render_errors: [view: Erlangelist.Web.Blog.View, accepts: ~w(html json)],
       pubsub_server: Erlangelist.PubSub
     ]
   end
@@ -68,7 +68,7 @@ defmodule ErlangelistWeb.Blog.Endpoint do
   case Mix.env() do
     :dev ->
       # need to determine assets path at compile time
-      @assets_path Path.expand("../../../assets", __DIR__)
+      @assets_path Path.expand("../../../../assets", __DIR__)
       unless File.exists?(@assets_path), do: Mix.raise("Assets not found in #{@assets_path}")
 
       defp env_specific_config() do
@@ -90,8 +90,8 @@ defmodule ErlangelistWeb.Blog.Endpoint do
             patterns: [
               ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
               ~r{priv/gettext/.*(po)$},
-              ~r{lib/erlangelist_web/views/.*(ex)$},
-              ~r{lib/erlangelist_web/templates/.*(eex)$}
+              ~r{lib/erlangelist/web/views/.*(ex)$},
+              ~r{lib/erlangelist/web/templates/.*(eex)$}
             ]
           ]
         ]

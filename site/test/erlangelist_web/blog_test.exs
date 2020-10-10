@@ -1,4 +1,4 @@
-defmodule ErlangelistWeb.BlogTest do
+defmodule Erlangelist.Web.BlogTest do
   use ExUnit.Case, async: true
   import Phoenix.ConnTest
   alias Erlangelist.Core.Article
@@ -36,13 +36,13 @@ defmodule ErlangelistWeb.BlogTest do
   end
 end
 
-defmodule ErlangelistWeb.Blog.CertificationTest do
+defmodule Erlangelist.Web.Blog.CertificationTest do
   use ExUnit.Case, async: false
   import SiteEncrypt.Phoenix.Test
 
   test "certification" do
-    clean_restart(ErlangelistWeb.Blog.Endpoint)
-    cert = get_cert(ErlangelistWeb.Blog.Endpoint)
+    clean_restart(Erlangelist.Web.Blog.Endpoint)
+    cert = get_cert(Erlangelist.Web.Blog.Endpoint)
     assert cert.domains == ~w/theerlangelist.com www.theerlangelist.com/
   end
 end

@@ -1,10 +1,10 @@
-defmodule ErlangelistWeb.Blog.View do
+defmodule Erlangelist.Web.Blog.View do
   use Phoenix.View,
-    root: "lib/erlangelist_web/blog/templates",
-    namespace: ErlangelistWeb.Blog
+    root: "lib/erlangelist/web/blog/templates",
+    namespace: Erlangelist.Web.Blog
 
   use Phoenix.HTML
-  import ErlangelistWeb.Blog.Router.Helpers
+  import Erlangelist.Web.Blog.Router.Helpers
 
   def articles_links_html do
     render("_articles.html", articles: Erlangelist.Core.Article.all())

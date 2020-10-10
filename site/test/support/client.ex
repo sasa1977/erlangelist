@@ -1,6 +1,6 @@
 defmodule ErlangelistTest.Client do
   require Phoenix.ConnTest
-  @endpoint ErlangelistWeb.Blog.Endpoint
+  @endpoint Erlangelist.Web.Blog.Endpoint
 
   def get(path, opts \\ []) do
     uri =
