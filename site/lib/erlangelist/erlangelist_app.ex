@@ -1,4 +1,4 @@
-defmodule ErlangelistApp do
+defmodule Erlangelist.App do
   use Application
 
   def start(_type, _args),

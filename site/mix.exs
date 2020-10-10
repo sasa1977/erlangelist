@@ -28,7 +28,7 @@ defmodule Erlangelist.Mixfile do
 
   def application do
     [
-      mod: {ErlangelistApp, []},
+      mod: {Erlangelist.App, []},
       extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
