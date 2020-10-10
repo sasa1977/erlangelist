@@ -13,7 +13,8 @@ defmodule Erlangelist.Mixfile do
       preferred_cli_env: [release: :prod],
       aliases: [
         release: ["cmd npm run deploy --prefix ./assets", "phx.digest", "release"],
-        test: ["erlangelist.clean", "test"]
+        test: ["erlangelist.clean", "test"],
+        "boundary.visualize": ["boundary.visualize", &create_boundary_pngs/1]
       ],
       dialyzer: [plt_add_deps: :transitive, remove_defaults: [:unknown]],
       releases: [
@@ -76,5 +77,25 @@ defmodule Erlangelist.Mixfile do
         ]
       ]
     ]
+  end
+
+  defp create_boundary_pngs(_args) do
+    if System.find_executable("dot") do
+      png_dir = Path.join(~w/boundary png/)
+      File.rm_rf(png_dir)
+      File.mkdir_p!(png_dir)
+
+      Enum.each(
+        Path.wildcard(Path.join("boundary", "*.dot")),
+        fn dot_file ->
+          png_file = Path.join([png_dir, "#{Path.basename(dot_file, ".dot")}.png"])
+          System.cmd("dot", ~w/-Tpng #{dot_file} -o #{png_file}/)
+        end
+      )
+
+      Mix.shell().info([:green, "Generated png files in #{png_dir}"])
+    else
+      Mix.shell().info([:yellow, "Install graphviz package to enable generation of png files."])
+    end
   end
 end
