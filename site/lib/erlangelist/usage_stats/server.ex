@@ -31,7 +31,10 @@ defmodule Erlangelist.UsageStats.Server do
         stats
 
       not Enum.empty?(stats.changes) ->
-        Parent.start_child(Parent.child_spec({UsageStats.Writer, changed_data(stats)}, restart: :temporary))
+        Parent.start_child(
+          Parent.child_spec({UsageStats.Writer, changed_data(stats)}, restart: :temporary, ephemeral?: true)
+        )
+
         %{stats | changes: MapSet.new()}
 
       true ->

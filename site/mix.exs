@@ -46,7 +46,7 @@ defmodule Erlangelist.Mixfile do
       {:makeup_elixir, "~> 0.14"},
       {:makeup_erlang, "~> 0.1"},
       {:mox, "~> 0.5", only: :test},
-      {:parent, github: "sasa1977/parent", branch: "supervision"},
+      {:parent, github: "sasa1977/parent", branch: "0.11"},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_dashboard, "~> 0.2"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
