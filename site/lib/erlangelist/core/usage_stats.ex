@@ -1,5 +1,6 @@
 defmodule Erlangelist.Core.UsageStats do
   use Boundary, deps: [Erlangelist.Core.Backup]
+  use Parent.Supervisor
 
   alias Erlangelist.Core.UsageStats
 
@@ -21,6 +22,18 @@ defmodule Erlangelist.Core.UsageStats do
     end
   end
 
+  def start_link(_) do
+    File.mkdir_p(folder())
+
+    Parent.Supervisor.start_link(
+      [
+        UsageStats.Server,
+        Erlangelist.Core.UsageStats.Cleanup
+      ],
+      name: __MODULE__
+    )
+  end
+
   def utc_today, do: @date_provider.utc_today
 
   def folder, do: Erlangelist.Config.db_path("usage_stats")
@@ -40,26 +53,5 @@ defmodule Erlangelist.Core.UsageStats do
     folder()
     |> File.ls!()
     |> Enum.into(%{}, &{&1, folder() |> Path.join(&1) |> File.read!() |> :erlang.binary_to_term()})
-  end
-
-  def start_link() do
-    File.mkdir_p(folder())
-
-    Parent.Supervisor.start_link(
-      [
-        UsageStats.Server,
-        Erlangelist.Core.UsageStats.Cleanup
-      ],
-      name: __MODULE__
-    )
-  end
-
-  @doc false
-  def child_spec(_arg) do
-    %{
-      id: __MODULE__,
-      type: :supervisor,
-      start: {__MODULE__, :start_link, []}
-    }
   end
 end

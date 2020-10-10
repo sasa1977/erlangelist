@@ -1,7 +1,8 @@
 defmodule Erlangelist.Core do
   use Boundary, deps: [Erlangelist.Config], exports: [Article, Backup, UsageStats]
+  use Parent.Supervisor
 
-  def start_link do
+  def start_link(_) do
     Erlangelist.Core.Backup.resync(Erlangelist.Core.UsageStats.folder())
 
     Parent.Supervisor.start_link(
@@ -11,14 +12,5 @@ defmodule Erlangelist.Core do
       ],
       name: __MODULE__
     )
-  end
-
-  @doc false
-  def child_spec(_arg) do
-    %{
-      id: __MODULE__,
-      start: {__MODULE__, :start_link, []},
-      type: :supervisor
-    }
   end
 end

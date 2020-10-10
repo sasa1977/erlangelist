@@ -1,5 +1,7 @@
 defmodule Erlangelist.Web.Dashboard do
-  def start_link do
+  use Parent.Supervisor
+
+  def start_link(_) do
     Parent.Supervisor.start_link(
       [
         Erlangelist.Web.Dashboard.Telemetry,
@@ -7,14 +9,5 @@ defmodule Erlangelist.Web.Dashboard do
       ],
       name: __MODULE__
     )
-  end
-
-  @doc false
-  def child_spec(_) do
-    %{
-      id: __MODULE__,
-      type: :supervisor,
-      start: {__MODULE__, :start_link, []}
-    }
   end
 end
