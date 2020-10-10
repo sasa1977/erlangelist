@@ -1,4 +1,6 @@
 defmodule Erlangelist.Core.UsageStats do
+  use Boundary, deps: [Erlangelist.Core.Backup]
+
   alias Erlangelist.Core.UsageStats
 
   defmodule DateProvider do
@@ -21,7 +23,7 @@ defmodule Erlangelist.Core.UsageStats do
 
   def utc_today, do: @date_provider.utc_today
 
-  def folder, do: Erlangelist.Core.db_path("usage_stats")
+  def folder, do: Erlangelist.Config.db_path("usage_stats")
 
   def clear_all do
     {:ok, stopped_children} = Parent.Client.shutdown_child(__MODULE__, Erlangelist.Core.UsageStats.Server)

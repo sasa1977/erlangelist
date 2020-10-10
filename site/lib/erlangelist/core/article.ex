@@ -1,4 +1,6 @@
 defmodule Erlangelist.Core.Article do
+  use Boundary
+
   require Erlangelist.Core.Article.Highlighter
   alias Erlangelist.Core.Article.Highlighter
   @external_resource "articles/index.exs"

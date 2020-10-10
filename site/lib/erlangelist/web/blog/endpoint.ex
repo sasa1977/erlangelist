@@ -123,7 +123,7 @@ defmodule Erlangelist.Web.Blog.Endpoint do
       directory_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
       domains: ["theerlangelist.com", "www.theerlangelist.com"],
       emails: [Erlangelist.Config.email()],
-      db_folder: Erlangelist.Core.db_path("site_encrypt"),
+      db_folder: Erlangelist.Config.db_path("site_encrypt"),
       backup: Path.join(Erlangelist.Core.Backup.folder(), "site_encrypt.tgz")
     )
   end

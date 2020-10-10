@@ -15,4 +15,10 @@ defmodule Erlangelist.Config do
       {:blog_host, default: "localhost"},
       {:blog_ssl_port, type: :integer, default: 443, dev: 20443, test: 443}
     ]
+
+  def priv_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv") | parts])
+  def priv_path(name), do: priv_path([name])
+
+  def db_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db" | parts])
+  def db_path(name), do: db_path([name])
 end
