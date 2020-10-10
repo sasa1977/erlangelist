@@ -23,7 +23,7 @@ defmodule Erlangelist.UsageStatsTest do
 
     UsageStats.sync()
 
-    assert UsageStats.all() == %{
+    assert all_stats() == %{
              yesterday => %{article: %{periodic: 1, macros_1: 3}},
              today => %{article: %{periodic: 2, macros_2: 1}}
            }
@@ -38,9 +38,17 @@ defmodule Erlangelist.UsageStatsTest do
 
     UsageStats.sync()
 
-    ErlangelistTest.Client.set_today(today)
+    UsageStats.mock_today(today)
     Periodic.Test.sync_tick(UsageStats.Cleanup)
 
-    assert UsageStats.all() == %{Date.add(today, -6) => %{article: %{why_elixir: 1}}}
+    assert all_stats() == %{Date.add(today, -6) => %{article: %{why_elixir: 1}}}
+  end
+
+  defp all_stats do
+    Enum.into(
+      UsageStats.all(),
+      %{},
+      fn {name, data} -> {UsageStats.Cleanup.from_yyyymmdd!(name), data} end
+    )
   end
 end

@@ -1,6 +1,26 @@
 defmodule Erlangelist.Core.UsageStats do
   alias Erlangelist.Core.UsageStats
 
+  defmodule DateProvider do
+    @callback utc_today :: Date.t()
+  end
+
+  if Mix.env() != :test do
+    @date_provider Date
+  else
+    @date_provider DateProvider.Mock
+
+    Mox.defmock(@date_provider, for: DateProvider)
+
+    def mock_today(date) do
+      Mox.stub(@date_provider, :utc_today, fn -> date end)
+      Mox.allow(@date_provider, self(), UsageStats.Server)
+      Mox.allow(@date_provider, self(), UsageStats.Cleanup)
+    end
+  end
+
+  def utc_today, do: @date_provider.utc_today
+
   def folder, do: Erlangelist.Core.db_path("usage_stats")
 
   def clear_all do
@@ -17,12 +37,7 @@ defmodule Erlangelist.Core.UsageStats do
   def all do
     folder()
     |> File.ls!()
-    |> Enum.into(%{}, fn filename ->
-      {
-        Erlangelist.Date.from_yyyymmdd!(filename),
-        folder() |> Path.join(filename) |> File.read!() |> :erlang.binary_to_term()
-      }
-    end)
+    |> Enum.into(%{}, &{&1, folder() |> Path.join(&1) |> File.read!() |> :erlang.binary_to_term()})
   end
 
   def start_link() do

@@ -55,13 +55,13 @@ defmodule Erlangelist.Core.UsageStats.Server do
 
   defp clear_old_stats(stats) do
     in_memory_dates = MapSet.new(Map.keys(stats.data))
-    dates_to_keep = MapSet.put(stats.changes, Erlangelist.Date.utc_today())
+    dates_to_keep = MapSet.put(stats.changes, UsageStats.utc_today())
     dates_to_remove = MapSet.to_list(MapSet.difference(in_memory_dates, dates_to_keep))
     update_in(stats.data, &Map.drop(&1, dates_to_remove))
   end
 
   defp inc(stats, category, subcategory) do
-    today = Erlangelist.Date.utc_today()
+    today = UsageStats.utc_today()
     %{stats | data: do_inc(stats.data, [today, category, subcategory]), changes: MapSet.put(stats.changes, today)}
   end
 

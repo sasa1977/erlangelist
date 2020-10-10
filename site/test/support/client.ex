@@ -10,7 +10,7 @@ defmodule ErlangelistTest.Client do
       |> Map.update!(:scheme, &(&1 || "https"))
       |> URI.to_string()
 
-    set_today(Keyword.get(opts, :accessed_at, Date.utc_today()))
+    Erlangelist.Core.UsageStats.mock_today(Keyword.get(opts, :accessed_at, Date.utc_today()))
     Phoenix.ConnTest.get(Phoenix.ConnTest.build_conn(), uri)
   end
 
@@ -21,10 +21,4 @@ defmodule ErlangelistTest.Client do
   end
 
   def rss_feed, do: get("/rss")
-
-  def set_today(date) do
-    Mox.stub(Erlangelist.Date.Mock, :utc_today, fn -> date end)
-    Mox.allow(Erlangelist.Date.Mock, self(), Erlangelist.Core.UsageStats.Server)
-    Mox.allow(Erlangelist.Date.Mock, self(), Erlangelist.Core.UsageStats.Cleanup)
-  end
 end
