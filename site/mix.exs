@@ -22,7 +22,8 @@ defmodule Erlangelist.Mixfile do
           steps: [:assemble, :tar],
           strip_beams: false
         ]
-      ]
+      ],
+      boundary: boundary()
     ]
   end
 
@@ -61,6 +62,19 @@ defmodule Erlangelist.Mixfile do
       {:table_rex, "~> 3.0", runtime: false},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"}
+    ]
+  end
+
+  defp boundary do
+    [
+      default: [
+        check: [
+          apps: [
+            {:mix, :runtime},
+            :phoenix
+          ]
+        ]
+      ]
     ]
   end
 end

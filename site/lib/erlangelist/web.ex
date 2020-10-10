@@ -1,5 +1,5 @@
 defmodule Erlangelist.Web do
-  use Boundary, deps: [Erlangelist.{Core, Config}]
+  use Boundary, deps: [Erlangelist.{Core, Config}, Phoenix]
 
   def start_link do
     Parent.Supervisor.start_link(
