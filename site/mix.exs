@@ -7,7 +7,7 @@ defmodule Erlangelist.Mixfile do
       version: "0.0.1",
       elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:boundary, :phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       preferred_cli_env: [release: :prod],
@@ -38,6 +38,7 @@ defmodule Erlangelist.Mixfile do
 
   defp deps do
     [
+      {:boundary, "~> 0.6.0", runtime: false},
       {:deep_merge, "~> 1.0"},
       {:dialyxir, "~> 1.0", runtime: false},
       {:earmark, "~> 1.4"},

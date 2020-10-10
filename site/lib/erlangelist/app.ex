@@ -1,4 +1,6 @@
 defmodule Erlangelist.App do
+  use Boundary, deps: [Erlangelist.{Core, Web}]
+
   use Application
 
   def start(_type, _args),

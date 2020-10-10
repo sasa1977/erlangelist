@@ -1,4 +1,5 @@
 defmodule Mix.Tasks.Erlangelist.Core.UsageStats do
+  use Boundary, classify_to: Erlangelist.Mix
   use Mix.Task
 
   # Mix.Task behaviour is not in PLT since Mix is not a runtime dep, so we disable the warning

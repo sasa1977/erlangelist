@@ -1,4 +1,6 @@
 defmodule Erlangelist.Config do
+  use Boundary
+
   use Provider,
     source: Provider.SystemEnv,
     params: [

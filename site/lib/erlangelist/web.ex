@@ -1,4 +1,6 @@
 defmodule Erlangelist.Web do
+  use Boundary, deps: [Erlangelist.{Core, Config}]
+
   def start_link do
     Parent.Supervisor.start_link(
       [Erlangelist.Web.Blog, Erlangelist.Web.Dashboard],

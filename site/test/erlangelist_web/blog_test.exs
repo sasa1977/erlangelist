@@ -2,7 +2,7 @@ defmodule Erlangelist.Web.BlogTest do
   use ExUnit.Case, async: true
   import Phoenix.ConnTest
   alias Erlangelist.Core.Article
-  alias ErlangelistTest.Client
+  alias Erlangelist.Test.Client
 
   test "root page shows the most recent article" do
     assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().title)}</h1>"

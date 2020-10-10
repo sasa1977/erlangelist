@@ -1,4 +1,6 @@
 defmodule Erlangelist.Core do
+  use Boundary, deps: [Erlangelist.Config], exports: [Article, Backup, UsageStats]
+
   def start_link do
     Erlangelist.Core.Backup.resync(Erlangelist.Core.UsageStats.folder())
 

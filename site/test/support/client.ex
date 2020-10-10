@@ -1,4 +1,4 @@
-defmodule ErlangelistTest.Client do
+defmodule Erlangelist.Test.Client do
   require Phoenix.ConnTest
   @endpoint Erlangelist.Web.Blog.Endpoint
 

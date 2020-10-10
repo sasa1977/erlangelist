@@ -1,6 +1,6 @@
 %{
   "base64url": {:hex, :base64url, "0.0.1", "36a90125f5948e3afd7be97662a1504b934dd5dac78451ca6e9abf85a10286be", [:rebar], [], "hexpm", "fab09b20e3f5db886725544cbcf875b8e73ec93363954eb8a1a9ed834aa8c1f9"},
-  "boundary": {:hex, :boundary, "0.4.4", "46dbe9bd7b1565a69ef7c83e4964c480e1079686c7ffaed1d5942fb4691f8ebe", [:mix], [], "hexpm", "d6adb866b283812bf3fb7177ac88e36fab4d011ae58a8aa7edfa61ba6736cb3e"},
+  "boundary": {:hex, :boundary, "0.6.0", "73f6945477bfb5b4ff6d0eb8bf68153d5ef899ed9d33818888c0ee125dac2f18", [:mix], [], "hexpm", "bf79fa6f5996e92e66c34fa3bdc3fab50676ab44ae46583bca98f25a443ac5bf"},
   "cachex": {:hex, :cachex, "2.1.0", "fad49b4e78d11c6c314e75bd8c9408f5b78cb065c047442798caed10803ee3be", [:mix], [{:eternal, "~> 1.1", [hex: :eternal, repo: "hexpm", optional: false]}], "hexpm"},
   "castore": {:hex, :castore, "0.1.5", "591c763a637af2cc468a72f006878584bc6c306f8d111ef8ba1d4c10e0684010", [:mix], [], "hexpm", "6db356b2bc6cc22561e051ff545c20ad064af57647e436650aa24d7d06cd941a"},
   "certifi": {:hex, :certifi, "2.3.1", "d0f424232390bf47d82da8478022301c561cf6445b5b5fb6a84d49a9e76d2639", [:rebar3], [{:parse_trans, "3.2.0", [hex: :parse_trans, repo: "hexpm", optional: false]}], "hexpm"},
