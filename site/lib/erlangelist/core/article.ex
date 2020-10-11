@@ -28,11 +28,9 @@ defmodule Erlangelist.Core.Article do
       posted_at: date_to_string.(date),
       copyright_year: date.year,
       posted_at_rfc822: to_rfc822.(date),
-      has_content?: article_spec[:redirect] == nil,
       title: Keyword.fetch!(article_spec, :title),
       sidebar_title: Keyword.get_lazy(article_spec, :sidebar_title, fn -> Keyword.fetch!(article_spec, :title) end),
-      link: article_spec[:redirect] || "/article/#{article_id}",
-      redirect: article_spec[:redirect],
+      link: "/article/#{article_id}",
       source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md"
     })
   end
@@ -46,18 +44,16 @@ defmodule Erlangelist.Core.Article do
   for article <- articles_meta do
     def article(unquote(article.id)), do: unquote(Macro.escape(article))
 
-    if article.has_content? do
-      @external_resource "articles/#{article.id}.md"
+    @external_resource "articles/#{article.id}.md"
 
-      def html(%{id: unquote(article.id)}),
-        do:
-          unquote(
-            "articles/#{article.id}.md"
-            |> File.read!()
-            |> Earmark.as_html!()
-            |> Highlighter.highlight_code_blocks()
-          )
-    end
+    def html(%{id: unquote(article.id)}),
+      do:
+        unquote(
+          "articles/#{article.id}.md"
+          |> File.read!()
+          |> Earmark.as_html!()
+          |> Highlighter.highlight_code_blocks()
+        )
   end
 
   def article(_), do: nil

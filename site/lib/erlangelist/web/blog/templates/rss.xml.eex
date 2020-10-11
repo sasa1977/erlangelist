@@ -4,7 +4,7 @@
     <title>The Erlangelist</title>
     <description>(not only) Erlang related musings</description>
     <link>http://theerlangelist.com</link>
-    <%= for article <- Erlangelist.Core.Article.all, article.has_content? do %>
+    <%= for article <- Erlangelist.Core.Article.all do %>
       <item>
         <title><![CDATA[<%= article.title %>]]></title>
         <link><![CDATA[http://theerlangelist.com/<%= article.link %>]]></link>

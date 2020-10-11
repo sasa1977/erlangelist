@@ -2,11 +2,9 @@
   <h4>Posts</h4>
   <ul>
     <%= for article <- @articles do %>
-      <%= if article.has_content? do %>
-        <li>
-          <a href="<%= article.link %>"><%= article.sidebar_title %></a>
-        </li>
-      <% end %>
+      <li>
+        <a href="<%= article.link %>"><%= article.sidebar_title %></a>
+      </li>
     <% end %>
   </ul>
 

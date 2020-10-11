@@ -12,13 +12,13 @@ defmodule Erlangelist.Web.Blog.Controller do
 
   def article(conn, %{"article_id" => article_id}) do
     case Article.article(Article.id_from_string(article_id)) do
-      %{has_content?: true} = article ->
+      nil ->
+        not_found(conn)
+
+      article ->
         conn
         |> assign(:title_suffix, article.sidebar_title)
         |> render_article(article)
-
-      _ ->
-        not_found(conn)
     end
   end
 

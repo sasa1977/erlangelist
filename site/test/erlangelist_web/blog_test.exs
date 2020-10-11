@@ -8,7 +8,7 @@ defmodule Erlangelist.Web.BlogTest do
     assert response(Client.get("/"), 200) =~ "<h1>#{Plug.HTML.html_escape(Article.most_recent().title)}</h1>"
   end
 
-  for article <- Article.all(), article.has_content? do
+  for article <- Article.all() do
     test "shows the #{article.id} article" do
       assert response(Client.article(unquote(article.id)), 200) =~
                "<h1>#{Plug.HTML.html_escape(unquote(article.title))}</h1>"
@@ -22,7 +22,7 @@ defmodule Erlangelist.Web.BlogTest do
   test "serves rss feed" do
     response = response(Client.rss_feed(), 200)
 
-    for article <- Article.all(), article.has_content? do
+    for article <- Article.all() do
       assert response =~ "<h1>#{Plug.HTML.html_escape(article.title)}</h1>"
     end
   end
