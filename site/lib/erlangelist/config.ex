@@ -21,4 +21,6 @@ defmodule Erlangelist.Config do
 
   def db_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db" | parts])
   def db_path(name), do: db_path([name])
+
+  def backup_folder, do: Erlangelist.Config.priv_path("backup")
 end

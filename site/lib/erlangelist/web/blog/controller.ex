@@ -7,22 +7,20 @@ defmodule Erlangelist.Web.Blog.Controller do
   plug :put_layout, {View, "layout.html"}
 
   def most_recent_article(conn, _params) do
-    render_article(conn, Article.most_recent())
+    {:ok, article} = Article.read(:most_recent)
+    render_article(conn, article)
   end
 
-  def article(conn, %{"article_id" => article_id}) do
-    case Article.article(Article.id_from_string(article_id)) do
-      nil ->
-        not_found(conn)
-
-      article ->
-        conn
-        |> assign(:title_suffix, article.sidebar_title)
-        |> render_article(article)
+  def article(conn, params) do
+    with {:ok, article_id} <- Map.fetch(params, "article_id"),
+         {:ok, article} <- Article.read(article_id) do
+      conn
+      |> assign(:title_suffix, article.sidebar_title)
+      |> render_article(article)
+    else
+      _ -> not_found(conn)
     end
   end
-
-  def article(conn, _params), do: not_found(conn)
 
   def privacy_policy(conn, _params), do: render(conn, "privacy.html")
 
@@ -40,8 +38,5 @@ defmodule Erlangelist.Web.Blog.Controller do
     |> render("404.html")
   end
 
-  defp render_article(conn, article) do
-    Erlangelist.Core.UsageStats.report(:article, article.id)
-    render(conn, "article.html", %{article: article})
-  end
+  defp render_article(conn, article), do: render(conn, "article.html", article: article)
 end

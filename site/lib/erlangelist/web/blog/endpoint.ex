@@ -124,7 +124,7 @@ defmodule Erlangelist.Web.Blog.Endpoint do
       domains: ["theerlangelist.com", "www.theerlangelist.com"],
       emails: [Erlangelist.Config.email()],
       db_folder: Erlangelist.Config.db_path("site_encrypt"),
-      backup: Path.join(Erlangelist.Core.Backup.folder(), "site_encrypt.tgz")
+      backup: Path.join(Erlangelist.Config.backup_folder(), "site_encrypt.tgz")
     )
   end
 

@@ -28,7 +28,7 @@ defmodule Erlangelist.Core.UsageStats do
     Parent.Supervisor.start_link(
       [
         UsageStats.Server,
-        Erlangelist.Core.UsageStats.Cleanup
+        UsageStats.Cleanup
       ],
       name: __MODULE__
     )
@@ -39,7 +39,7 @@ defmodule Erlangelist.Core.UsageStats do
   def folder, do: Erlangelist.Config.db_path("usage_stats")
 
   def clear_all do
-    {:ok, stopped_children} = Parent.Client.shutdown_child(__MODULE__, Erlangelist.Core.UsageStats.Server)
+    {:ok, stopped_children} = Parent.Client.shutdown_child(__MODULE__, UsageStats.Server)
     File.rm_rf(folder())
     File.mkdir_p!(folder())
     Parent.Client.return_children(__MODULE__, stopped_children)

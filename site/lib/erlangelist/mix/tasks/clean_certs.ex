@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Erlangelist.Clean do
   def run(_) do
     Enum.each(
       [
-        Erlangelist.Core.Backup.folder(),
+        Erlangelist.Config.backup_folder(),
         Erlangelist.Config.db_path([])
       ],
       &File.rm_rf/1

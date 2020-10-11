@@ -1,13 +1,15 @@
 defmodule Erlangelist.Core do
-  use Boundary, deps: [Erlangelist.Config], exports: [Article, Backup, UsageStats]
+  use Boundary, deps: [Erlangelist.Config], exports: [Article]
   use Parent.Supervisor
 
+  alias Erlangelist.Core.{Backup, UsageStats}
+
   def start_link(_) do
-    Erlangelist.Core.Backup.resync(Erlangelist.Core.UsageStats.folder())
+    Backup.resync(UsageStats.folder())
 
     Parent.Supervisor.start_link(
       [
-        Erlangelist.Core.UsageStats,
+        UsageStats,
         {Phoenix.PubSub, name: Erlangelist.PubSub}
       ],
       name: __MODULE__

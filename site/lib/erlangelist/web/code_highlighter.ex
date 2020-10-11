@@ -1,4 +1,4 @@
-defmodule Erlangelist.Core.Article.Highlighter do
+defmodule Erlangelist.Web.CodeHighlighter do
   defp pick_language_and_lexer(""), do: {"elixir", Makeup.Lexers.ElixirLexer, []}
 
   defp pick_language_and_lexer(lang) do

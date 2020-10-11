@@ -1,8 +1,5 @@
 defmodule Erlangelist.Core.Article do
-  use Boundary
-
-  require Erlangelist.Core.Article.Highlighter
-  alias Erlangelist.Core.Article.Highlighter
+  use Boundary, deps: [Erlangelist.Core.UsageStats]
   @external_resource "articles/index.exs"
 
   months = ~w(January February March April May June July August September October November December)
@@ -19,8 +16,6 @@ defmodule Erlangelist.Core.Article do
   date_to_string = fn date -> "#{Enum.at(months, date.month - 1)} #{date.day}, #{date.year}" end
 
   article_meta = fn {article_id, article_spec} ->
-    Application.ensure_all_started(:timex)
-
     date = Date.from_iso8601!(article_spec[:posted_at])
 
     Enum.into(article_spec, %{
@@ -31,7 +26,8 @@ defmodule Erlangelist.Core.Article do
       title: Keyword.fetch!(article_spec, :title),
       sidebar_title: Keyword.get_lazy(article_spec, :sidebar_title, fn -> Keyword.fetch!(article_spec, :title) end),
       link: "/article/#{article_id}",
-      source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md"
+      source_link: "https://github.com/sasa1977/erlangelist/tree/master/site/articles/#{article_id}.md",
+      content: File.read!("articles/#{article_id}.md")
     })
   end
 
@@ -39,31 +35,20 @@ defmodule Erlangelist.Core.Article do
   articles_meta = Enum.map(articles_specs, article_meta)
 
   def all, do: unquote(Macro.escape(articles_meta))
-  def most_recent, do: unquote(Macro.escape(hd(articles_meta)))
+
+  def read(:most_recent) do
+    {:ok, article} = read(unquote(to_string(hd(articles_meta).id)))
+    {:ok, article}
+  end
 
   for article <- articles_meta do
-    def article(unquote(article.id)), do: unquote(Macro.escape(article))
-
     @external_resource "articles/#{article.id}.md"
-
-    def html(%{id: unquote(article.id)}),
-      do:
-        unquote(
-          "articles/#{article.id}.md"
-          |> File.read!()
-          |> Earmark.as_html!()
-          |> Highlighter.highlight_code_blocks()
-        )
-  end
-
-  def article(_), do: nil
-
-  def id_from_string(string) do
-    try do
-      String.to_existing_atom(string)
-    rescue
-      ArgumentError ->
-        :undefined
+    def read(unquote(to_string(article.id))) do
+      article = unquote(Macro.escape(article))
+      Erlangelist.Core.UsageStats.report(:article, article.id)
+      {:ok, article}
     end
   end
+
+  def read(_), do: :error
 end

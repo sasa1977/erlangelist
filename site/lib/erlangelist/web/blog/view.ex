@@ -6,6 +6,22 @@ defmodule Erlangelist.Web.Blog.View do
   use Phoenix.HTML
   import Erlangelist.Web.Blog.Router.Helpers
 
+  require Erlangelist.Core.Article
+  require Erlangelist.Web.CodeHighlighter
+
+  alias Erlangelist.Core.Article
+  alias Erlangelist.Web.CodeHighlighter
+
+  for article <- Article.all() do
+    def article_html(%{id: unquote(article.id)}) do
+      unquote(
+        article.content
+        |> Earmark.as_html!()
+        |> CodeHighlighter.highlight_code_blocks()
+      )
+    end
+  end
+
   def articles_links_html do
     render("_articles.html", articles: Erlangelist.Core.Article.all())
   end
