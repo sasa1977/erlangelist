@@ -1,4 +1,5 @@
 defmodule Erlangelist.Web.Dashboard do
+  use Boundary, exports: [Endpoint]
   use Parent.Supervisor
 
   def start_link(_) do

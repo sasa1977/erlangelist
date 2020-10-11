@@ -7,10 +7,10 @@ defmodule Erlangelist.Web.Blog.View do
   import Erlangelist.Web.Blog.Router.Helpers
 
   require Erlangelist.Core.Article
-  require Erlangelist.Web.CodeHighlighter
+  require Erlangelist.Web.Blog.CodeHighlighter
 
   alias Erlangelist.Core.Article
-  alias Erlangelist.Web.CodeHighlighter
+  alias Erlangelist.Web.Blog.CodeHighlighter
 
   for article <- Article.all() do
     def article_html(%{id: unquote(article.id)}) do
