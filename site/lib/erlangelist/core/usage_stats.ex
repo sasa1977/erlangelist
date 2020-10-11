@@ -35,6 +35,8 @@ defmodule Erlangelist.Core.UsageStats do
     )
   end
 
+  def folder, do: Path.join([Application.app_dir(:erlangelist, "priv"), "db", "usage_stats"])
+
   def utc_today, do: @date_provider.utc_today
 
   def clear_all do
@@ -81,6 +83,4 @@ defmodule Erlangelist.Core.UsageStats do
   @doc false
   def from_yyyymmdd!(<<y::binary-size(4), m::binary-size(2), d::binary-size(2)>>),
     do: Date.from_iso8601!(Enum.join([y, m, d], "-"))
-
-  defp folder, do: Erlangelist.Config.usage_stats_folder()
 end

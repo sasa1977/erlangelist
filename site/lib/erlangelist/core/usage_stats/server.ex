@@ -1,6 +1,6 @@
 defmodule Erlangelist.Core.UsageStats.Server do
   use Parent.GenServer
-  alias Erlangelist.Core.UsageStats
+  alias Erlangelist.Core.{Backup, UsageStats}
 
   def start_link(_), do: Parent.GenServer.start_link(__MODULE__, nil, name: __MODULE__)
 
@@ -92,9 +92,9 @@ defmodule Erlangelist.Core.UsageStats.Server do
 
   defp write!(stats) do
     Enum.each(stats, fn {date, data} -> File.write!(date_file(date), :erlang.term_to_binary(data)) end)
-    Erlangelist.Core.Backup.backup(Erlangelist.Config.usage_stats_folder())
+    Backup.run(UsageStats.folder())
   end
 
   defp date_file(date),
-    do: Path.join(Erlangelist.Config.usage_stats_folder(), Date.to_iso8601(date, :basic))
+    do: Path.join(UsageStats.folder(), Date.to_iso8601(date, :basic))
 end

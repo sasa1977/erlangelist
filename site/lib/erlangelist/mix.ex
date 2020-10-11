@@ -1,3 +1,3 @@
 defmodule Erlangelist.Mix do
-  use Boundary, deps: [Erlangelist.{Config, Core}, Mix]
+  use Boundary, deps: [Erlangelist.Core, Mix]
 end

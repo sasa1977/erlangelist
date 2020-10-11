@@ -6,13 +6,5 @@ defmodule Mix.Tasks.Erlangelist.Clean do
   @dialyzer :no_undefined_callbacks
 
   @impl Mix.Task
-  def run(_) do
-    Enum.each(
-      [
-        Erlangelist.Config.backup_folder(),
-        Erlangelist.Config.db_path()
-      ],
-      &File.rm_rf/1
-    )
-  end
+  def run(_), do: Erlangelist.Core.clean()
 end

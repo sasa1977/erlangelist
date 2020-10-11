@@ -13,7 +13,7 @@ defmodule Erlangelist.Web.Dashboard.Endpoint do
     {:ok,
      Keyword.merge(
        phoenix_defaults,
-       pubsub_server: Erlangelist.PubSub,
+       pubsub_server: Erlangelist.Core.PubSub,
        http: [compress: true, port: 20082, transport_options: [num_acceptors: 5]],
        live_view: [signing_salt: "dmsgVNOMhYDl66PB65qHd2HOMc2sV1K4"],
        secret_key_base: "tOczp1KVeoPHOXj8CyYoinE/2xr3dps53AGzpx9AuJR7pft8LK4YkhMj55O+lP6o"

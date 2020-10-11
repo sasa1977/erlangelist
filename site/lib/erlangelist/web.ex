@@ -1,5 +1,5 @@
 defmodule Erlangelist.Web do
-  use Boundary, deps: [Erlangelist.{Core, Config}, Phoenix]
+  use Boundary, deps: [Erlangelist.Core, Phoenix]
   use Parent.Supervisor
 
   alias Erlangelist.Web.{Blog, Dashboard}

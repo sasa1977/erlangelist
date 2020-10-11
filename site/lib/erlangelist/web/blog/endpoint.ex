@@ -1,7 +1,8 @@
 defmodule Erlangelist.Web.Blog.Endpoint do
   use Phoenix.Endpoint, otp_app: :erlangelist
   use SiteEncrypt.Phoenix
-  require Erlangelist.Config
+  require Erlangelist.Web.Blog.Config
+  alias Erlangelist.Web.Blog.Config
 
   plug Plug.Static, at: "/", from: :erlangelist, only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -30,9 +31,9 @@ defmodule Erlangelist.Web.Blog.Endpoint do
 
   defp force_ssl(conn, _opts) do
     host =
-      case Erlangelist.Config.blog_ssl_port() do
-        443 -> Erlangelist.Config.blog_host()
-        port -> "#{Erlangelist.Config.blog_host()}:#{port}"
+      case Config.blog_ssl_port() do
+        443 -> Config.blog_host()
+        port -> "#{Config.blog_host()}:#{port}"
       end
 
     Plug.SSL.call(conn, Plug.SSL.init(host: host, log: :debug, exclude: []))
@@ -50,7 +51,7 @@ defmodule Erlangelist.Web.Blog.Endpoint do
 
   defp common_config() do
     [
-      url: [scheme: "https", host: Erlangelist.Config.blog_host(), port: Erlangelist.Config.blog_ssl_port()],
+      url: [scheme: "https", host: Config.blog_host(), port: Config.blog_ssl_port()],
       http: [compress: true, port: 20080],
       https: [
         compress: true,
@@ -61,7 +62,7 @@ defmodule Erlangelist.Web.Blog.Endpoint do
         log_level: :warning
       ],
       render_errors: [view: Erlangelist.Web.Blog.View, accepts: ~w(html json)],
-      pubsub_server: Erlangelist.PubSub
+      pubsub_server: Erlangelist.Core.PubSub
     ]
   end
 
@@ -119,11 +120,11 @@ defmodule Erlangelist.Web.Blog.Endpoint do
   def certification do
     SiteEncrypt.configure(
       client: :native,
-      directory_url: with("localhost" <- Erlangelist.Config.ca_url(), do: local_acme_server()),
+      directory_url: with("localhost" <- Config.ca_url(), do: local_acme_server()),
       domains: ["theerlangelist.com", "www.theerlangelist.com"],
-      emails: [Erlangelist.Config.email()],
-      db_folder: Erlangelist.Config.db_path("site_encrypt"),
-      backup: Path.join(Erlangelist.Config.backup_folder(), "site_encrypt.tgz")
+      emails: [Config.email()],
+      db_folder: Path.join([Application.app_dir(:erlangelist, "priv"), "db", "site_encrypt"]),
+      backup: Path.join(Erlangelist.Core.backup_folder(), "site_encrypt.tgz")
     )
   end
 
