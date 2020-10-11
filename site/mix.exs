@@ -48,7 +48,7 @@ defmodule Erlangelist.Mixfile do
       {:jason, "~> 1.0"},
       {:makeup_elixir, "~> 0.14"},
       {:makeup_erlang, "~> 0.1"},
-      {:mox, "~> 0.5", only: :test},
+      {:mox, "~> 1.0", only: :test},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_dashboard, "~> 0.2"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
@@ -60,7 +60,7 @@ defmodule Erlangelist.Mixfile do
       {:site_encrypt, github: "sasa1977/site_encrypt", branch: "upgrade-parent"},
       {:sshex, "~> 2.0", runtime: false},
       {:table_rex, "~> 3.0", runtime: false},
-      {:telemetry_metrics, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.5"},
       {:telemetry_poller, "~> 0.4"}
     ]
   end
