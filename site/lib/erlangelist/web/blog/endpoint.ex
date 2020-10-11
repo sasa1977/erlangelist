@@ -75,7 +75,6 @@ defmodule Erlangelist.Web.Blog.Endpoint do
         [
           http: [transport_options: [num_acceptors: 5]],
           https: [transport_options: [num_acceptors: 5]],
-          debug_errors: true,
           check_origin: false,
           watchers: [
             node: [

@@ -14,7 +14,7 @@ if Mix.env() == :dev do
   config :phoenix, :stacktrace_depth, 20
 
   # code_reloader works only if provided in app env, not in `init/2`
-  config :erlangelist, Erlangelist.Web.Blog.Endpoint, code_reloader: true
+  config :erlangelist, Erlangelist.Web.Blog.Endpoint, code_reloader: true, debug_errors: true
 end
 
 if Mix.env() == :prod do
