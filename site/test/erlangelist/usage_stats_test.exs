@@ -47,7 +47,7 @@ defmodule Erlangelist.UsageStatsTest do
     Enum.into(
       UsageStats.all(),
       %{},
-      fn {name, data} -> {UsageStats.Cleanup.from_yyyymmdd!(name), data} end
+      fn {name, data} -> {UsageStats.from_yyyymmdd!(name), data} end
     )
   end
 end

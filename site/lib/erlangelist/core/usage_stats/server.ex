@@ -20,21 +20,18 @@ defmodule Erlangelist.Core.UsageStats.Server do
     do: {:noreply, update_in(stats.awaiting_flush, &[from | &1]) |> maybe_start_writer()}
 
   @impl Parent.GenServer
-  def handle_stopped_children(%{UsageStats.Writer => info}, stats) do
+  def handle_stopped_children(%{:writer => info}, stats) do
     stats = if info.exit_reason != :normal, do: update_in(stats.changes, &MapSet.union(&1, info.meta)), else: stats
     {:noreply, maybe_start_writer(clear_old_stats(stats))}
   end
 
   defp maybe_start_writer(stats) do
     cond do
-      Parent.child?(UsageStats.Writer) ->
+      Parent.child?(:writer) ->
         stats
 
       not Enum.empty?(stats.changes) ->
-        Parent.start_child(
-          Parent.child_spec({UsageStats.Writer, changed_data(stats)}, restart: :temporary, ephemeral?: true)
-        )
-
+        Parent.start_child(writer_spec(changed_data(stats)))
         %{stats | changes: MapSet.new()}
 
       true ->
@@ -48,7 +45,7 @@ defmodule Erlangelist.Core.UsageStats.Server do
 
     %{
       changes: MapSet.new(),
-      data: %{today => UsageStats.Writer.stored_data(today)},
+      data: %{today => stored_data(today)},
       awaiting_flush: []
     }
   end
@@ -69,4 +66,35 @@ defmodule Erlangelist.Core.UsageStats.Server do
 
   defp do_inc(map, [final_key]), do: map |> Map.put_new(final_key, 0) |> Map.update!(final_key, &(&1 + 1))
   defp do_inc(map, [this_key | other_keys]), do: Map.put(map, this_key, do_inc(Map.get(map, this_key, %{}), other_keys))
+
+  ## Writer
+
+  defp writer_spec(stats) do
+    %{
+      id: :writer,
+      start: {Task, :start_link, [fn -> write!(stats) end]},
+      meta: stats |> Enum.map(fn {date, _data} -> date end) |> MapSet.new(),
+      restart: :temporary,
+      ephemeral?: true
+    }
+  end
+
+  defp stored_data(date) do
+    try do
+      date
+      |> date_file()
+      |> File.read!()
+      |> :erlang.binary_to_term()
+    catch
+      _, _ -> %{}
+    end
+  end
+
+  defp write!(stats) do
+    Enum.each(stats, fn {date, data} -> File.write!(date_file(date), :erlang.term_to_binary(data)) end)
+    Erlangelist.Core.Backup.backup(Erlangelist.Config.usage_stats_folder())
+  end
+
+  defp date_file(date),
+    do: Path.join(Erlangelist.Config.usage_stats_folder(), Date.to_iso8601(date, :basic))
 end

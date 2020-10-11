@@ -16,11 +16,12 @@ defmodule Erlangelist.Config do
       {:blog_ssl_port, type: :integer, default: 443, dev: 20443, test: 443}
     ]
 
-  def priv_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv") | parts])
-  def priv_path(name), do: priv_path([name])
+  def backup_folder, do: priv_path("backup")
+  def usage_stats_folder, do: db_path("usage_stats")
 
   def db_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv"), "db" | parts])
   def db_path(name), do: db_path([name])
 
-  def backup_folder, do: Erlangelist.Config.priv_path("backup")
+  defp priv_path(parts) when is_list(parts), do: Path.join([Application.app_dir(:erlangelist, "priv") | parts])
+  defp priv_path(name), do: priv_path([name])
 end
