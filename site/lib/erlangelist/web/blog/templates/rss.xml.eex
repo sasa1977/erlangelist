@@ -8,7 +8,7 @@
       <item>
         <title><![CDATA[<%= article.title %>]]></title>
         <link><![CDATA[http://theerlangelist.com/<%= article.link %>]]></link>
-        <pubdate><%= article.posted_at_rfc822 %></pubdate>
+        <pubDate><%= article.posted_at_rfc822 %></pubDate>
         <description>
           <![CDATA[<%= Phoenix.View.render_to_string(__MODULE__, "_article_content.html", article: article) %>]]>
         </description>
