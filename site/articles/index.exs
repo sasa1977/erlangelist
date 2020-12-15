@@ -1,4 +1,8 @@
 [
+  sequences: [
+    title: "Sequences",
+    posted_at: "2020-12-14"
+  ],
   operating_via_development: [
     title: "Operating systems via development",
     sidebar_title: "Operating via development",
