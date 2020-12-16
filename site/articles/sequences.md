@@ -1,4 +1,4 @@
-It was the first day of my first Erlang-based system in production. I've invested some sensible amount of time to test and stabilize it. I's we're dotted, t's were crossed and I felt confident that it would work reasonably well. The system broke in production within the first few hours of its life.
+It was the first day of my first Erlang-based system in production. I've invested some sensible amount of time to test and stabilize it. I's were dotted, t's were crossed and I felt confident that it would work reasonably well. The system broke in production within the first few hours of its life.
 
 The breakage was caused by the excessive usage of the `++` operator. I was iteratively building a large list by appending new chunks to its end, which is extremely inefficient in Erlang. Why did I do it then? Because I didn't know better :-) I incorrectly assumed, based on my experience with other languages, that in the expression `list_a ++ list_b` only `list_b` is being iterated (which would have been fine).
 
@@ -178,7 +178,7 @@ Finally it's worth noting that for very small sequences (10 elements or less), l
 
 I conveniently skipped some other operations such as inserts, deletes, joins, splits. Generally, these will amount to O(n) operations for all of the mentioned structures. If such actions are performed infrequently, or taken on a small collection, the performance of the presented structures might suffice. Otherwise, you'll need to look for something else.
 
-For example, if you need to frequently insert items in the middle of a sequence, [gb_trees](https://erlang.org/doc/man/gb_trees.html) could be a good choice. Implementing a priority queue can be as easy as using `{priority, System.unique_integer()}` for keys.
+For example, if you need to frequently insert items in the middle of a sequence, [gb_trees](https://erlang.org/doc/man/gb_trees.html) could be a good choice. Implementing a priority queue can be as easy as using `{priority, System.unique_integer([:monotonic])}` for keys.
 
 If you need a FIFO queue consider using [:queue](https://erlang.org/doc/man/queue.html), which will give you amortized constant time for prepend, append, and pop operations.
 
