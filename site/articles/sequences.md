@@ -101,9 +101,11 @@ Therefore, treat these results carefully, and always measure in the context of t
 
 ## Building a sequence
 
-Let's first compare the performance of building a sequence incrementally, using various sizes up to 1M. Here are the results:
+Let's first compare the performance of building a sequence incrementally. Here are the results:
 
 ![Incremental build benchmark](/images/seq_build.png)
+
+The measurements are performed on various sizes: 1, 2, 3, ..., 10, 20, 30, ..., 100, ..., 1M. For the sake of better identification of each measurement, a few points on each line are highlighted (circles, squares, ...).
 
 The results demonstrate that lists are the fastest option for dynamically building a sequence. The 2nd- and the 3rd- best option also owe their results to lists. In both of these cases we first build a list, and then convert it to a target structure with `List.to_tuple` and `:array.from_list` respectively. `List.to_tuple` is particularly fast since it's implemented natively. It takes a few milliseconds to transform a list of million elements into a tuple on my machine.
 
