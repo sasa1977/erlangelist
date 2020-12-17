@@ -141,7 +141,7 @@ Maps are significantly slower than the rest of the pack, but not necessarily ter
 
 ![Sequential walk benchmark (logscale)](/images/seq_walk_log.png)
 
-Up to 10k elements, a full sequential map traversal will run in less than one millisecond. This is still slower than other data structures, but it might suffice in many cases.
+Up to 10k elements, a full sequential map traversal will run in less than one millisecond. This is still slower than other data structures, but it might suffice in many cases. It's also worth noting that maps can be iterated much faster using [:maps.iterator](https://erlang.org/doc/man/maps.html#iterator-1) and [:maps.next](https://erlang.org/doc/man/maps.html#next-1). Such iteration is as fast as array iteration, but it's not ordered, and is therefore not included in this benchmark.
 
 
 ## Random-access reads
