@@ -24,7 +24,7 @@ Consequently, lists are not a general purpose sequence data structure, and treat
 
 ## Arrays
 
-Somewhat less well-known, the [:array module](https://erlang.org/doc/man/array.html) from the Erlang's stdlib offers fast random-access operations, and can also be used to handle sparse arrays. The memory overhead of an array is also significantly smaller compared to list. Arrays are the only data structure presented here which is completely implemented in Erlang code. Still they manage to offer pretty good all-round performance. I wonder if the results would be even better if `:array` was natively implemented.
+Somewhat less well-known, the [:array module](https://erlang.org/doc/man/array.html) from the Erlang's stdlib offers fast random-access operations, and can also be used to handle sparse arrays. The memory overhead of an array is also significantly smaller compared to list. Arrays are the only data structure presented here which is completely implemented in Erlang code. Internally, arrays are represented as a tree of small tuples. As we'll see from the benchmarks, small tuples have excellent random-access read & write performance. Relying on them allows `:array` to offer pretty good all-round performance. I wonder if the results would be even better if `:array` was implemented natively.
 
 
 ## Maps
